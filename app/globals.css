@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +22,62 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Apply heading font to main titles by default */
+h1,
+h2 {
+  font-family: var(--font-heading), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
+}
+
+/* Ensure iframe videos display properly */
+iframe {
+  border: none;
+  outline: none;
+  display: block;
+}
+
+/* Video element styling */
+video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Ensure proper z-index stacking */
+.z-0 { z-index: 0 !important; }
+.z-1 { z-index: 1 !important; }
+.z-10 { z-index: 10 !important; }
+.z-20 { z-index: 20 !important; }
+
+/* Debug styles */
+.debug-border {
+  border: 2px solid red;
+}
+
+.debug-bg {
+  background-color: rgba(255, 0, 0, 0.3);
+}
+
+/* Ensure video containers are visible */
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Force video to be visible */
+video:not([src]) {
+  display: none;
+}
+
+/* Ensure iframe is visible */
+iframe[src] {
+  display: block !important;
 }
