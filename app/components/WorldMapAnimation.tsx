@@ -67,7 +67,7 @@ export default function WorldMapAnimation() {
       controls = globe.controls();
       if (controls) {
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 1.2;
+        controls.autoRotateSpeed = 2;
         controls.enableRotate = false;
         controls.enablePan = false;
         controls.enableZoom = false;
@@ -97,11 +97,11 @@ export default function WorldMapAnimation() {
   }, []);
 
   return (
-    <section className="relative h-screen w-full bg-black flex items-center justify-center">
+    <section className="relative h-[500px] w-full bg-black flex items-center justify-center">
       <Globe
         ref={globeRef}
-        height={700}
-        width={700}
+        height={500}
+        width={500}
         backgroundColor="rgba(0,0,0,0)"
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
         bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
