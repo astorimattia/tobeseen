@@ -1,6 +1,6 @@
 import React from "react";
 import SectionHeading from "./SectionHeading";
-// import WorldMapAnimation from "./WorldMapAnimation";
+import WorldMapAnimation from "./WorldMapAnimation";
 
 export default function What() {
   return (
@@ -25,6 +25,7 @@ export default function What() {
           <p className="mt-2 text-zinc-300">We work with locals, respect boundaries, and keep viewers safe while we get close.</p>
         </div>
       </div>
+    <WorldMapAnimation />
     </section>
   );
 }

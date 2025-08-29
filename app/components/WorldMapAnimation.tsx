@@ -1,67 +1,60 @@
+"use client";
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function WorldMapAnimation() {
+  const dots = [
+    { x: 300, y: 280 },
+    { x: 600, y: 250 },
+    { x: 950, y: 400 },
+    { x: 1300, y: 350 },
+    { x: 1550, y: 500 },
+  ];
+
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden">
+    <div className="relative mt-16 flex justify-center">
       <svg
-        className="w-full h-full"
-        viewBox="0 0 800 400"
-        preserveAspectRatio="xMidYMid slice"
+        viewBox="0 0 1800 800"
+        className="w-full max-w-6xl"
         xmlns="http://www.w3.org/2000/svg"
       >
+        {/* Soft glowing globe halo */}
         <defs>
-          <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#fff" stopOpacity="0.2" />
-            <stop offset="50%" stopColor="#fff" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#fff" stopOpacity="0.2" />
-          </linearGradient>
+          <radialGradient id="glow" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="black" stopOpacity="0" />
+          </radialGradient>
         </defs>
+        <circle cx="900" cy="400" r="420" fill="url(#glow)" />
 
-        {/* World outline, simplified */}
-        <path
-          d="M20,180 Q60,100 140,120 Q220,140 300,100 Q380,60 460,120 Q540,180 620,140 Q700,100 780,180"
-          stroke="url(#glow)"
-          strokeWidth="2"
-          fill="transparent"
-        >
-          <animate
-            attributeName="stroke-dasharray"
-            from="0,1000"
-            to="1000,0"
-            dur="20s"
-            repeatCount="indefinite"
-          />
-        </path>
+        {/* Animated arc */}
+        <motion.path
+          d="M300,280 C700,120 1200,700 1550,500"
+          fill="none"
+          stroke="white"
+          strokeOpacity="0.25"
+          strokeWidth="1"
+          strokeDasharray="6 10"
+          animate={{ strokeDashoffset: [0, 80] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+        />
 
-        {/* Random glowing dots that animate across the world */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <circle
+        {/* Pulsing dots */}
+        {dots.map((dot, i) => (
+          <motion.circle
             key={i}
-            cx={Math.random() * 800}
-            cy={Math.random() * 400}
-            r={2 + Math.random() * 2}
+            cx={dot.x}
+            cy={dot.y}
+            r="3.5"
             fill="white"
-            opacity={0.2 + Math.random() * 0.3}
-          >
-            <animate
-              attributeName="cx"
-              values={`${Math.random() * 800};${Math.random() * 800}`}
-              dur={`${10 + Math.random() * 10}s`}
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="cy"
-              values={`${Math.random() * 400};${Math.random() * 400}`}
-              dur={`${10 + Math.random() * 10}s`}
-              repeatCount="indefinite"
-            />
-            <animate
-              attributeName="opacity"
-              values="0.2;0.8;0.2"
-              dur={`${5 + Math.random() * 5}s`}
-              repeatCount="indefinite"
-            />
-          </circle>
+            initial={{ opacity: 0.2, scale: 0.8 }}
+            animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.4, 0.8] }}
+            transition={{
+              duration: 2 + i * 0.8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
         ))}
       </svg>
     </div>
