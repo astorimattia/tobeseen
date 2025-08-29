@@ -9,7 +9,9 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 export default function WorldMapAnimation() {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
 
-  const pointsData = [
+  type PointDatum = { lat: number; lng: number; phase?: number };
+
+  const pointsData: PointDatum[] = [
     // Tultepec, Mexico
     { lat: 19.685, lng: -99.129, phase: 0.0 },
     // Macha (San Pedro de Macha), Bolivia
@@ -46,7 +48,7 @@ export default function WorldMapAnimation() {
   useEffect(() => {
     let attachedCanvas: HTMLCanvasElement | null = null;
     let blockEvent: ((e: Event) => void) | null = null;
-    let controls: any = null;
+    let controls: ReturnType<NonNullable<GlobeMethods["controls"]>> | null = null;
     let cancelled = false;
 
     const init = () => {
@@ -108,11 +110,12 @@ export default function WorldMapAnimation() {
         pointsData={pointsData}
         pointAltitude={0.03}
         pointColor={() => "rgba(0,255,255,0.6)"}
-        pointRadius={(d: any) => {
+        pointRadius={(d: object) => {
+          const datum = d as PointDatum;
           const base = 0.45;
           const amp = 0.2;
           const speed = 0.04; // lower is slower
-          return base + amp * (0.5 + 0.5 * Math.sin(tick * speed + (d?.phase || 0)));
+          return base + amp * (0.5 + 0.5 * Math.sin(tick * speed + (datum?.phase || 0)));
         }}
       />
     </section>

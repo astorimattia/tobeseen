@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 export type GalleryItem = {
   id: string;
@@ -35,10 +36,13 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
             key={item.id}
             className={`absolute inset-0 transition-opacity duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
           >
-            <img
+            <Image
               src={item.image}
               alt={item.title}
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority={i === index}
             />
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
               <div className="text-sm text-zinc-300">{item.title}</div>
