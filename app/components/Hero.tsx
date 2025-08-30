@@ -44,7 +44,7 @@ export default function Hero() {
         </div>
         
         {/* Buttons area - positioned at bottom */}
-        <div className="pb-8 md:pb-12 flex justify-center">
+        <div className="pb-22 md:pb-12 flex justify-center">
           <div className="flex items-center justify-center gap-3">
             <a
               href="#material"
