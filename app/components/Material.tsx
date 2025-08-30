@@ -37,7 +37,7 @@ export default function Material() {
   return (
     <section id="material" className="relative">
       {/* Content container */}
-      <div className="mx-auto max-w-6xl px-4 py-4 md:py-16">
+      <div className="mx-auto max-w-6xl px-4 py-8 md:py-16">
         <SectionHeading eyebrow="latest work" title="a few windows into the chaos." kicker="More coming soon." />
       </div>
       
