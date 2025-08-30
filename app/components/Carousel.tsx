@@ -13,6 +13,8 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
   const [index, setIndex] = useState(0);
   const count = items.length;
   const timer = useRef<NodeJS.Timeout | null>(null);
+  const touchStart = useRef<number | null>(null);
+  const touchEnd = useRef<number | null>(null);
 
   useEffect(() => {
     if (timer.current) clearInterval(timer.current);
@@ -29,12 +31,40 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
     timer.current = setInterval(() => setIndex((i) => (i + 1) % count), 3000);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEnd.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart.current || !touchEnd.current) return;
+    
+    const distance = touchStart.current - touchEnd.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      go(1); // Next
+    } else if (isRightSwipe) {
+      go(-1); // Previous
+    }
+
+    touchStart.current = null;
+    touchEnd.current = null;
+  };
+
   return (
     <div className="relative w-full overflow-hidden bg-zinc-900">
       <div
         className="relative h-[80vh] md:h-screen w-full"
         aria-roledescription="carousel"
         aria-label="Gallery"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {items.map((item, i) => (
           <figure
@@ -61,16 +91,16 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
         <button
           aria-label="Previous"
           onClick={() => go(-1)}
-          className="pointer-events-auto inline-flex h-12 w-12 md:h-10 md:w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur transition hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-white"
+          className="pointer-events-auto inline-flex h-12 w-12 md:h-10 md:w-10 items-center justify-center text-white hover:text-zinc-300 transition focus:outline-none focus:ring-2 focus:ring-white"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="text-white md:w-5 md:h-5"><path d="M15 18l-6-6 6-6"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="md:w-5 md:h-5"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <button
           aria-label="Next"
           onClick={() => go(1)}
-          className="pointer-events-auto inline-flex h-12 w-12 md:h-10 md:w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur transition hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-white"
+          className="pointer-events-auto inline-flex h-12 w-12 md:h-10 md:w-10 items-center justify-center text-white hover:text-zinc-300 transition focus:outline-none focus:ring-2 focus:ring-white"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="text-white md:w-5 md:h-5"><path d="M9 18l6-6-6-6"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="md:w-5 md:h-5"><path d="M9 18l6-6-6-6"/></svg>
         </button>
       </div>
 
