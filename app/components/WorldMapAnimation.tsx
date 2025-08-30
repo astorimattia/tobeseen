@@ -31,6 +31,16 @@ export default function WorldMapAnimation() {
     { lat: 28.6139, lng: 77.2090, phase: 4.2 },
     // Sydney, Australia
     { lat: -33.8688, lng: 151.2093, phase: 5.1 },
+    // Tokyo, Japan
+    { lat: 35.6762, lng: 139.6503, phase: 0.3 },
+    // Rio de Janeiro, Brazil
+    { lat: -22.9068, lng: -43.1729, phase: 1.6 },
+    // Cape Town, South Africa
+    { lat: -33.9249, lng: 18.4241, phase: 2.8 },
+    // Moscow, Russia
+    { lat: 55.7558, lng: 37.6176, phase: 4.5 },
+    // Vancouver, Canada
+    { lat: 49.2827, lng: -123.1207, phase: 5.8 },
   ];
 
   const [tick, setTick] = useState(0);
@@ -99,7 +109,7 @@ export default function WorldMapAnimation() {
   }, []);
 
   return (
-    <section className="relative h-[500px] w-full bg-black flex items-center justify-center">
+    <section className="relative h-[500px] w-full bg-black flex flex-col items-center justify-center">
       <Globe
         ref={globeRef}
         height={500}
@@ -118,6 +128,23 @@ export default function WorldMapAnimation() {
           return base + amp * (0.5 + 0.5 * Math.sin(tick * speed + (datum?.phase || 0)));
         }}
       />
+      
+      {/* Contact Information */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-8 text-white text-sm">
+        <div className="flex items-center space-x-2">
+          <span>Email:</span>
+          <a 
+            href="mailto:mattiastori@gmail.com" 
+            className="text-cyan-400 hover:text-cyan-300 transition-colors"
+          >
+            mattiastori@gmail.com
+          </a>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span>DM:</span>
+          <span className="text-cyan-400">if you have our number</span>
+        </div>
+      </div>
     </section>
   );
 }
