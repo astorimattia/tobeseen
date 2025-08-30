@@ -6,7 +6,7 @@ export default function Faq() {
     <section id="faq" className="mx-auto max-w-6xl px-4 pb-24">
       <SectionHeading eyebrow="FAQ" title="for a bit more context" />
       <div className="space-y-3">
-        <details className="group rounded-xl border border-white/10 bg-zinc-900/30 p-5">
+        <details className="group rounded-xl bg-zinc-900/30 p-5">
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
             <span>Why are you doing this?</span>
             <span className="transition group-open:rotate-180" aria-hidden>
@@ -18,7 +18,7 @@ export default function Faq() {
           </p>
         </details>
 
-        <details className="group rounded-xl border border-white/10 bg-zinc-900/30 p-5">
+        <details className="group rounded-xl bg-zinc-900/30 p-5">
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
             <span>Why only photos for now?</span>
             <span className="transition group-open:rotate-180" aria-hidden>
@@ -28,7 +28,7 @@ export default function Faq() {
           <p className="mt-3 text-zinc-300">We’re working on a documentary. Photos are the fast lane to share the journey while we build the long form.</p>
         </details>
 
-        <details className="group rounded-xl border border-white/10 bg-zinc-900/30 p-5">
+        <details className="group rounded-xl bg-zinc-900/30 p-5">
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
             <span>Partnerships / funding</span>
             <span className="transition group-open:rotate-180" aria-hidden>

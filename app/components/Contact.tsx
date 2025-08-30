@@ -8,16 +8,18 @@ export default function Contact() {
         <SectionHeading
           eyebrow="Contact"
           title="have a story tip or collaboration idea?"
-          kicker="We’re always open to conversations."
+          // kicker="We're always open to conversations."
         />
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col items-center gap-4 mt-8">
           <a
             href="mailto:mattiastori@gmail.com?subject=Story%20Tip%20/ %20Collaboration%20–%20Off‑Map%20Stories"
-            className="rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200"
+            className="rounded-xl bg-white text-black px-6 py-3 text-sm font-medium hover:bg-zinc-200 transition-colors"
           >
             Email mattiastori@gmail.com
           </a>
-          <span className="text-sm text-zinc-400">or DM if you have our number.</span>
+          <span className="text-sm text-zinc-400 text-center">
+            or DM if you have our number.
+          </span>
         </div>
       </div>
     </section>

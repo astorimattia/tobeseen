@@ -30,7 +30,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-zinc-900 ring-1 ring-white/5">
+    <div className="relative w-full overflow-hidden bg-zinc-900 ring-1 ring-white/5 rounded-2xl">
       <div
         className="relative h-[70vw] max-h-[700px] w-full"
         aria-roledescription="carousel"
