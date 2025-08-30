@@ -4,11 +4,12 @@ type SectionHeadingProps = {
   kicker?: string;
   title: string;
   eyebrow?: string;
+  className?: string;
 };
 
-export default function SectionHeading({ kicker, title, eyebrow }: SectionHeadingProps) {
+export default function SectionHeading({ kicker, title, eyebrow, className = "mb-6" }: SectionHeadingProps) {
   return (
-    <header className="mb-6 text-center">
+    <header className={`text-center ${className}`}>
       {eyebrow ? (
         <div className="text-xs uppercase tracking-widest text-zinc-400 mb-2">{eyebrow}</div>
       ) : null}

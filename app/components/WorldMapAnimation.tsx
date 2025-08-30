@@ -123,7 +123,7 @@ export default function WorldMapAnimation() {
   }, []);
 
   return (
-    <section className="relative h-[500px] w-full bg-black flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden">
       <div className="w-full h-full flex items-center justify-center">
         <Globe
           ref={globeRef}

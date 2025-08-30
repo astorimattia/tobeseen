@@ -42,19 +42,21 @@ export default function Hero() {
           </div>
         </div>
         {/* Buttons positioned higher on mobile, bottom on desktop */}
-        <div className="mt-8 md:mt-auto mb-4 flex items-center justify-center gap-3">
-          <a
-            href="#material"
-            className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200"
-          >
-            See the work
-          </a>
-          <a
-            href="#contact"
-            className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10"
-          >
-            Get in touch
-          </a>
+        <div className="flex-1 flex items-end justify-center pb-8 md:pb-4">
+          <div className="flex items-center justify-center gap-3">
+            <a
+              href="#material"
+              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200"
+            >
+              See the work
+            </a>
+            <a
+              href="#contact"
+              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10"
+            >
+              Get in touch
+            </a>
+          </div>
         </div>
       </div>
     </section>
