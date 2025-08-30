@@ -16,18 +16,23 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
 
   useEffect(() => {
     if (timer.current) clearInterval(timer.current);
-    timer.current = setInterval(() => setIndex((i) => (i + 1) % count), 5000);
+    timer.current = setInterval(() => setIndex((i) => (i + 1) % count), 3000);
     return () => {
       if (timer.current) clearInterval(timer.current);
     };
   }, [count]);
 
-  const go = (dir: number) => setIndex((i) => (i + dir + count) % count);
+  const go = (dir: number) => {
+    setIndex((i) => (i + dir + count) % count);
+    // Reset timer when manually navigating
+    if (timer.current) clearInterval(timer.current);
+    timer.current = setInterval(() => setIndex((i) => (i + 1) % count), 3000);
+  };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/5">
+    <div className="relative w-full overflow-hidden bg-zinc-900 ring-1 ring-white/5">
       <div
-        className="relative h-[56vw] max-h-[520px] w-full"
+        className="relative h-[70vw] max-h-[700px] w-full"
         aria-roledescription="carousel"
         aria-label="Gallery"
       >
@@ -44,7 +49,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               sizes="100vw"
               priority={i === index}
             />
-            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+            <figcaption className="absolute inset-x-0 bottom-8 p-4">
               <div className="text-sm text-zinc-300">{item.title}</div>
               <div className="text-base md:text-lg font-medium text-zinc-100">{item.subtitle}</div>
             </figcaption>
@@ -69,15 +74,17 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
         </button>
       </div>
 
-      <div className="absolute bottom-2 inset-x-0 flex items-center justify-center gap-2">
-        {items.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            aria-label={`Go to slide ${i + 1}`}
-            className={`h-2 w-2 rounded-full transition ${i === index ? "bg-white" : "bg-white/40"}`}
-          />
-        ))}
+      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-16 pb-4">
+        <div className="flex items-center justify-center gap-2">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`h-2 w-2 rounded-full transition ${i === index ? "bg-white" : "bg-white/40"}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

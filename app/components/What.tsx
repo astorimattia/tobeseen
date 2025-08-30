@@ -6,7 +6,7 @@ export default function What() {
   return (
     <section id="what" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
       <SectionHeading
-        // eyebrow="What we do"
+        eyebrow="Hidden stories"
         title="the world is full of stories that will blow your mind."
         kicker="We travel to places that don’t show up on maps or Instagram feeds. We're after the kinds of moments you can’t Google, the ones whispered about by locals or hidden in plain sight, full of noise, chaos, beauty, and danger."
       />

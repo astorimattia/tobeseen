@@ -5,38 +5,38 @@ import Carousel, { GalleryItem } from "./Carousel";
 const GALLERY: GalleryItem[] = [
   {
     id: "tultepec",
-    title: "Tultepec – Feria Internacional de la Pirotecnia, Mexico",
+    title: "Feria Internacional de la Pirotecnia, Mexico",
     subtitle:
-      "200 rocket‑loaded bulls charge crowds. Explosions everywhere. 85 deaths tied to pyrotechnics since 2016, yet the ritual thrives.",
-    image: "/gallery/tultepec.jpg",
+      "200 bulls loaded with rockets are thrown against thousands of people, 53 wounded.",
+    image: "/tultepec.webp",
   },
   {
-    id: "ma-song",
-    title: "Ma Song – Vegetarian Festival, Thailand",
+    id: "vegetarian",
+    title: "Vegetarian Festival, Thailand",
     subtitle:
-      "Spirit mediums pierce their skin to banish evil. A practice traced to 1825 during fever outbreaks.",
-    image: "/gallery/masong.jpg",
+      "Spirit mediums pierce their skin to get rid of evil.",
+    image: "/vegetarian.webp",
   },
   {
-    id: "exploding-hammers",
+    id: "hammers",
     title: "Exploding Hammers, Mexico",
     subtitle:
-      "Hammers packed with explosives slam stone anvils. Roots in 17th‑century legend. 58 injured in 2025.",
-    image: "/gallery/exploding-hammers.jpg",
+      "Hammers packed with explosives slam stone anvils.",
+    image: "/hammers.webp",
   },
   {
     id: "tinku",
     title: "Tinku de Macha, Bolivia",
     subtitle:
       "Day 1: Dance. Day 2: Fight. Day 3: Mourn. At 4,000m, the blood seals a harvest year.",
-    image: "/gallery/tinku.jpg",
+    image: "/tinku.webp",
   },
 ];
 
 export default function Material() {
   return (
     <section id="material" className="mx-auto max-w-6xl px-4 pb-8 md:pb-16">
-      <SectionHeading eyebrow="Material" title="A few windows into the chaos." kicker="More coming soon." />
+      <SectionHeading eyebrow="latest work" title="a few windows into the chaos." kicker="More coming soon." />
       <Carousel items={GALLERY} />
     </section>
   );

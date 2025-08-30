@@ -36,7 +36,7 @@ export default function Hero() {
       <div className="relative mx-auto flex h-full max-w-6xl flex-col px-4 py-6">
         <div className="flex flex-1 items-center justify-center">
           <div className="max-w-3xl text-center">
-            <h1 className="font-heading font-bold text-xl md:text-4xl leading-tight">
+            <h1 className="font-heading text-xl md:text-2xl leading-tight">
               some things deserve to be seen
             </h1>
           </div>
