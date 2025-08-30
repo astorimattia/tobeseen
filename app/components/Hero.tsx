@@ -33,16 +33,18 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative mx-auto flex h-full max-w-6xl flex-col px-4 py-6">
-        <div className="flex flex-1 items-center justify-center">
+      <div className="relative mx-auto h-full max-w-6xl px-4 grid grid-rows-[1fr_auto] items-center">
+        {/* Main content area - perfectly centered */}
+        <div className="flex items-center justify-center">
           <div className="max-w-3xl text-center">
             <h1 className="font-heading text-xl md:text-2xl leading-tight">
               some things deserve to be seen
             </h1>
           </div>
         </div>
-        {/* Buttons positioned higher on mobile, bottom on desktop */}
-        <div className="flex-1 flex items-end justify-center pb-8 md:pb-4">
+        
+        {/* Buttons area - positioned at bottom */}
+        <div className="pb-8 md:pb-12 flex justify-center">
           <div className="flex items-center justify-center gap-3">
             <a
               href="#material"
