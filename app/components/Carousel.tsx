@@ -30,7 +30,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-zinc-900 ring-1 ring-white/5 rounded-2xl">
+    <div className="relative w-full overflow-hidden bg-zinc-900">
       <div
         className="relative h-[120vw] md:h-[70vw] max-h-[900px] w-full"
         aria-roledescription="carousel"
@@ -49,9 +49,9 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               sizes="100vw"
               priority={i === index}
             />
-            <figcaption className="absolute inset-x-0 bottom-8 p-4">
-              <div className="text-sm md:text-sm text-zinc-300">{item.title}</div>
-              <div className="text-lg md:text-lg font-medium text-zinc-100">{item.subtitle}</div>
+            <figcaption className="absolute inset-x-0 bottom-12 p-4 text-center">
+              <div className="text-sm md:text-sm text-white font-medium">{item.title}</div>
+              <div className="text-lg md:text-lg font-bold text-white">{item.subtitle}</div>
             </figcaption>
           </figure>
         ))}
@@ -81,7 +81,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               key={i}
               onClick={() => setIndex(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`h-3 w-3 md:h-2 md:w-2 rounded-full transition ${i === index ? "bg-white" : "bg-white/40"}`}
+              className={`h-2 w-2 rounded-full transition ${i === index ? "bg-white" : "bg-white/40"}`}
             />
           ))}
         </div>
