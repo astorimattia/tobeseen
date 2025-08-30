@@ -10,14 +10,14 @@ export default function Contact() {
           title="have a story tip or collaboration idea?"
           // kicker="We're always open to conversations."
         />
-        <div className="flex flex-col items-center gap-4 mt-8">
+        <div className="flex flex-row items-center justify-center gap-4 mt-8">
           <a
             href="mailto:mattiastori@gmail.com?subject=Story%20Tip%20/ %20Collaboration%20–%20Off‑Map%20Stories"
             className="rounded-xl bg-white text-black px-6 py-3 text-sm font-medium hover:bg-zinc-200 transition-colors"
           >
             Email mattiastori@gmail.com
           </a>
-          <span className="text-sm text-zinc-400 text-center">
+          <span className="text-sm text-zinc-400">
             or DM if you have our number.
           </span>
         </div>
