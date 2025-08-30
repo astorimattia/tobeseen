@@ -35,9 +35,11 @@ const GALLERY: GalleryItem[] = [
 
 export default function Material() {
   return (
-    <section id="material" className="mx-auto max-w-6xl px-4 pb-8 md:pb-16">
+    <section id="material" className="mx-auto max-w-6xl px-4 py-8 md:py-16">
       <SectionHeading eyebrow="latest work" title="a few windows into the chaos." kicker="More coming soon." />
-      <Carousel items={GALLERY} />
+      <div className="mt-8 md:mt-12">
+        <Carousel items={GALLERY} />
+      </div>
     </section>
   );
 }

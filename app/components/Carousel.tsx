@@ -32,7 +32,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
   return (
     <div className="relative w-full overflow-hidden bg-zinc-900 ring-1 ring-white/5 rounded-2xl">
       <div
-        className="relative h-[70vw] max-h-[700px] w-full"
+        className="relative h-[120vw] md:h-[70vw] max-h-[900px] w-full"
         aria-roledescription="carousel"
         aria-label="Gallery"
       >
@@ -50,8 +50,8 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               priority={i === index}
             />
             <figcaption className="absolute inset-x-0 bottom-8 p-4">
-              <div className="text-sm text-zinc-300">{item.title}</div>
-              <div className="text-base md:text-lg font-medium text-zinc-100">{item.subtitle}</div>
+              <div className="text-sm md:text-sm text-zinc-300">{item.title}</div>
+              <div className="text-lg md:text-lg font-medium text-zinc-100">{item.subtitle}</div>
             </figcaption>
           </figure>
         ))}
@@ -61,27 +61,27 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
         <button
           aria-label="Previous"
           onClick={() => go(-1)}
-          className="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur transition hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-white"
+          className="pointer-events-auto inline-flex h-12 w-12 md:h-10 md:w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur transition hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-white"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="text-white"><path d="M15 18l-6-6 6-6"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="text-white md:w-5 md:h-5"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <button
           aria-label="Next"
           onClick={() => go(1)}
-          className="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur transition hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-white"
+          className="pointer-events-auto inline-flex h-12 w-12 md:h-10 md:w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur transition hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-white"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="text-white"><path d="M9 18l6-6-6-6"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="text-white md:w-5 md:h-5"><path d="M9 18l6-6-6-6"/></svg>
         </button>
       </div>
 
       <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-16 pb-4">
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-3 md:gap-2">
           {items.map((_, i) => (
             <button
               key={i}
               onClick={() => setIndex(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`h-2 w-2 rounded-full transition ${i === index ? "bg-white" : "bg-white/40"}`}
+              className={`h-3 w-3 md:h-2 md:w-2 rounded-full transition ${i === index ? "bg-white" : "bg-white/40"}`}
             />
           ))}
         </div>

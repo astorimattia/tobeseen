@@ -41,7 +41,8 @@ export default function Hero() {
             </h1>
           </div>
         </div>
-        <div className="mt-auto mb-4 flex items-center justify-center gap-3">
+        {/* Buttons positioned higher on mobile, bottom on desktop */}
+        <div className="mt-8 md:mt-auto mb-4 flex items-center justify-center gap-3">
           <a
             href="#material"
             className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200"

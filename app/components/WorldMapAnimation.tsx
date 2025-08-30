@@ -44,6 +44,20 @@ export default function WorldMapAnimation() {
   ];
 
   const [tick, setTick] = useState(0);
+  const [dimensions, setDimensions] = useState({ width: 500, height: 500 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const isMobile = window.innerWidth < 768;
+      const containerWidth = Math.min(window.innerWidth - 32, 500); // Account for padding
+      const size = isMobile ? containerWidth : 500;
+      setDimensions({ width: size, height: size });
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   useEffect(() => {
     let rafId: number;
@@ -109,41 +123,26 @@ export default function WorldMapAnimation() {
   }, []);
 
   return (
-    <section className="relative h-[500px] w-full bg-black flex flex-col items-center justify-center">
-      <Globe
-        ref={globeRef}
-        height={500}
-        width={500}
-        backgroundColor="rgba(0,0,0,0)"
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
-        bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-        pointsData={pointsData}
-        pointAltitude={0.03}
-        pointColor={() => "rgba(0,255,255,0.6)"}
-        pointRadius={(d: object) => {
-          const datum = d as PointDatum;
-          const base = 0.45;
-          const amp = 0.2;
-          const speed = 0.04; // lower is slower
-          return base + amp * (0.5 + 0.5 * Math.sin(tick * speed + (datum?.phase || 0)));
-        }}
-      />
-      
-      {/* Contact Information */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-8 text-white text-sm">
-        <div className="flex items-center space-x-2">
-          <span>Email:</span>
-          <a 
-            href="mailto:mattiastori@gmail.com" 
-            className="text-cyan-400 hover:text-cyan-300 transition-colors"
-          >
-            mattiastori@gmail.com
-          </a>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span>DM:</span>
-          <span className="text-cyan-400">if you have our number</span>
-        </div>
+    <section className="relative h-[500px] w-full bg-black flex flex-col items-center justify-center overflow-hidden">
+      <div className="w-full h-full flex items-center justify-center">
+        <Globe
+          ref={globeRef}
+          height={dimensions.height}
+          width={dimensions.width}
+          backgroundColor="rgba(0,0,0,0)"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+          bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+          pointsData={pointsData}
+          pointAltitude={0.03}
+          pointColor={() => "rgba(0,255,255,0.6)"}
+          pointRadius={(d: object) => {
+            const datum = d as PointDatum;
+            const base = 0.45;
+            const amp = 0.2;
+            const speed = 0.04; // lower is slower
+            return base + amp * (0.5 + 0.5 * Math.sin(tick * speed + (datum?.phase || 0)));
+          }}
+        />
       </div>
     </section>
   );
