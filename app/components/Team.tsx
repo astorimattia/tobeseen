@@ -11,7 +11,19 @@ export default function Team() {
           <div className="aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-800 relative">
             <Image src="/daniele.png" alt="Daniele Colucci headshot" fill className="object-cover group-hover:scale-[1.02] transition" sizes="(max-width: 768px) 100vw, 50vw" />
           </div>
-          <h3 className="mt-4 text-xl font-semibold">Daniele Colucci</h3>
+          <h3 className="mt-4 text-xl font-semibold">
+            <a 
+              href="https://danielecolucci.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group/link inline-flex items-center gap-2 hover:text-zinc-300 transition-colors"
+            >
+              Daniele Colucci
+              <svg className="w-4 h-4 opacity-60 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </h3>
           <p className="text-zinc-400">Co‑Creator · Photographer · Videomaker</p>
           {/* <p className="mt-2 text-zinc-300">Earns trust fast. Finds the door no one else sees. (Add a short, credibility‑boosting line here.)</p> */}
         </article>
@@ -19,7 +31,19 @@ export default function Team() {
           <div className="aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-800 relative">
             <Image src="/mattia.png" alt="Mattia Astori headshot" fill className="object-cover group-hover:scale-[1.02] transition" sizes="(max-width: 768px) 100vw, 50vw" />
           </div>
-          <h3 className="mt-4 text-xl font-semibold">Mattia Astori</h3>
+          <h3 className="mt-4 text-xl font-semibold">
+            <a 
+              href="https://mattiaastori.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group/link inline-flex items-center gap-2 hover:text-zinc-300 transition-colors"
+            >
+              Mattia Astori
+              <svg className="w-4 h-4 opacity-60 group-hover/link:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </h3>
           <p className="text-zinc-400">Co‑Creator · Producer · Photographer</p>
           {/* <p className="mt-2 text-zinc-300">Turns chaos into access and story. Logistics whisperer. (Tighten/replace copy as needed.)</p> */}
         </article>
