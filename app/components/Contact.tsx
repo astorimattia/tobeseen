@@ -3,7 +3,7 @@ import SectionHeading from "./SectionHeading";
 
 export default function Contact() {
   return (
-    <section id="contact" className="mx-auto max-w-6xl px-4 py-16">
+    <section id="contact" className="mx-auto max-w-6xl px-4 py-8 md:py-16">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-900/40 p-8">
         <SectionHeading
           eyebrow="Contact"

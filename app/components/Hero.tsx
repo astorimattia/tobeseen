@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Hero() {
   return (
-    <section className="relative isolate h-screen">
+    <section className="relative isolate h-[80vh] md:h-screen">
       {/* Background video */}
       <div className="absolute inset-0 -z-10">
         {/* Fallback background */}
@@ -42,7 +42,7 @@ export default function Hero() {
           </div>
         </div>
         {/* Buttons positioned higher on mobile, bottom on desktop */}
-        <div className="mt-8 md:mt-auto mb-4 flex items-center justify-center gap-3">
+        <div className="mt-4 md:mt-auto mb-4 md:mb-4 flex items-center justify-center gap-3">
           <a
             href="#material"
             className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200"
