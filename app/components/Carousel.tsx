@@ -59,7 +59,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
   return (
     <div className="relative w-full overflow-hidden bg-zinc-900">
       <div
-        className="relative h-screen w-full"
+        className="relative h-[calc(100vh-88px)] md:h-screen w-full"
         aria-roledescription="carousel"
         aria-label="Gallery"
         onTouchStart={handleTouchStart}
@@ -79,7 +79,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               sizes="100vw"
               priority={i === index}
             />
-            <figcaption className="absolute inset-x-0 bottom-12 p-4 text-center">
+            <figcaption className="absolute inset-x-0 bottom-8 p-4 text-center">
               <div className="text-sm md:text-sm text-white font-medium">{item.title}</div>
               <div className="text-lg md:text-lg font-bold text-white">{item.subtitle}</div>
             </figcaption>
@@ -118,7 +118,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
         </button>
       </div>
 
-      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-16 pb-4">
+      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-14 pb-4">
         <div className="flex items-center justify-center gap-3 md:gap-2">
           {items.map((_, i) => (
             <button
