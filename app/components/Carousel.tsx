@@ -59,7 +59,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
   return (
     <div className="relative w-full overflow-hidden bg-zinc-900">
       <div
-        className="relative h-[80vh] md:h-screen w-full"
+        className="relative h-screen w-full"
         aria-roledescription="carousel"
         aria-label="Gallery"
         onTouchStart={handleTouchStart}
