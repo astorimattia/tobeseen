@@ -1,6 +1,16 @@
 import React from "react";
 
 export default function Hero() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
   return (
     <section className="relative isolate h-screen">
       {/* Background video */}
@@ -46,18 +56,18 @@ export default function Hero() {
         {/* Buttons area - positioned at bottom */}
         <div className="pb-22 md:pb-12 flex justify-center">
           <div className="flex items-center justify-center gap-3">
-            <a
-              href="#material"
-              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200"
+            <button
+              onClick={() => scrollToSection('material')}
+              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 cursor-pointer"
             >
               See the work
-            </a>
-            <a
-              href="#contact"
-              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10"
+            </button>
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer"
             >
               Get in touch
-            </a>
+            </button>
           </div>
         </div>
       </div>
