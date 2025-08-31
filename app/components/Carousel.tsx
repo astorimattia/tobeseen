@@ -85,6 +85,20 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
             </figcaption>
           </figure>
         ))}
+        
+        {/* Left click zone for previous slide */}
+        <div 
+          className="absolute left-0 top-0 w-1/3 h-full cursor-w-resize z-10"
+          onClick={() => go(-1)}
+          aria-label="Previous slide"
+        />
+        
+        {/* Right click zone for next slide */}
+        <div 
+          className="absolute right-0 top-0 w-1/3 h-full cursor-e-resize z-10"
+          onClick={() => go(1)}
+          aria-label="Next slide"
+        />
       </div>
 
       <div className="absolute inset-0 flex items-center justify-between p-2 pointer-events-none">

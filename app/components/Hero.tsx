@@ -15,7 +15,7 @@ export default function Hero() {
           muted
           playsInline
           preload="auto"
-          src="/test.webm"
+          src="/bg.webm"
           className="h-full w-full object-cover"
           style={{ 
             position: 'absolute',
