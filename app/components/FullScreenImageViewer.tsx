@@ -94,10 +94,10 @@ export default function FullScreenImageViewer({
     if (loadingTimeoutRef.current) {
       clearTimeout(loadingTimeoutRef.current);
     }
-    // Show loading overlay after 0.5 seconds
+    // Show loading overlay after 0.35 seconds
     loadingTimeoutRef.current = setTimeout(() => {
       setShowLoading(true);
-    }, 500);
+    }, 350);
   };
 
   const stopLoading = () => {
