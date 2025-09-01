@@ -1,7 +1,7 @@
 import React from "react";
 
 type SectionHeadingProps = {
-  kicker?: string;
+  kicker?: string | React.ReactNode;
   title: string;
   eyebrow?: string;
   className?: string;
