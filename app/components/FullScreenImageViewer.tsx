@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 
 interface FullScreenImageViewerProps {
@@ -19,6 +19,12 @@ export default function FullScreenImageViewer({
   title
 }: FullScreenImageViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     if (isOpen) {
@@ -54,6 +60,31 @@ export default function FullScreenImageViewer({
     };
   }, [isOpen, images.length, onClose]);
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      // Swipe left - go to next image
+      setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+    } else if (isRightSwipe) {
+      // Swipe right - go to previous image
+      setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+    }
+  };
+
   if (!isOpen) return null;
 
   const goToPrevious = () => {
@@ -65,7 +96,13 @@ export default function FullScreenImageViewer({
   };
 
   return (
-    <div className="fixed h-screen inset-0 z-[9999] bg-black flex items-center justify-center">
+    <div 
+      ref={containerRef}
+      className="fixed inset-0 w-full h-full z-[9999] bg-black flex items-center justify-center"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {/* Close button */}
       <button
         onClick={onClose}
@@ -78,17 +115,17 @@ export default function FullScreenImageViewer({
       </button>
 
       {/* Title */}
-      <div className="absolute top-4 left-4 z-[10000] text-white">
-        <h2 className="text-lg font-medium">{title}</h2>
+      <div className="absolute top-4 left-4 z-[10000] text-white max-w-[60%]">
+        <h2 className="text-lg font-medium truncate">{title}</h2>
         <p className="text-sm text-zinc-400">
           {currentIndex + 1} of {images.length}
         </p>
       </div>
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows - hidden on mobile, shown on larger screens */}
       <button
         onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-[10000] text-white hover:text-zinc-300 transition-colors p-2"
+        className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-[10000] text-white hover:text-zinc-300 transition-colors p-2"
         aria-label="Previous image"
       >
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +135,7 @@ export default function FullScreenImageViewer({
 
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-[10000] text-white hover:text-zinc-300 transition-colors p-2"
+        className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 z-[10000] text-white hover:text-zinc-300 transition-colors p-2"
         aria-label="Next image"
       >
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +144,7 @@ export default function FullScreenImageViewer({
       </button>
 
       {/* Main image */}
-      <div className="absolute inset-0 flex items-center justify-center p-4">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full max-w-full max-h-full">
           <Image
             src={images[currentIndex]}

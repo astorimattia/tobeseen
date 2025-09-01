@@ -158,18 +158,20 @@ export default function WorldMapAnimation() {
           height={dimensions.height}
           width={dimensions.width}
           backgroundColor="rgba(0,0,0,0)"
-          globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+          globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           pointsData={pointsData}
           pointAltitude={0.03}
-          pointColor={() => "rgba(0,255,255,0.6)"}
+          pointColor={() => "rgba(255, 0, 0, 0.6)"}
           pointRadius={(d: object) => {
             const datum = d as PointDatum;
-            const base = 0.45;
+            const base = 0.8;
             const amp = 0.2;
             const speed = 0.04; // lower is slower
             return base + amp * (0.5 + 0.5 * Math.sin(tick * speed + (datum?.phase || 0)));
           }}
+          atmosphereColor="rgba(255, 255, 255, 0.6)"
+          atmosphereAltitude={0.25}
         />
       </div>
     </section>
