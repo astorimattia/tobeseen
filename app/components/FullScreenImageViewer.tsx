@@ -21,6 +21,9 @@ export default function FullScreenImageViewer({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Minimum swipe distance (in px)
@@ -42,11 +45,11 @@ export default function FullScreenImageViewer({
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+          goToPrevious();
           break;
         case 'ArrowRight':
           e.preventDefault();
-          setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+          goToNext();
           break;
       }
     };
@@ -78,22 +81,63 @@ export default function FullScreenImageViewer({
 
     if (isLeftSwipe) {
       // Swipe left - go to next image
-      setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+      goToNext();
     } else if (isRightSwipe) {
       // Swipe right - go to previous image
-      setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+      goToPrevious();
     }
   };
 
-  if (!isOpen) return null;
+  const startLoading = () => {
+    setIsLoading(true);
+    // Clear any existing timeout
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+    }
+    // Show loading overlay after 0.5 seconds
+    loadingTimeoutRef.current = setTimeout(() => {
+      setShowLoading(true);
+    }, 500);
+  };
+
+  const stopLoading = () => {
+    setIsLoading(false);
+    setShowLoading(false);
+    // Clear the timeout if it exists
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
+  };
 
   const goToPrevious = () => {
+    startLoading();
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
   };
 
   const goToNext = () => {
+    startLoading();
     setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
   };
+
+  const handleImageLoad = () => {
+    stopLoading();
+  };
+
+  const handleImageError = () => {
+    stopLoading();
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  if (!isOpen) return null;
 
   return (
     <div 
@@ -152,16 +196,30 @@ export default function FullScreenImageViewer({
             fill
             className="object-contain"
             priority
+            onLoad={handleImageLoad}
+            onError={handleImageError}
           />
         </div>
       </div>
+
+      {/* Loading overlay - only shows after 0.5 seconds */}
+      {showLoading && (
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-[10002]">
+          <div className="text-white text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+          </div>
+        </div>
+      )}
 
       {/* Image counter dots */}
       <div className="fixed left-1/2 bottom-6 -translate-x-1/2 z-[10001] flex gap-2">
         {images.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => {
+              startLoading();
+              setCurrentIndex(index);
+            }}
             className={`w-2 h-2 rounded-full transition-colors ${
               index === currentIndex ? 'bg-white' : 'bg-white/30 hover:bg-white/50'
             }`}
