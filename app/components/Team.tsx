@@ -5,7 +5,7 @@ import SectionHeading from "./SectionHeading";
 export default function Team() {
   return (
     <section id="team" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
-      <SectionHeading eyebrow="who we are" title="two people, one mission." />
+      <SectionHeading title="Two people, one mission." />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <article className="group rounded-2xl border border-white/10 bg-zinc-900/30 p-5">
           <div className="aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-800 relative">
@@ -25,7 +25,6 @@ export default function Team() {
             </a>
           </h3>
           <p className="text-zinc-400">Co‑Creator · Photographer · Videomaker</p>
-          {/* <p className="mt-2 text-zinc-300">Earns trust fast. Finds the door no one else sees. (Add a short, credibility‑boosting line here.)</p> */}
         </article>
         <article className="group rounded-2xl border border-white/10 bg-zinc-900/30 p-5">
           <div className="aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-800 relative">
@@ -45,7 +44,6 @@ export default function Team() {
             </a>
           </h3>
           <p className="text-zinc-400">Co‑Creator · Producer · Photographer</p>
-          {/* <p className="mt-2 text-zinc-300">Turns chaos into access and story. Logistics whisperer. (Tighten/replace copy as needed.)</p> */}
         </article>
       </div>
     </section>

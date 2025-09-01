@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export type GalleryItem = {
   id: string;
@@ -82,6 +83,12 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
             <figcaption className="absolute inset-x-0 bottom-8 p-4 text-center">
               <div className="text-sm md:text-sm text-white font-medium">{item.title}</div>
               <div className="text-lg md:text-lg font-bold text-white">{item.subtitle}</div>
+              <Link
+                href={`/work#${item.id}`}
+                className="mt-4 inline-block rounded-xl border border-white/20 px-3 py-1 text-sm hover:bg-white/10 transition relative z-20 pointer-events-auto"
+              >
+                View full story →
+              </Link>
             </figcaption>
           </figure>
         ))}

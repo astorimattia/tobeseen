@@ -1,6 +1,9 @@
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter();
+  
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -57,7 +60,7 @@ export default function Hero() {
         <div className="pb-22 md:pb-12 flex justify-center">
           <div className="flex items-center justify-center gap-3">
             <button
-              onClick={() => scrollToSection('material')}
+              onClick={() => router.push('/work')}
               className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 cursor-pointer"
             >
               See the work

@@ -8,6 +8,8 @@ const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 export default function WorldMapAnimation() {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   type PointDatum = { lat: number; lng: number; phase?: number };
 
@@ -46,6 +48,29 @@ export default function WorldMapAnimation() {
   const [tick, setTick] = useState(0);
   const [dimensions, setDimensions] = useState({ width: 500, height: 500 });
 
+  // Intersection Observer to detect when component is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the component is visible
+        rootMargin: '0px 0px -100px 0px' // Start animation slightly before fully in view
+      }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const updateDimensions = () => {
       const isMobile = window.innerWidth < 768;
@@ -59,7 +84,10 @@ export default function WorldMapAnimation() {
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
+  // Animation loop - only runs when component is visible
   useEffect(() => {
+    if (!isVisible) return;
+
     let rafId: number;
     const animate = () => {
       setTick(t => (t + 1) % 1000000);
@@ -67,7 +95,7 @@ export default function WorldMapAnimation() {
     };
     rafId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafId);
-  }, []);
+  }, [isVisible]);
 
   useEffect(() => {
     let attachedCanvas: HTMLCanvasElement | null = null;
@@ -123,7 +151,7 @@ export default function WorldMapAnimation() {
   }, []);
 
   return (
-    <section className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden">
+    <section ref={containerRef} className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden">
       <div className="w-full h-full flex items-center justify-center">
         <Globe
           ref={globeRef}

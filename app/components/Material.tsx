@@ -1,5 +1,4 @@
 import React from "react";
-import SectionHeading from "./SectionHeading";
 import Carousel, { GalleryItem } from "./Carousel";
 
 const GALLERY: GalleryItem[] = [
@@ -36,12 +35,6 @@ const GALLERY: GalleryItem[] = [
 export default function Material() {
   return (
     <section id="material" className="relative">
-      {/* Content container */}
-      {/* <div className="mx-auto max-w-6xl px-4 py-8 md:py-16">
-        <SectionHeading eyebrow="latest work" title="a few windows into the chaos." kicker="More coming soon." />
-      </div> */}
-      
-      {/* Full-width carousel */}
       <div className="relative w-full">
         <Carousel items={GALLERY} />
       </div>

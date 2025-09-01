@@ -7,8 +7,7 @@ export default function Contact() {
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-900/40 p-8">
         <SectionHeading
           eyebrow="Contact"
-          title="have a story tip or collaboration idea?"
-          // kicker="We're always open to conversations."
+          title="Have a story tip or collaboration idea?"
         />
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-8">
           <a

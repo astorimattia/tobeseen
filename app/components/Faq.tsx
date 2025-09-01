@@ -4,7 +4,7 @@ import SectionHeading from "./SectionHeading";
 export default function Faq() {
   return (
     <section id="faq" className="mx-auto max-w-6xl px-4 pb-24">
-      <SectionHeading eyebrow="FAQ" title="for a bit more context" />
+      <SectionHeading eyebrow="FAQ" title="For a bit more context" />
       <div className="space-y-3">
         <details className="group rounded-xl bg-zinc-900/30 p-5">
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
