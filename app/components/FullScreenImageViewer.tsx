@@ -19,8 +19,8 @@ export default function FullScreenImageViewer({
   title
 }: FullScreenImageViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -28,6 +28,8 @@ export default function FullScreenImageViewer({
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
+  // Minimum scroll distance to exit full screen (in px)
+  const minScrollDistance = 80;
 
   useEffect(() => {
     if (isOpen) {
@@ -65,26 +67,39 @@ export default function FullScreenImageViewer({
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    setTouchEnd({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    });
   };
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
     
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      // Swipe left - go to next image
-      goToNext();
-    } else if (isRightSwipe) {
-      // Swipe right - go to previous image
-      goToPrevious();
+    const deltaX = touchStart.x - touchEnd.x;
+    const deltaY = touchStart.y - touchEnd.y;
+    
+    // Check if it's a horizontal swipe (for image navigation)
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+      if (deltaX > 0) {
+        // Swipe left - go to next image
+        goToNext();
+      } else {
+        // Swipe right - go to previous image
+        goToPrevious();
+      }
+    }
+    
+    // Check if it's a downward scroll (to exit full screen)
+    if (deltaY < -minScrollDistance) {
+      onClose();
     }
   };
 
