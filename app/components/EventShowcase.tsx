@@ -31,7 +31,7 @@ export default function EventShowcase({ id, title, story, images, documentaryDat
         <h2 className="text-2xl font-semibold">{title}</h2>
         <p className="text-zinc-300 max-w-3xl">{story}</p>
         {documentaryDate && (
-          <p className="text-zinc-400 text-sm italic">m
+          <p className="text-zinc-400 text-sm italic">
             🎬 Documentary coming {documentaryDate}
           </p>
         )}

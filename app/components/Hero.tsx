@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function Hero() {
   const router = useRouter();
@@ -20,6 +21,14 @@ export default function Hero() {
       <div className="absolute inset-0 -z-10">
         {/* Fallback background */}
         <div className="absolute inset-0 bg-black" />
+        
+        {/* Video fade-in overlay */}
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="absolute inset-0 bg-black z-20"
+        />
         
         {/* Background video */}
         <video
@@ -46,7 +55,12 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative mx-auto h-full max-w-6xl px-4 grid grid-rows-[1fr_auto] items-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative mx-auto h-full max-w-6xl px-4 grid grid-rows-[1fr_auto] items-center"
+      >
         {/* Main content area - perfectly centered */}
         <div className="flex items-center justify-center">
           <div className="max-w-3xl text-center">
@@ -73,7 +87,7 @@ export default function Hero() {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
