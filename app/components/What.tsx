@@ -14,7 +14,7 @@ export default function What() {
     <SectionHeading
         // eyebrow="What we do"
         title="This isn’t a polished travel show."
-        kicker="No hotels. No crew. One backpack. We follow the trail of stories, sleeping wherever we’re welcomed, someone’s couch, a tent, the back of a truck. Our trips are built on word of mouth. Locals point us to someone who knows someone. That’s how we find the things no one talks about. And that’s how we keep our work real."
+        kicker="No hotels. No crew. One backpack. We follow the trail of stories, sleeping wherever we’re welcomed, someone’s couch, a tent, the back of a truck. Our trips are built on word of mouth. Locals point us to someone who knows someone. That’s how we find the things no one talks about."
       />
     </section>
   );
