@@ -61,14 +61,16 @@ export default function WorldMapAnimation() {
     );
 
     if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
+      const currentContainer = containerRef.current;
+      observer.observe(currentContainer);
 
-    return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
-    };
+      return () => {
+        if (currentContainer) {
+          observer.unobserve(currentContainer);
+        }
+      };
+    }
+    return () => {};
   }, []);
 
   useEffect(() => {

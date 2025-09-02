@@ -43,7 +43,7 @@ export default function Contact() {
         {isSubscribed ? (
           <div className="mt-8 flex flex-col items-center justify-center text-center text-white p-6 rounded-xl bg-green-600/20 border border-green-500/50">
             <p className="text-xl font-semibold mb-2">Thank you for subscribing!</p>
-            <p className="text-zinc-300">You'll receive updates on new work, previews, and more shortly.</p>
+            <p className="text-zinc-300">You&apos;ll receive updates on new work, previews, and more shortly.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-center justify-center gap-4 mt-8">

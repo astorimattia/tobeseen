@@ -21,7 +21,6 @@ export default function FullScreenImageViewer({
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,6 +29,16 @@ export default function FullScreenImageViewer({
   const minSwipeDistance = 50;
   // Minimum scroll distance to exit full screen (in px)
   const minScrollDistance = 80;
+
+  const goToPrevious = React.useCallback(() => {
+    startLoading();
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  }, [images.length]);
+
+  const goToNext = React.useCallback(() => {
+    startLoading();
+    setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+  }, [images.length]);
 
   useEffect(() => {
     if (isOpen) {
@@ -63,7 +72,7 @@ export default function FullScreenImageViewer({
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, images.length, onClose]);
+  }, [isOpen, images.length, onClose, goToPrevious, goToNext]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -104,7 +113,6 @@ export default function FullScreenImageViewer({
   };
 
   const startLoading = () => {
-    setIsLoading(true);
     // Clear any existing timeout
     if (loadingTimeoutRef.current) {
       clearTimeout(loadingTimeoutRef.current);
@@ -116,23 +124,12 @@ export default function FullScreenImageViewer({
   };
 
   const stopLoading = () => {
-    setIsLoading(false);
     setShowLoading(false);
     // Clear the timeout if it exists
     if (loadingTimeoutRef.current) {
       clearTimeout(loadingTimeoutRef.current);
       loadingTimeoutRef.current = null;
     }
-  };
-
-  const goToPrevious = () => {
-    startLoading();
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
-  };
-
-  const goToNext = () => {
-    startLoading();
-    setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
   };
 
   const handleImageLoad = () => {
