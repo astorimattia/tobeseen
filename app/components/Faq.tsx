@@ -30,12 +30,12 @@ export default function Faq() {
 
         <details className="group rounded-xl bg-zinc-900/30 p-5">
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
-            <span>Partnerships / funding</span>
+            <span>Contact us</span>
             <span className="transition group-open:rotate-180" aria-hidden>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
             </span>
           </summary>
-          <p className="mt-3 text-zinc-300">Get in touch to discuss partnerships, commissions, or platforms. We’re open to smart collaboration.</p>
+          <p className="mt-3 text-zinc-300">For story tips, collaboration ideas or anything else, email us at <a href="mailto:mattiastori@gmail.com?subject=Regarding%20ToBeSeen" className="hover:underline font-bold">mattiastori@gmail.com</a>.</p>
         </details>
       </div>
     </section>

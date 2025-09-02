@@ -80,10 +80,10 @@ export default function Hero() {
               See the work
             </button>
             <button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => scrollToSection('subscribe')}
               className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer"
             >
-              Get in touch
+              Subscribe
             </button>
           </div>
         </div>
