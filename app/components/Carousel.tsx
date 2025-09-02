@@ -76,8 +76,14 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               src={item.image}
               alt={item.title}
               fill
-              className="object-cover"
-              sizes="100vw"
+              className={`object-cover ${
+                item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
+                item.id === 'hammers' ? 'object-[35%_center] md:object-center' :
+                item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
+                'object-center'
+              }`}
+              sizes="(max-width: 768px) 100vw, 100vw"
+              quality={90}
               priority={i === index}
             />
             <figcaption className="absolute inset-x-0 bottom-8 p-4 text-center">
