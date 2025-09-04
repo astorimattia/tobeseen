@@ -109,9 +109,9 @@ export default function Hero() {
         
         {/* CTA area - positioned at bottom */}
         <div className="pb-22 md:pb-12 flex justify-center">
-          <div className="flex flex-col items-center justify-center gap-3 w-full max-w-xl">
+          <div className="flex flex-col items-center justify-center gap-3 w-full max-w-3xl">
             <div className="flex items-center justify-center gap-3 w-full">
-              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-auto mx-auto">
                 <input
                   type="email"
                   inputMode="email"
@@ -119,7 +119,7 @@ export default function Hero() {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 w-full sm:max-w-xs md:max-w-sm rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm placeholder-white/50 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
+                  className="w-80 rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm placeholder-white/50 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
                   aria-label="Email address"
                   required
                 />
