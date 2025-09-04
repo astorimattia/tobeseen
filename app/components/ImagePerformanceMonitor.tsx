@@ -63,7 +63,7 @@ export default function ImagePerformanceMonitor({ enabled = true }: ImagePerform
       if ('PerformanceObserver' in window) {
         const lcpObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1];
+          const lastEntry = entries[entries.length - 1] as any;
           
           if (lastEntry && lastEntry.element && lastEntry.element.tagName === 'IMG') {
             console.log('LCP image detected:', lastEntry.element.src, 'LCP:', lastEntry.startTime);
@@ -75,8 +75,9 @@ export default function ImagePerformanceMonitor({ enabled = true }: ImagePerform
         // Cumulative Layout Shift (CLS) monitoring
         const clsObserver = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
-            if (entry.sources && entry.sources.some((source: { element?: { tagName?: string } }) => source.element?.tagName === 'IMG')) {
-              console.log('CLS caused by image:', entry.value);
+            const layoutShiftEntry = entry as any;
+            if (layoutShiftEntry.sources && layoutShiftEntry.sources.some((source: { element?: { tagName?: string } }) => source.element?.tagName === 'IMG')) {
+              console.log('CLS caused by image:', layoutShiftEntry.value);
             }
           }
         });
