@@ -41,26 +41,26 @@ export default function ResponsiveImage({
   const [isInView, setIsInView] = useState(priority);
   const imgRef = useRef<HTMLDivElement>(null);
 
-  // Generate responsive image sources
-  const generateSrcSet = (baseSrc: string) => {
-    const baseName = baseSrc.replace(/\.[^/.]+$/, '');
-    const extension = baseSrc.split('.').pop();
-    
-    // Check if optimized versions exist
-    const optimizedVersions = [
-      { suffix: '_sm', width: 640 },
-      { suffix: '_md', width: 1024 },
-      { suffix: '_lg', width: 1920 },
-      { suffix: '_xl', width: 2560 }
-    ];
+  // Generate responsive image sources (for future use)
+  // const generateSrcSet = (baseSrc: string) => {
+  //   const baseName = baseSrc.replace(/\.[^/.]+$/, '');
+  //   const extension = baseSrc.split('.').pop();
+  //   
+  //   // Check if optimized versions exist
+  //   const optimizedVersions = [
+  //     { suffix: '_sm', width: 640 },
+  //     { suffix: '_md', width: 1024 },
+  //     { suffix: '_lg', width: 1920 },
+  //     { suffix: '_xl', width: 2560 }
+  //   ];
 
-    return optimizedVersions
-      .map(({ suffix, width }) => {
-        const optimizedPath = `/optimized${baseName}${suffix}.webp`;
-        return `${optimizedPath} ${width}w`;
-      })
-      .join(', ');
-  };
+  //   return optimizedVersions
+  //     .map(({ suffix, width }) => {
+  //       const optimizedPath = `/optimized${baseName}${suffix}.webp`;
+  //       return `${optimizedPath} ${width}w`;
+  //     })
+  //     .join(', ');
+  // };
 
   // Intersection Observer for lazy loading
   useEffect(() => {
