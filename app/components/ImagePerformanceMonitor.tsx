@@ -9,6 +9,23 @@ declare global {
   }
 }
 
+// Type definitions for PerformanceEntry extensions
+interface LCPEntry extends PerformanceEntry {
+  element?: {
+    tagName?: string;
+    src?: string;
+  };
+}
+
+interface CLSEntry extends PerformanceEntry {
+  sources?: Array<{
+    element?: {
+      tagName?: string;
+    };
+  }>;
+  value?: number;
+}
+
 interface ImagePerformanceMonitorProps {
   enabled?: boolean;
 }
@@ -63,7 +80,7 @@ export default function ImagePerformanceMonitor({ enabled = true }: ImagePerform
       if ('PerformanceObserver' in window) {
         const lcpObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1] as any;
+          const lastEntry = entries[entries.length - 1] as LCPEntry;
           
           if (lastEntry && lastEntry.element && lastEntry.element.tagName === 'IMG') {
             console.log('LCP image detected:', lastEntry.element.src, 'LCP:', lastEntry.startTime);
@@ -75,8 +92,8 @@ export default function ImagePerformanceMonitor({ enabled = true }: ImagePerform
         // Cumulative Layout Shift (CLS) monitoring
         const clsObserver = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
-            const layoutShiftEntry = entry as any;
-            if (layoutShiftEntry.sources && layoutShiftEntry.sources.some((source: { element?: { tagName?: string } }) => source.element?.tagName === 'IMG')) {
+            const layoutShiftEntry = entry as CLSEntry;
+            if (layoutShiftEntry.sources && layoutShiftEntry.sources.some((source) => source.element?.tagName === 'IMG')) {
               console.log('CLS caused by image:', layoutShiftEntry.value);
             }
           }
