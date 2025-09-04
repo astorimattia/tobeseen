@@ -48,22 +48,22 @@ export default function Contact() {
             <p className="text-zinc-300">You&apos;ll receive updates on new work, previews, and more shortly.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-center justify-center gap-4 mt-8">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 mt-8 w-full max-w-xl mx-auto">
             <input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full md:w-auto rounded-xl bg-zinc-800 border border-white/20 px-6 py-3 text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="flex-1 w-full sm:max-w-xs md:max-w-sm rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
               required
               disabled={isSubscribed}
             />
             <button
               type="submit"
-              className="w-full md:w-auto rounded-xl bg-white text-black px-6 py-3 text-sm font-medium hover:bg-zinc-200 transition-colors cursor-pointer"
+              className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer disabled:opacity-60"
               disabled={isSubscribed}
             >
-              Subscribe
+              {isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
           </form>
         )}
