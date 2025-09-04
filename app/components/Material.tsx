@@ -51,7 +51,6 @@ export default function Material() {
             {/* Content container with subtle border */}
             <div className="relative bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 text-center">
               {/* Decorative top border */}
-                            
               <p className="text-zinc-300 text-base md:text-lg mb-10 max-w-3xl mx-auto leading-relaxed">
                 Discover the full collection of our work and the stories behind each project
               </p>
@@ -59,7 +58,7 @@ export default function Material() {
               <div className="flex justify-center">
                 <Link
                   href="/work#stories"
-                  className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-black font-heading font-medium rounded-2xl hover:bg-zinc-100 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
+                  className="group relative inline-flex items-center justify-center px-6 py-3 bg-white text-black font-heading text-sm font-medium rounded-xl hover:bg-zinc-100 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-white/20"
                 >
                   <span className="relative z-10">
                     <span className="sm:hidden">Browse all work</span>

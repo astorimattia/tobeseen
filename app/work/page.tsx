@@ -4,6 +4,7 @@ import SectionHeading from "../components/SectionHeading";
 import EventShowcase from "../components/EventShowcase";
 import Footer from "../components/Footer";
 import ImagePreloader from "../components/ImagePreloader";
+import Contact from "../components/Contact";
 
 const EVENTS = [
   {
@@ -75,7 +76,8 @@ export default function WorkPage() {
         </div>
       </section>
 
-
+      {/* Subscribe CTA Section */}
+      <Contact />
 
       <Footer />
     </main>
