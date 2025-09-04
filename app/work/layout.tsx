@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Work - Hidden Festivals and Extreme Rituals | Off Map Stories",
+  title: "Work - Hidden Festivals and Extreme Rituals | Sacratos",
   description: "Explore our documentary coverage of the world's most dangerous and hidden cultural events. From fireworks bulls in Mexico to spirit mediums in Thailand, discover the stories that deserve to be seen.",
   keywords: ["documentary work", "hidden festivals", "extreme rituals", "cultural events", "dangerous traditions", "photojournalism", "world festivals"],
   openGraph: {

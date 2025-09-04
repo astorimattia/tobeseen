@@ -14,32 +14,33 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Off Map Stories - Some Things Deserve to Be Seen",
+  title: "Sacratos - Some Things Deserve to Be Seen",
   description: "Documentary photography and stories from the world's most dangerous and hidden cultural events. From exploding hammers in Mexico to spirit mediums in Thailand, we capture the chaos, beauty, and truth that mainstream media misses.",
   keywords: ["documentary", "photography", "hidden stories", "cultural events", "dangerous festivals", "world travel", "photojournalism", "real stories"],
-  authors: [{ name: "Off Map Team" }],
-  creator: "Off Map",
-  publisher: "Off Map",
+  authors: [{ name: "Sacratos Team" }],
+  creator: "Sacratos",
+  publisher: "Sacratos",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://placeholder-domain.com"),
+  metadataBase: new URL("https://sacratos.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "To Be Seen - Hidden Stories That Deserve to Be Seen",
+    title: "Sacratos - Hidden Stories That Deserve to Be Seen",
     description: "Documentary photography and stories from the world's most dangerous and hidden cultural events. From exploding hammers in Mexico to spirit mediums in Thailand, we capture the chaos, beauty, and truth that mainstream media misses.",
-    url: "https://placeholder-domain.com",
-    siteName: "To Be Seen",
+    url: "https://sacratos.com",
+    siteName: "Sacratos",
     images: [
       {
-        url: "/tultepec.webp",
+        url: "https://sacratos.com/tultepec.webp",
         width: 1200,
         height: 630,
         alt: "Feria Internacional de la Pirotecnia - Bulls loaded with rockets thrown against thousands of people",
+        type: "image/webp",
       },
     ],
     locale: "en_US",
@@ -47,10 +48,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "To Be Seen - Hidden Stories That Deserve to Be Seen",
+    title: "Sacratos - Hidden Stories That Deserve to Be Seen",
     description: "Documentary photography and stories from the world's most dangerous and hidden cultural events.",
-    images: ["/tultepec.webp"],
-    creator: "@tobeseen",
+    images: ["https://sacratos.com/tultepec.webp"],
+    creator: "@sacratos",
   },
   robots: {
     index: true,
@@ -82,7 +83,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         
         {/* Additional Meta Tags */}
-        <meta name="author" content="To Be Seen Team" />
+        <meta name="author" content="Sacratos Team" />
         <meta name="robots" content="index, follow" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
@@ -90,7 +91,7 @@ export default function RootLayout({
         <meta name="rating" content="general" />
         
         {/* Social Media Meta Tags */}
-        <meta property="og:site_name" content="To Be Seen" />
+        <meta property="og:site_name" content="Sacratos" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_US" />
         <meta property="og:image:width" content="1200" />
@@ -98,8 +99,8 @@ export default function RootLayout({
         <meta property="og:image:alt" content="Feria Internacional de la Pirotecnia - Dangerous fireworks festival in Mexico" />
         
         {/* Twitter Additional Meta */}
-        <meta name="twitter:site" content="@tobeseen" />
-        <meta name="twitter:creator" content="@tobeseen" />
+        <meta name="twitter:site" content="@sacratos" />
+        <meta name="twitter:creator" content="@sacratos" />
         
         {/* JSON-LD Structured Data */}
         <script
@@ -108,13 +109,13 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "To Be Seen",
+              "name": "Sacratos",
               "description": "Documentary photography and storytelling project capturing hidden cultural events and dangerous festivals around the world",
-              "url": "https://placeholder-domain.com",
-              "logo": "https://placeholder-domain.com/favicon.ico",
+              "url": "https://sacratos.com",
+              "logo": "https://sacratos.com/favicon.ico",
               "sameAs": [
-                "https://instagram.com/tobeseen",
-                "https://twitter.com/tobeseen"
+                "https://instagram.com/sacratos",
+                "https://twitter.com/sacratos"
               ],
               "foundingDate": "2024",
               "areaServed": "Worldwide",

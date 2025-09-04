@@ -35,7 +35,7 @@ export default function Faq() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
             </span>
           </summary>
-          <p className="mt-3 text-zinc-300">For story tips, collaboration ideas or anything else, email us at <a href="mailto:mattiastori@gmail.com?subject=Regarding%20ToBeSeen" className="hover:underline font-bold">mattiastori@gmail.com</a>.</p>
+          <p className="mt-3 text-zinc-300">For story tips, collaboration ideas or anything else, email us at <a href="mailto:mattiastori@gmail.com?subject=Regarding%20Sacratos" className="hover:underline font-bold">mattiastori@gmail.com</a>.</p>
         </details>
       </div>
     </section>
