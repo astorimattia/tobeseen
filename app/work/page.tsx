@@ -3,6 +3,7 @@ import Link from "next/link";
 import SectionHeading from "../components/SectionHeading";
 import EventShowcase from "../components/EventShowcase";
 import Footer from "../components/Footer";
+import ImagePreloader from "../components/ImagePreloader";
 
 const EVENTS = [
   {
@@ -36,8 +37,19 @@ const EVENTS = [
 ];
 
 export default function WorkPage() {
+  // Preload first few images from each event for faster loading
+  const preloadImages = [
+    "/tultepec.webp", "/tultepec2.webp", "/tultepec3.webp",
+    "/vegetarian.webp", "/vegetarian2.webp", "/vegetarian3.webp", 
+    "/hammers.webp", "/hammers2.webp", "/hammers3.webp",
+    "/tinku.webp", "/tinku2.webp", "/tinku3.webp"
+  ];
+
   return (
     <main className="min-h-screen bg-black text-white">
+      {/* Preload critical images */}
+      <ImagePreloader images={preloadImages} priority={true} />
+      
       {/* Back navigation */}
       <div className="border-b border-white/10">
         <div className="mx-auto max-w-6xl px-4 py-4">

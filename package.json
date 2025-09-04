@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "optimize-images": "node scripts/optimize-images.js",
+    "build:optimized": "npm run optimize-images && npm run build"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.4",
@@ -32,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "postcss": "^8.5.6",
+    "sharp": "^0.33.5",
     "tailwindcss": "^4.1.12",
     "typescript": "^5"
   }

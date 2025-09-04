@@ -8,10 +8,24 @@ import Team from "./components/Team";
 import Contact from "./components/Contact";
 import Faq from "./components/Faq";
 import Footer from "./components/Footer";
+import ImagePreloader from "./components/ImagePreloader";
 
 export default function Page() {
+  // Critical images to preload for main page
+  const criticalImages = [
+    "/tultepec.webp",
+    "/vegetarian.webp", 
+    "/hammers.webp",
+    "/tinku.webp",
+    "/daniele.png",
+    "/mattia.png"
+  ];
+
   return (
     <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+      {/* Preload critical images */}
+      <ImagePreloader images={criticalImages} priority={true} />
+      
       {/* <Nav /> */}
       <Hero />
       <What />

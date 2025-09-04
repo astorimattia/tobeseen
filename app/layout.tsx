@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import ImagePerformanceMonitor from "./components/ImagePerformanceMonitor";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -146,6 +147,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
       >
+        <ImagePerformanceMonitor />
         {children}
       </body>
     </html>
