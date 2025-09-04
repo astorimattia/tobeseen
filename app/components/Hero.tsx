@@ -77,7 +77,7 @@ export default function Hero() {
               onClick={() => router.push('/work')}
               className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 cursor-pointer"
             >
-              See the work
+              View work
             </button>
             <button
               onClick={() => scrollToSection('subscribe')}
