@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://placeholder-domain.com/sitemap.xml
+Sitemap: https://sacratos.com/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
