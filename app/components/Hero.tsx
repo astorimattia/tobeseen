@@ -67,11 +67,14 @@ export default function Hero() {
             <h1 className="font-heading text-xl md:text-2xl leading-tight">
               some things deserve to be seen
             </h1>
+            <p className="mt-4 text-sm md:text-base text-white/80 font-light">
+              discover the world's most hidden rituals
+            </p>
           </div>
         </div>
         
         {/* Buttons area - positioned at bottom */}
-        <div className="pb-22 md:pb-12 flex justify-center">
+        <div className="pb-32 md:pb-20 flex justify-center">
           <div className="flex items-center justify-center gap-3">
             <button
               onClick={() => router.push('/work')}
@@ -83,9 +86,36 @@ export default function Hero() {
               onClick={() => scrollToSection('subscribe')}
               className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer"
             >
-              Subscribe
+              Stay Updated
             </button>
           </div>
+        </div>
+        
+        {/* Down arrow */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <motion.button
+            onClick={() => scrollToSection('what')}
+            animate={{ y: [0, 8, 0] }}
+            transition={{ 
+              duration: 2, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="text-white/60 hover:text-white/80 transition-colors duration-200 cursor-pointer"
+          >
+            <svg 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </motion.button>
         </div>
       </motion.div>
     </section>
