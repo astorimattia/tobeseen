@@ -1,13 +1,9 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function Hero() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -16,39 +12,6 @@ export default function Hero() {
         behavior: 'smooth',
         block: 'start',
       });
-    }
-  };
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage(null);
-
-    const isValid = /.+@.+\..+/.test(email);
-    if (!isValid) {
-      setMessage({ type: "error", text: "Enter a valid email" });
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({ message: "Subscription failed" }));
-        throw new Error(data.message || "Subscription failed");
-      }
-
-      setMessage({ type: "success", text: "Thanks! You're on the list." });
-      setEmail("");
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Something went wrong";
-      setMessage({ type: "error", text: errorMessage });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -107,34 +70,21 @@ export default function Hero() {
           </div>
         </div>
         
-        {/* CTA area - positioned at bottom */}
+        {/* Buttons area - positioned at bottom */}
         <div className="pb-22 md:pb-12 flex justify-center">
-          <div className="flex flex-col items-center justify-center gap-3 w-full max-w-3xl">
-            <div className="flex items-center justify-center gap-3 w-full">
-              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-auto mx-auto">
-                <input
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-80 rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm placeholder-white/50 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
-                  aria-label="Email address"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer disabled:opacity-60"
-                >
-                  {isSubmitting ? 'Subscribing…' : 'Subscribe'}
-                </button>
-              </form>
-            </div>
-            {message && (
-              <p className={`${message.type === 'success' ? 'text-green-400' : 'text-red-400'} text-xs`}>{message.text}</p>
-            )}
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => router.push('/work')}
+              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 cursor-pointer"
+            >
+              View work
+            </button>
+            <button
+              onClick={() => scrollToSection('subscribe')}
+              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer"
+            >
+              Subscribe
+            </button>
           </div>
         </div>
       </motion.div>
