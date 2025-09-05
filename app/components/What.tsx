@@ -13,7 +13,7 @@ export default function What() {
     <WorldMapAnimation />
     <SectionHeading
         // eyebrow="What we do"
-        title="This isn’t a polished travel show."
+        title="These aren't polished documentaries."
         kicker="No hotels. No crew. One backpack. We follow the trail of stories, sleeping wherever we’re welcomed, someone’s couch, a tent, the back of a truck. Our trips are built on word of mouth. Locals point us to someone who knows someone. That’s how we find the things no one talks about."
       />
     </section>

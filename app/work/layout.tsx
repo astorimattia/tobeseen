@@ -29,5 +29,9 @@ export default function WorkLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <div className="min-h-screen bg-black text-white">
+      {children}
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import SectionHeading from "../components/SectionHeading";
-import EventShowcase from "../components/EventShowcase";
 import Footer from "../components/Footer";
 import ImagePreloader from "../components/ImagePreloader";
 import Contact from "../components/Contact";
@@ -69,11 +69,62 @@ export default function WorkPage() {
           kicker="Each story is a glimpse into traditions that defy logic and safety. Lived by locals, dangerous, chaotic, and unforgettable."
         />
 
-        <div className="space-y-16 mt-12">
-          {EVENTS.map((event) => (
-            <EventShowcase key={event.id} {...event} />
+        {/* Event Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+          {EVENTS.map((event, index) => (
+            <Link
+              key={event.id}
+              href={`/work/${event.id}`}
+              className="group block bg-zinc-900/50 rounded-2xl overflow-hidden hover:bg-zinc-900/70 transition-all duration-300 border border-white/10 hover:border-white/20"
+            >
+              {/* Event Image */}
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <Image
+                  src={event.images[0]}
+                  alt={event.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  quality={85}
+                  priority={index < 2}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                
+                {/* Event number */}
+                <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold">
+                  {index + 1}
+                </div>
+              </div>
+
+              {/* Event Content */}
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-3 group-hover:text-white transition-colors">
+                  {event.title}
+                </h3>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                  {event.story}
+                </p>
+                {event.documentaryDate && (
+                  <p className="text-zinc-500 text-xs italic mb-4">
+                    🎬 Documentary coming {event.documentaryDate}
+                  </p>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-zinc-500">
+                    {event.images.length} photos
+                  </span>
+                  <div className="flex items-center gap-2 text-sm text-zinc-400 group-hover:text-white transition-colors">
+                    <span>View event</span>
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
+
       </section>
 
       {/* Subscribe CTA Section */}

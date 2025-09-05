@@ -68,7 +68,7 @@ export default function Hero() {
               some things deserve to be seen
             </h1>
             <p className="mt-4 text-sm md:text-base text-white/80 font-light">
-              discover the world's most hidden rituals
+              discover the world&apos;s most hidden rituals
             </p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function Hero() {
               onClick={() => router.push('/work')}
               className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 cursor-pointer"
             >
-              View work
+              View Work
             </button>
             <button
               onClick={() => scrollToSection('subscribe')}
