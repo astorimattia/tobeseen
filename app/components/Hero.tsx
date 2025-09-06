@@ -92,7 +92,7 @@ export default function Hero() {
         </div>
         
         {/* Down arrow */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="absolute bottom-16 md:bottom-8 left-1/2 transform -translate-x-1/2">
           <motion.button
             onClick={() => scrollToSection('what')}
             animate={{ y: [0, 8, 0] }}
