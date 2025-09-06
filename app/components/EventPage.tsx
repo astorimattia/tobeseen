@@ -34,6 +34,8 @@ export default function EventPage({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const handleImageClick = useCallback((index: number) => {
     setSelectedImageIndex(index);
@@ -56,6 +58,33 @@ export default function EventPage({
     router.push(`/work/${eventId}`);
   }, [router]);
 
+  // Touch event handlers for swipe navigation
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (isFullScreenOpen) return; // Don't navigate when fullscreen is open
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  }, [isFullScreenOpen]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (isFullScreenOpen) return; // Don't navigate when fullscreen is open
+    setTouchEnd(e.targetTouches[0].clientX);
+  }, [isFullScreenOpen]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (isFullScreenOpen) return; // Don't navigate when fullscreen is open
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      navigateToEvent(nextEventId);
+    } else if (isRightSwipe) {
+      navigateToEvent(prevEventId);
+    }
+  }, [touchStart, touchEnd, navigateToEvent, nextEventId, prevEventId, isFullScreenOpen]);
+
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -74,7 +103,12 @@ export default function EventPage({
 
   return (
     <>
-      <div className="mx-auto max-w-6xl px-4 py-16">
+      <div 
+        className="mx-auto max-w-6xl px-4 py-16"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Event Navigation */}
         <EventNavigation
           currentIndex={currentIndex}
