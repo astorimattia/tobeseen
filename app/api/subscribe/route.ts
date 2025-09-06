@@ -32,6 +32,15 @@ export async function POST(req: Request) {
                              process.env.EMAIL_FROM && 
                              process.env.NOTIFICATION_EMAIL;
 
+      console.log('Email configuration check:', {
+        EMAIL_HOST: !!process.env.EMAIL_HOST,
+        EMAIL_USER: !!process.env.EMAIL_USER,
+        EMAIL_PASS: !!process.env.EMAIL_PASS,
+        EMAIL_FROM: !!process.env.EMAIL_FROM,
+        NOTIFICATION_EMAIL: !!process.env.NOTIFICATION_EMAIL,
+        configured: emailConfigured
+      });
+
       if (emailConfigured) {
         const transporter = nodemailer.createTransport({
           host: process.env.EMAIL_HOST,
@@ -48,15 +57,28 @@ export async function POST(req: Request) {
           to: process.env.NOTIFICATION_EMAIL,
           subject: 'New Subscriber Alert!',
           text: `A new user has subscribed with the email: ${email}`,
+          html: `
+            <h2>New Subscriber Alert!</h2>
+            <p>A new user has subscribed to your newsletter:</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+          `,
         };
 
         await transporter.sendMail(mailOptions);
-        console.log(`Notification email sent for new subscriber: ${email}`);
+        console.log(`✅ Notification email sent successfully for new subscriber: ${email}`);
       } else {
-        console.log('Email configuration not available, skipping email notification');
+        console.log('❌ Email configuration not available, skipping email notification');
+        console.log('Missing environment variables:', {
+          EMAIL_HOST: !process.env.EMAIL_HOST,
+          EMAIL_USER: !process.env.EMAIL_USER,
+          EMAIL_PASS: !process.env.EMAIL_PASS,
+          EMAIL_FROM: !process.env.EMAIL_FROM,
+          NOTIFICATION_EMAIL: !process.env.NOTIFICATION_EMAIL,
+        });
       }
     } catch (emailError) {
-      console.warn('Could not send notification email:', emailError);
+      console.error('❌ Failed to send notification email:', emailError);
       // Continue execution - email sending is optional
     }
 
