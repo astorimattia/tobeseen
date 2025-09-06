@@ -75,16 +75,16 @@ export default function Hero() {
         
         {/* Buttons area - positioned at bottom */}
         <div className="pb-32 md:pb-20 flex justify-center">
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-3 w-full max-w-72">
             <button
               onClick={() => router.push('/work')}
-              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 cursor-pointer"
+              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 transition-colors duration-200 cursor-pointer flex-1"
             >
               View Work
             </button>
             <button
               onClick={() => scrollToSection('subscribe')}
-              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer"
+              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer flex-1"
             >
               Stay Updated
             </button>
