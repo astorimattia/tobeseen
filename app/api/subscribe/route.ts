@@ -42,8 +42,11 @@ export async function POST(req: Request) {
           ? process.env.NOTIFICATION_EMAIL.split(',').map(email => email.trim())
           : [];
 
+        console.log('📧 Sending notification emails to:', notificationEmails);
+        console.log('📧 Number of recipients:', notificationEmails.length);
+
         const { data, error } = await resend.emails.send({
-          from: 'Sacratos <onboarding@resend.dev>', // You can change this to your domain
+          from: 'Sacratos <noreply@resend.dev>', // Using noreply instead of onboarding
           to: notificationEmails,
           subject: '🎬 New Subscriber Alert - Sacratos',
           html: `
@@ -69,8 +72,10 @@ export async function POST(req: Request) {
 
         if (error) {
           console.error('❌ Resend error:', error);
+          console.error('❌ Error details:', JSON.stringify(error, null, 2));
         } else {
-          console.log(`✅ Notification email sent successfully via Resend for: ${email}`, data);
+          console.log(`✅ Notification email sent successfully via Resend for: ${email}`);
+          console.log('✅ Email data:', JSON.stringify(data, null, 2));
         }
       } else {
         console.log('❌ Resend configuration not available, skipping email notification');
