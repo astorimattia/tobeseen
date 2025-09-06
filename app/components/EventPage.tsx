@@ -95,6 +95,7 @@ export default function EventPage({
             )}
           </div>
 
+
           {/* Photo Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {event.images.map((src, i) => (

@@ -69,6 +69,7 @@ export default function WorkPage() {
           kicker="Each story is a glimpse into traditions that defy logic and safety. Lived by locals, dangerous, chaotic, and unforgettable."
         />
 
+
         {/* Event Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
           {EVENTS.map((event, index) => (

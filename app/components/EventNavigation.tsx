@@ -55,7 +55,7 @@ export default function EventNavigation({
       <div className="flex items-center justify-between">
         <button
           onClick={onPrevious}
-          className="group flex items-center justify-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 min-w-[60px] sm:min-w-[120px]"
+          className="group flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[60px] sm:w-[130px]"
           aria-label="Previous event"
         >
           <svg 
@@ -66,7 +66,7 @@ export default function EventNavigation({
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="text-sm font-medium hidden sm:inline">Previous</span>
+          <span className="text-sm font-medium hidden sm:inline">Prev</span>
         </button>
 
         {/* Progress indicator */}
@@ -87,7 +87,7 @@ export default function EventNavigation({
 
         <button
           onClick={onNext}
-          className="group flex items-center justify-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 min-w-[60px] sm:min-w-[120px]"
+          className="group flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[60px] sm:w-[130px]"
           aria-label="Next event"
         >
           <span className="text-sm font-medium hidden sm:inline">Next</span>
