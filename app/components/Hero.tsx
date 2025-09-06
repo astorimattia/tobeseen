@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import OptimizedVideo from "./OptimizedVideo";
 
 export default function Hero() {
   const router = useRouter();
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -18,7 +16,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="hero-section relative isolate h-screen">
+    <section className="relative isolate h-screen">
       {/* Background video */}
       <div className="absolute inset-0 -z-10">
         {/* Fallback background */}
@@ -27,30 +25,30 @@ export default function Hero() {
         {/* Video fade-in overlay */}
         <motion.div
           initial={{ opacity: 1 }}
-          animate={{ opacity: isVideoLoaded ? 0 : 1 }}
+          animate={{ opacity: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="absolute inset-0 bg-black z-20"
         />
         
-        {/* Optimized background video */}
-        <OptimizedVideo
+        {/* Background video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
           src="/bg.webm"
-          fallbackSrc="/bg.mp4"
-          className="h-full w-full"
-          style={{
+          className="h-full w-full object-cover"
+          style={{ 
             position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%'
           }}
-          onLoadedData={() => setIsVideoLoaded(true)}
-          onLoadStart={() => console.log('Video loading started')}
-          onCanPlay={() => console.log('Video can play')}
-          onError={(e) => console.error('Video error:', e)}
-          lazy={true}
-          threshold={0.1}
-        />
+        >
+          Your browser does not support the video tag.
+        </video>
         
         {/* Overlay gradient for readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
