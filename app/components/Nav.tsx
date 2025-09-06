@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function Nav() {
   return (
@@ -11,7 +12,7 @@ export default function Nav() {
         <div className="hidden md:flex items-center gap-4 text-sm text-zinc-300">
           <a href="#what" className="hover:text-white">What</a>
           <a href="#material" className="hover:text-white">Material</a>
-          <a href="/work" className="hover:text-white">Work</a>
+          <Link href="/work" className="hover:text-white">Work</Link>
           <a href="#team" className="hover:text-white">Team</a>
           <a href="#contact" className="hover:text-white">Contact</a>
           <a href="#faq" className="hover:text-white">FAQ</a>
