@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-// import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import What from "./components/What";
 import Material from "./components/Material";
@@ -26,7 +25,6 @@ export default function Page() {
       {/* Preload critical images */}
       <ImagePreloader images={criticalImages} priority={true} />
       
-      {/* <Nav /> */}
       <Hero />
       <What />
       <Material />
