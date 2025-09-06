@@ -37,9 +37,14 @@ export async function POST(req: Request) {
       if (resendConfigured) {
         const resend = new Resend(process.env.RESEND_API_KEY);
 
+        // Parse notification emails (support comma-separated list)
+        const notificationEmails = process.env.NOTIFICATION_EMAIL
+          ? process.env.NOTIFICATION_EMAIL.split(',').map(email => email.trim())
+          : [];
+
         const { data, error } = await resend.emails.send({
           from: 'Sacratos <onboarding@resend.dev>', // You can change this to your domain
-          to: [process.env.NOTIFICATION_EMAIL],
+          to: notificationEmails,
           subject: '🎬 New Subscriber Alert - Sacratos',
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
