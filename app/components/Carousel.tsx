@@ -93,7 +93,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               <div className="text-sm md:text-sm text-white font-medium">{item.title}</div>
               <div className="text-lg md:text-lg font-bold text-white">{item.subtitle}</div>
               <Link
-                href={`/work#${item.id}`}
+                href={`/work/${item.id}`}
                 className="mt-4 inline-block rounded-xl border border-white/20 px-3 py-1 text-sm hover:bg-white/10 transition relative z-20 pointer-events-auto"
               >
                 View full story →
