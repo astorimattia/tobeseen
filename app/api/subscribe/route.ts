@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 export async function POST(req: Request) {
   try {
@@ -24,61 +24,58 @@ export async function POST(req: Request) {
       // Continue execution - file saving is optional
     }
 
-    // Try to send notification email (optional - may fail if email not configured)
+    // Try to send notification email using Resend
     try {
-      const emailConfigured = process.env.EMAIL_HOST && 
-                             process.env.EMAIL_USER && 
-                             process.env.EMAIL_PASS && 
-                             process.env.EMAIL_FROM && 
-                             process.env.NOTIFICATION_EMAIL;
+      const resendConfigured = process.env.RESEND_API_KEY && process.env.NOTIFICATION_EMAIL;
 
-      console.log('Email configuration check:', {
-        EMAIL_HOST: !!process.env.EMAIL_HOST,
-        EMAIL_USER: !!process.env.EMAIL_USER,
-        EMAIL_PASS: !!process.env.EMAIL_PASS,
-        EMAIL_FROM: !!process.env.EMAIL_FROM,
+      console.log('Resend configuration check:', {
+        RESEND_API_KEY: !!process.env.RESEND_API_KEY,
         NOTIFICATION_EMAIL: !!process.env.NOTIFICATION_EMAIL,
-        configured: emailConfigured
+        configured: resendConfigured
       });
 
-      if (emailConfigured) {
-        const transporter = nodemailer.createTransport({
-          host: process.env.EMAIL_HOST,
-          port: parseInt(process.env.EMAIL_PORT || '587'),
-          secure: process.env.EMAIL_SECURE === 'true',
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-          },
+      if (resendConfigured) {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+
+        const { data, error } = await resend.emails.send({
+          from: 'Sacratos <onboarding@resend.dev>', // You can change this to your domain
+          to: [process.env.NOTIFICATION_EMAIL],
+          subject: '🎬 New Subscriber Alert - Sacratos',
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #333; border-bottom: 2px solid #000; padding-bottom: 10px;">
+                New Subscriber Alert!
+              </h2>
+              <p style="color: #666; font-size: 16px;">
+                Someone has subscribed to your newsletter about hidden rituals and extreme traditions.
+              </p>
+              <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0; font-weight: bold; color: #333;">Email:</p>
+                <p style="margin: 5px 0 0 0; color: #666; font-family: monospace;">${email}</p>
+                <p style="margin: 15px 0 0 0; font-weight: bold; color: #333;">Time:</p>
+                <p style="margin: 5px 0 0 0; color: #666;">${new Date().toLocaleString()}</p>
+              </div>
+              <p style="color: #999; font-size: 14px; margin-top: 30px;">
+                This notification was sent from your Sacratos website subscription form.
+              </p>
+            </div>
+          `,
         });
 
-        const mailOptions = {
-          from: process.env.EMAIL_FROM,
-          to: process.env.NOTIFICATION_EMAIL,
-          subject: 'New Subscriber Alert!',
-          text: `A new user has subscribed with the email: ${email}`,
-          html: `
-            <h2>New Subscriber Alert!</h2>
-            <p>A new user has subscribed to your newsletter:</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
-          `,
-        };
-
-        await transporter.sendMail(mailOptions);
-        console.log(`✅ Notification email sent successfully for new subscriber: ${email}`);
+        if (error) {
+          console.error('❌ Resend error:', error);
+        } else {
+          console.log(`✅ Notification email sent successfully via Resend for: ${email}`, data);
+        }
       } else {
-        console.log('❌ Email configuration not available, skipping email notification');
+        console.log('❌ Resend configuration not available, skipping email notification');
         console.log('Missing environment variables:', {
-          EMAIL_HOST: !process.env.EMAIL_HOST,
-          EMAIL_USER: !process.env.EMAIL_USER,
-          EMAIL_PASS: !process.env.EMAIL_PASS,
-          EMAIL_FROM: !process.env.EMAIL_FROM,
+          RESEND_API_KEY: !process.env.RESEND_API_KEY,
           NOTIFICATION_EMAIL: !process.env.NOTIFICATION_EMAIL,
         });
       }
     } catch (emailError) {
-      console.error('❌ Failed to send notification email:', emailError);
+      console.error('❌ Failed to send notification email via Resend:', emailError);
       // Continue execution - email sending is optional
     }
 
