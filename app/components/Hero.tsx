@@ -37,6 +37,9 @@ export default function Hero() {
           muted
           playsInline
           preload="auto"
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
           src="/bg.webm"
           className="h-full w-full object-cover"
           style={{ 
