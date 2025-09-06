@@ -14,7 +14,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Sacratos - Some Things Deserve to Be Seen",
+  title: "Sacratos - Stories of Raw Devotion",
   description: "Documentary photography and stories from the world's most dangerous and hidden cultural events. From exploding hammers in Mexico to spirit mediums in Thailand, we capture the chaos, beauty, and truth that mainstream media misses.",
   keywords: ["documentary", "photography", "hidden stories", "cultural events", "dangerous festivals", "world travel", "photojournalism", "real stories"],
   authors: [{ name: "Sacratos Team" }],
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Sacratos - Hidden Stories That Deserve to Be Seen",
+    title: "Sacratos - Stories of Raw Devotion",
     description: "Documentary photography and stories from the world's most dangerous and hidden cultural events. From exploding hammers in Mexico to spirit mediums in Thailand, we capture the chaos, beauty, and truth that mainstream media misses.",
     url: "https://sacratos.com",
     siteName: "Sacratos",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sacratos - Hidden Stories That Deserve to Be Seen",
+    title: "Sacratos - Stories of Raw Devotion",
     description: "Documentary photography and stories from the world's most dangerous and hidden cultural events.",
     images: ["https://sacratos.com/tultepec.webp"],
     creator: "@sacratos",

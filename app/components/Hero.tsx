@@ -68,7 +68,7 @@ export default function Hero() {
         <div className="flex items-center justify-center">
           <div className="max-w-3xl text-center">
             <h1 className="font-heading text-xl md:text-2xl leading-tight">
-              some things deserve to be seen
+              stories of raw devotion
             </h1>
             <p className="mt-4 text-sm md:text-base text-white/80 font-light">
               discover the world&apos;s most hidden rituals
