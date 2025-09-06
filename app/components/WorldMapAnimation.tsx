@@ -164,7 +164,7 @@ export default function WorldMapAnimation() {
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           pointsData={pointsData}
           pointAltitude={0.03}
-          pointColor={() => "rgba(255, 0, 0, 0.6)"}
+          pointColor={() => "rgb(255, 0, 0)"}
           pointRadius={(d: object) => {
             const datum = d as PointDatum;
             const base = 0.8;
@@ -172,7 +172,7 @@ export default function WorldMapAnimation() {
             const speed = 0.04; // lower is slower
             return base + amp * (0.5 + 0.5 * Math.sin(tick * speed + (datum?.phase || 0)));
           }}
-          atmosphereColor="rgba(255, 255, 255, 0.6)"
+          atmosphereColor="rgb(255, 255, 255)"
           atmosphereAltitude={0.25}
         />
       </div>
