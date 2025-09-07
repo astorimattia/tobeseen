@@ -41,7 +41,7 @@ export default function Hero() {
           disablePictureInPicture
           disableRemotePlayback
           src="/bg.webm"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover pointer-events-none"
           style={{ 
             position: 'absolute',
             top: 0,
@@ -67,10 +67,10 @@ export default function Hero() {
         {/* Main content area - perfectly centered */}
         <div className="flex items-center justify-center">
           <div className="max-w-3xl text-center">
-            <h1 className="font-heading text-xl md:text-2xl leading-tight">
+            <h1 className="font-heading text-xl md:text-2xl leading-tight select-none">
               Stories of Raw Devotion
             </h1>
-            <p className="mt-4 text-sm md:text-base text-white/80 font-light">
+            <p className="mt-4 text-sm md:text-base text-white/80 font-light select-none">
               Discover the World&apos;s Most Hidden Rituals
             </p>
           </div>
