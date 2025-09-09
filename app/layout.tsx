@@ -77,8 +77,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.webp" type="image/webp" />
+        <link rel="apple-touch-icon" href="/favicon.webp" />
         <meta name="theme-color" content="#000000" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         
@@ -120,7 +120,7 @@ export default function RootLayout({
               "name": "Sacratos",
               "description": "Documentary photography and storytelling project capturing hidden cultural events and dangerous festivals around the world",
               "url": "https://sacratos.com",
-              "logo": "https://sacratos.com/favicon.png",
+              "logo": "https://sacratos.com/favicon.webp",
               "sameAs": [
                 "https://instagram.com/sacratos",
                 "https://twitter.com/sacratos"
