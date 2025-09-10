@@ -39,7 +39,7 @@ export default function Contact() {
     <section id="subscribe" className="mx-auto max-w-6xl px-4 py-16">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-900/40 p-8">
         <SectionHeading
-          eyebrow="Get Exclusive Access"
+          eyebrow="Get exclusive access"
           title="Be the first to explore new work"
         />
         <div className="mt-4 md:text-center">
