@@ -63,7 +63,7 @@ export default function WorkPage() {
         </div>
       </div>
 
-      <section className="mx-auto max-w-6xl px-4 py-16">
+      <section className="mx-auto max-w-6xl px-4 py-8">
         <SectionHeading
           title="A few windows into the chaos"
           kicker="Each story is a glimpse into traditions that defy logic and safety. Lived by locals, dangerous, chaotic, and unforgettable."

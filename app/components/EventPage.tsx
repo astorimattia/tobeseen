@@ -104,7 +104,7 @@ export default function EventPage({
   return (
     <>
       <div 
-        className="mx-auto max-w-6xl px-4 py-16"
+        className="mx-auto max-w-6xl px-4 py-8"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
