@@ -91,21 +91,21 @@ export default function WorkPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 
                 {/* Event number */}
-                <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold">
+                <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-6 h-6 md:w-10 md:h-10 flex items-center justify-center text-2xs md:text-sm font-bold">
                   {index + 1}
                 </div>
               </div>
 
               {/* Event Content */}
               <div className="p-6">
-                <h3 className="text-xl font-semibold mb-3 group-hover:text-white transition-colors">
+                <h3 className="text-xl md:text-3xl font-semibold mb-3 group-hover:text-white transition-colors">
                   {event.title}
                 </h3>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                <p className="text-sm md:text-lg text-zinc-400 leading-relaxed mb-4 line-clamp-3">
                   {event.story}
                 </p>
                 {event.documentaryDate && (
-                  <p className="text-zinc-500 text-xs italic mb-4">
+                  <p className="text-base md:text-lg text-zinc-500 italic mb-4">
                     🎬 Documentary coming {event.documentaryDate}
                   </p>
                 )}

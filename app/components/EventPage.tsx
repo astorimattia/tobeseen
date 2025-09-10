@@ -104,7 +104,7 @@ export default function EventPage({
   return (
     <>
       <div 
-        className="mx-auto max-w-6xl px-4 py-8"
+        className="mx-auto max-w-6xl px-4 py-4 md:py-8"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -118,36 +118,65 @@ export default function EventPage({
         />
 
         {/* Event Content */}
-        <article className="space-y-8 mt-12">
+        <article className="space-y-8 mt-4 md:mt-8">
           <div className="space-y-6">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight">{event.title}</h1>
-            <p className="text-xl text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
+            <h1 className="text-3xl md:text-5xl font-bold leading-tight">{event.title}</h1>
+            <p className="text-lg md:text-xl text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
             {event.documentaryDate && (
-              <p className="text-zinc-400 text-lg italic">
+              <p className="text-base md:text-lg text-zinc-400 italic">
                 🎬 Documentary coming {event.documentaryDate}
               </p>
             )}
           </div>
 
+          {/* Hero Image */}
+          {event.images.length > 0 && (
+            <div className="relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
+              <Image
+                src={event.images[0]}
+                alt={`${event.title} main photo`}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                sizes="100vw"
+                priority
+                onLoad={() => handleImageLoad(0)}
+                onError={() => handleImageError(0)}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+              />
+              {/* Loading placeholder */}
+              {!loadedImages.has(0) && !imageErrors.has(0) && (
+                <div className="absolute inset-0 bg-zinc-800 animate-pulse flex items-center justify-center">
+                  <div className="w-8 h-8 border-2 border-zinc-600 border-t-white rounded-full animate-spin"></div>
+                </div>
+              )}
+              {/* Error placeholder */}
+              {imageErrors.has(0) && (
+                <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
+                  <div className="text-zinc-500 text-sm">Failed to load</div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Photo Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {event.images.map((src, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6">
+            {event.images.slice(1).map((src, i) => (
               <button
                 key={i}
-                onClick={() => handleImageClick(i)}
+                onClick={() => handleImageClick(i + 1)}
                 className="relative aspect-[4/3] overflow-hidden group cursor-pointer bg-zinc-800"
                 aria-label={`View ${event.title} photo ${i + 1} in full screen`}
               >
                 {/* Loading placeholder */}
-                {!loadedImages.has(i) && !imageErrors.has(i) && (
+                {!loadedImages.has(i + 1) && !imageErrors.has(i + 1) && (
                   <div className="absolute inset-0 bg-zinc-800 animate-pulse flex items-center justify-center">
                     <div className="w-8 h-8 border-2 border-zinc-600 border-t-white rounded-full animate-spin"></div>
                   </div>
                 )}
                 
                 {/* Error placeholder */}
-                {imageErrors.has(i) && (
+                {imageErrors.has(i + 1) && (
                   <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
                     <div className="text-zinc-500 text-sm">Failed to load</div>
                   </div>
@@ -158,7 +187,7 @@ export default function EventPage({
                   alt={`${event.title} photo ${i + 1}`}
                   fill
                   className={`object-cover group-hover:scale-105 transition-transform duration-300 ${
-                    loadedImages.has(i) ? 'opacity-100' : 'opacity-0'
+                    loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
                   }`}
                   style={{
                     objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' : 
@@ -168,8 +197,8 @@ export default function EventPage({
                   quality={85}
                   loading={i < 8 ? "eager" : "lazy"} // Load first 8 images eagerly, rest lazy
                   priority={i < 4} // Prioritize first 4 images
-                  onLoad={() => handleImageLoad(i)}
-                  onError={() => handleImageError(i)}
+                  onLoad={() => handleImageLoad(i + 1)}
+                  onError={() => handleImageError(i + 1)}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                 />

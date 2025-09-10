@@ -52,30 +52,30 @@ export default function EventNavigation({
       onTouchEnd={handleTouchEnd}
     >
       {/* Navigation buttons */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between p-2 md:p-0">
         <button
           onClick={onPrevious}
-          className="group flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[60px] sm:w-[130px]"
+          className="group flex items-center justify-center gap-1 px-3 py-2 md:px-4 md:py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[50px] sm:w-[130px]"
           aria-label="Previous event"
         >
           <svg 
-            className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" 
+            className="w-4 h-4 md:w-5 md:h-5 group-hover:-translate-x-1 transition-transform duration-300" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="text-sm font-medium hidden sm:inline">Prev</span>
+          <span className="text-xs md:text-sm font-medium hidden sm:inline">Prev</span>
         </button>
 
         {/* Progress indicator */}
-        <div className="flex items-center justify-center gap-4">
-          <div className="flex gap-1">
+        <div className="flex items-center justify-center gap-2 md:gap-4">
+          <div className="flex gap-0.5 md:gap-1">
             {Array.from({ length: totalEvents }, (_, i) => (
               <div
                 key={i}
-                className={`h-1.5 w-6 rounded-full transition-all duration-300 ${
+                className={`h-1 w-4 md:w-6 rounded-full transition-all duration-300 ${
                   i === currentIndex 
                     ? 'bg-white' 
                     : 'bg-white/30'
@@ -87,12 +87,12 @@ export default function EventNavigation({
 
         <button
           onClick={onNext}
-          className="group flex items-center justify-center gap-2 px-4 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[60px] sm:w-[130px]"
+          className="group flex items-center justify-center gap-1 px-3 py-2 md:px-4 md:py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[50px] sm:w-[130px]"
           aria-label="Next event"
         >
-          <span className="text-sm font-medium hidden sm:inline">Next</span>
+          <span className="text-xs md:text-sm font-medium hidden sm:inline">Next</span>
           <svg 
-            className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" 
+            className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-300" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
