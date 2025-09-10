@@ -106,10 +106,6 @@ export default function WorkPage() {
                     </div>
                   )}
 
-                  {/* Event number */}
-                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-6 h-6 md:w-10 md:h-10 flex items-center justify-center text-3xs md:text-xs font-bold">
-                    {index + 1}
-                  </div>
                 </div>
 
                 {/* Event Content */}
