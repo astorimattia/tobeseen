@@ -55,9 +55,21 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
     }
   };
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 rounded-2xl p-8 w-full max-w-md relative border border-white/10 shadow-lg">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+      onClick={handleBackdropClick}
+    >
+      <div 
+        className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 rounded-2xl p-8 w-full max-w-md relative border border-white/10 shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-zinc-400 hover:text-white transition-colors"
@@ -77,7 +89,7 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
             />
           </svg>
         </button>
-        <h2 className="text-3xl font-bold text-white mb-4 text-center">Get Exclusive Access</h2>
+        <h2 className="text-3xl font-bold text-white mb-4 text-center">Get exclusive access</h2>
         <p className="text-zinc-300 text-center mb-6 text-sm leading-relaxed">
           Be the first to know when new documentaries drop.
         </p>
