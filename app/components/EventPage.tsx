@@ -120,10 +120,10 @@ export default function EventPage({
         {/* Event Content */}
         <article className="space-y-8 mt-4 md:mt-8">
           <div className="space-y-6">
-            <h1 className="text-3xl md:text-5xl font-bold leading-tight">{event.title}</h1>
-            <p className="text-lg md:text-xl text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
+            <h1 className="text-2xl md:text-4xl font-bold leading-tight">{event.title}</h1>
+            <p className="text-base md:text-lg text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
             {event.documentaryDate && (
-              <p className="text-base md:text-lg text-zinc-400 italic">
+              <p className="text-sm md:text-base text-zinc-400 italic">
                 🎬 Documentary coming {event.documentaryDate}
               </p>
             )}
@@ -153,7 +153,7 @@ export default function EventPage({
               {/* Error placeholder */}
               {imageErrors.has(0) && (
                 <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-                  <div className="text-zinc-500 text-sm">Failed to load</div>
+                  <div className="text-zinc-500 text-xs">Failed to load</div>
                 </div>
               )}
             </div>
@@ -178,7 +178,7 @@ export default function EventPage({
                 {/* Error placeholder */}
                 {imageErrors.has(i + 1) && (
                   <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
-                    <div className="text-zinc-500 text-sm">Failed to load</div>
+                    <div className="text-zinc-500 text-xs">Failed to load</div>
                   </div>
                 )}
 

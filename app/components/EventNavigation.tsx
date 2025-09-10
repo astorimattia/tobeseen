@@ -66,7 +66,7 @@ export default function EventNavigation({
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="text-xs md:text-sm font-medium hidden sm:inline">Prev</span>
+          <span className="text-2xs md:text-xs font-medium hidden sm:inline">Prev</span>
         </button>
 
         {/* Progress indicator */}
@@ -90,7 +90,7 @@ export default function EventNavigation({
           className="group flex items-center justify-center gap-1 px-3 py-2 md:px-4 md:py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[50px] sm:w-[130px]"
           aria-label="Next event"
         >
-          <span className="text-xs md:text-sm font-medium hidden sm:inline">Next</span>
+          <span className="text-2xs md:text-xs font-medium hidden sm:inline">Next</span>
           <svg 
             className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-300" 
             fill="none" 

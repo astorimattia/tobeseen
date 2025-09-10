@@ -66,7 +66,7 @@ export default function WorkPage() {
         <div className="mx-auto max-w-6xl px-4 py-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition"
+            className="inline-flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition"
           >
             ← Back to home
           </Link>
@@ -101,37 +101,37 @@ export default function WorkPage() {
                   />
                   <div className={`absolute inset-0 ${isComingSoon ? 'bg-gradient-to-t from-[#FF9933]/60 via-[#FFFFFF]/60 to-[#138808]/60' : 'bg-gradient-to-t from-black/60 via-transparent to-transparent'}`} />
                   {isComingSoon && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-2xl font-bold">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-xl font-bold">
                       Coming Soon
                     </div>
                   )}
 
                   {/* Event number */}
-                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-6 h-6 md:w-10 md:h-10 flex items-center justify-center text-2xs md:text-sm font-bold">
+                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-6 h-6 md:w-10 md:h-10 flex items-center justify-center text-3xs md:text-xs font-bold">
                     {index + 1}
                   </div>
                 </div>
 
                 {/* Event Content */}
                 <div className="p-6">
-                  <h3 className="text-xl md:text-3xl font-semibold mb-3 group-hover:text-white transition-colors">
+                  <h3 className="text-lg md:text-xl font-semibold mb-3 group-hover:text-white transition-colors">
                     {event.title}
                   </h3>
-                  <p className="text-sm md:text-lg text-zinc-400 leading-relaxed mb-4 line-clamp-3">
+                  <p className="text-xs md:text-sm text-zinc-400 leading-relaxed mb-4 line-clamp-3">
                     {event.story}
                   </p>
                   {!isComingSoon && event.documentaryDate && (
-                    <p className="text-base md:text-lg text-zinc-500 italic mb-4">
+                    <p className="text-sm md:text-base text-zinc-500 italic mb-4">
                       🎬 Documentary coming {event.documentaryDate}
                     </p>
                   )}
                   <div className="flex items-center justify-between">
                     {!isComingSoon && (
-                      <span className="text-sm text-zinc-500">
+                      <span className="text-xs text-zinc-500">
                         {event.images.length} photos
                       </span>
                     )}
-                    <div className="flex items-center gap-2 text-sm text-zinc-400 group-hover:text-white transition-colors">
+                    <div className="flex items-center gap-2 text-xs text-zinc-400 group-hover:text-white transition-colors">
                       <span>{isComingSoon ? 'Get exclusive access' : 'View event'}</span>
                       <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
