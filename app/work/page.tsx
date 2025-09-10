@@ -85,6 +85,7 @@ export default function WorkPage() {
             const isComingSoon = event.documentaryDate === "Coming Soon";
             const CardContent = (
               <div
+                key={event.id}
                 className={`group block bg-zinc-900/50 rounded-2xl overflow-hidden transition-all duration-300 border border-white/10 ${isComingSoon ? "cursor-pointer" : "hover:bg-zinc-900/70 hover:border-white/20"}`}
                 onClick={isComingSoon ? () => setIsModalOpen(true) : undefined}
               >
