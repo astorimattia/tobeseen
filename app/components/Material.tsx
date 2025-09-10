@@ -49,7 +49,7 @@ export default function Material() {
           
           <div className="relative max-w-5xl mx-auto">
             {/* Content container with subtle border */}
-            <div className="relative bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 text-center">
+            <div className="relative bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 text-center">
               {/* Decorative top border */}
               <p className="text-zinc-300 text-base md:text-lg mb-10 max-w-3xl mx-auto leading-relaxed">
                 Discover the full collection of our work and the stories behind each project

@@ -13,7 +13,7 @@ const EVENTS = [
     id: "bastar-dussera",
     title: "Bastar Dusserha, India",
     story: "One of the longest festivals in the world (75 days), Bastar Dusserha is a unique celebration of Goddess Danteshwari, involving rituals, processions, and tribal traditions.",
-    images: ["/coming-soon.webp"],
+    images: ["/tultepec.webp"],
     documentaryDate: "Coming Soon",
   },
   {
@@ -50,7 +50,6 @@ export default function WorkPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Preload first few images from each event for faster loading
   const preloadImages = [
-    "/bastar-dussera.webp",
     "/tultepec.webp", "/tultepec2.webp", "/tultepec3.webp",
     "/vegetarian.webp", "/vegetarian2.webp", "/vegetarian3.webp", 
     "/hammers.webp", "/hammers2.webp", "/hammers3.webp",

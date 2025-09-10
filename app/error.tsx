@@ -10,7 +10,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
       </p>
       <button
         onClick={() => reset()}
-        className="inline-flex items-center rounded-md bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20"
+        className="inline-flex items-center rounded-xl bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20"
       >
         Try again
       </button>
