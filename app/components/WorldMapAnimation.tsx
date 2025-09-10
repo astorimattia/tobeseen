@@ -101,7 +101,6 @@ export default function WorldMapAnimation() {
 
   useEffect(() => {
     let attachedCanvas: HTMLCanvasElement | null = null;
-    let blockEvent: ((e: Event) => void) | null = null;
     let controls: ReturnType<NonNullable<GlobeMethods["controls"]>> | null = null;
     let cancelled = false;
 
@@ -131,30 +130,39 @@ export default function WorldMapAnimation() {
       }
 
       attachedCanvas = domElement;
-      // Allow page scroll (wheel/touch) but prevent drag interactions on the globe
-      blockEvent = (e: Event) => {
-        e.stopPropagation();
-      };
-      ["pointerdown", "pointermove", "pointerup", "contextmenu"].forEach(ev =>
-        attachedCanvas!.addEventListener(ev, blockEvent!, { passive: true })
-      );
+      
+      // Allow touch scrolling through the canvas
+      attachedCanvas.style.touchAction = 'auto';
+      attachedCanvas.style.pointerEvents = 'none';
+      
+      // Ensure the container can receive scroll events
+      const container = attachedCanvas.parentElement;
+      if (container) {
+        container.style.pointerEvents = 'auto';
+        container.style.touchAction = 'auto';
+      }
     };
 
     init();
 
     return () => {
       cancelled = true;
-      if (attachedCanvas && blockEvent) {
-        ["pointerdown", "pointermove", "pointerup", "contextmenu"].forEach(ev =>
-          attachedCanvas!.removeEventListener(ev, blockEvent as EventListener)
-        );
+      if (attachedCanvas) {
+        // Reset pointer events and touch action
+        attachedCanvas.style.pointerEvents = 'auto';
+        attachedCanvas.style.touchAction = 'auto';
+        const container = attachedCanvas.parentElement;
+        if (container) {
+          container.style.pointerEvents = 'auto';
+          container.style.touchAction = 'auto';
+        }
       }
     };
   }, []);
 
   return (
-    <section ref={containerRef} className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden">
-      <div className="w-full h-full flex items-center justify-center">
+    <section ref={containerRef} className="relative w-full bg-black flex flex-col items-center justify-center overflow-hidden min-h-[400px] md:min-h-[500px]" style={{ touchAction: 'auto' }}>
+      <div className="w-full h-full flex items-center justify-center" style={{ touchAction: 'auto' }}>
         <Globe
           ref={globeRef}
           height={dimensions.height}

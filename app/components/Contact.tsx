@@ -40,9 +40,9 @@ export default function Contact() {
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-900/40 p-8">
         <SectionHeading
           eyebrow="Get Exclusive Access"
-          title="Be the First to Explore New Work"
+          title="Be the first to explore new work"
         />
-        <div className="mt-4 text-center">
+        <div className="mt-4 md:text-center">
           <p className="text-zinc-300 text-sm leading-relaxed max-w-2xl mx-auto">
             Unlock behind the scenes content, early previews of upcoming projects, and deep dives into hidden rituals and extreme traditions worldwide. Join our community and stay ahead of the curve.
           </p>
