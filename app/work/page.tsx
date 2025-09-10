@@ -1,12 +1,21 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SectionHeading from "../components/SectionHeading";
 import Footer from "../components/Footer";
 import ImagePreloader from "../components/ImagePreloader";
 import Contact from "../components/Contact";
+import ExclusiveAccessModal from "../components/ExclusiveAccessModal";
 
 const EVENTS = [
+  {
+    id: "bastar-dussera",
+    title: "Bastar Dusserha, India",
+    story: "One of the longest festivals in the world (75 days), Bastar Dusserha is a unique celebration of Goddess Danteshwari, involving rituals, processions, and tribal traditions.",
+    images: ["/coming-soon.webp"],
+    documentaryDate: "Coming Soon",
+  },
   {
     id: "tultepec",
     title: "Feria Internacional de la Pirotecnia, Mexico",
@@ -38,8 +47,10 @@ const EVENTS = [
 ];
 
 export default function WorkPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // Preload first few images from each event for faster loading
   const preloadImages = [
+    "/bastar-dussera.webp",
     "/tultepec.webp", "/tultepec2.webp", "/tultepec3.webp",
     "/vegetarian.webp", "/vegetarian2.webp", "/vegetarian3.webp", 
     "/hammers.webp", "/hammers2.webp", "/hammers3.webp",
@@ -71,64 +82,85 @@ export default function WorkPage() {
 
         {/* Event Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-          {EVENTS.map((event, index) => (
-            <Link
-              key={event.id}
-              href={`/work/${event.id}`}
-              className="group block bg-zinc-900/50 rounded-2xl overflow-hidden hover:bg-zinc-900/70 transition-all duration-300 border border-white/10 hover:border-white/20"
-            >
-              {/* Event Image */}
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image
-                  src={event.images[0]}
-                  alt={event.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  quality={85}
-                  priority={index < 2}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                
-                {/* Event number */}
-                <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-6 h-6 md:w-10 md:h-10 flex items-center justify-center text-2xs md:text-sm font-bold">
-                  {index + 1}
-                </div>
-              </div>
+          {EVENTS.map((event, index) => {
+            const isComingSoon = event.documentaryDate === "Coming Soon";
+            const CardContent = (
+              <div
+                className={`group block bg-zinc-900/50 rounded-2xl overflow-hidden transition-all duration-300 border border-white/10 ${isComingSoon ? "cursor-pointer" : "hover:bg-zinc-900/70 hover:border-white/20"}`}
+                onClick={isComingSoon ? () => setIsModalOpen(true) : undefined}
+              >
+                {/* Event Image */}
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <Image
+                    src={event.images[0]}
+                    alt={event.title}
+                    fill
+                    className={`object-cover ${isComingSoon ? "blur-md" : "group-hover:scale-105 transition-transform duration-500"}`}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    quality={85}
+                    priority={index < 2}
+                  />
+                  <div className={`absolute inset-0 ${isComingSoon ? 'bg-gradient-to-t from-[#FF9933]/60 via-[#FFFFFF]/60 to-[#138808]/60' : 'bg-gradient-to-t from-black/60 via-transparent to-transparent'}`} />
+                  {isComingSoon && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-2xl font-bold">
+                      Coming Soon
+                    </div>
+                  )}
 
-              {/* Event Content */}
-              <div className="p-6">
-                <h3 className="text-xl md:text-3xl font-semibold mb-3 group-hover:text-white transition-colors">
-                  {event.title}
-                </h3>
-                <p className="text-sm md:text-lg text-zinc-400 leading-relaxed mb-4 line-clamp-3">
-                  {event.story}
-                </p>
-                {event.documentaryDate && (
-                  <p className="text-base md:text-lg text-zinc-500 italic mb-4">
-                    🎬 Documentary coming {event.documentaryDate}
+                  {/* Event number */}
+                  <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-sm rounded-full w-6 h-6 md:w-10 md:h-10 flex items-center justify-center text-2xs md:text-sm font-bold">
+                    {index + 1}
+                  </div>
+                </div>
+
+                {/* Event Content */}
+                <div className="p-6">
+                  <h3 className="text-xl md:text-3xl font-semibold mb-3 group-hover:text-white transition-colors">
+                    {event.title}
+                  </h3>
+                  <p className="text-sm md:text-lg text-zinc-400 leading-relaxed mb-4 line-clamp-3">
+                    {event.story}
                   </p>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-500">
-                    {event.images.length} photos
-                  </span>
-                  <div className="flex items-center gap-2 text-sm text-zinc-400 group-hover:text-white transition-colors">
-                    <span>View event</span>
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                  {!isComingSoon && event.documentaryDate && (
+                    <p className="text-base md:text-lg text-zinc-500 italic mb-4">
+                      🎬 Documentary coming {event.documentaryDate}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between">
+                    {!isComingSoon && (
+                      <span className="text-sm text-zinc-500">
+                        {event.images.length} photos
+                      </span>
+                    )}
+                    <div className="flex items-center gap-2 text-sm text-zinc-400 group-hover:text-white transition-colors">
+                      <span>{isComingSoon ? 'Get exclusive access' : 'View event'}</span>
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
-            </Link>
-          ))}
+            );
+
+            return isComingSoon ? (
+              CardContent
+            ) : (
+              <Link key={event.id} href={`/work/${event.id}`}>
+                {CardContent}
+              </Link>
+            );
+          })}
         </div>
 
       </section>
 
       {/* Subscribe CTA Section */}
       <Contact />
+      <ExclusiveAccessModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
 
       <Footer />
     </main>
