@@ -131,7 +131,7 @@ export default function EventPage({
 
           {/* Hero Image */}
           {event.images.length > 0 && (
-            <div className="relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
+            <div className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
               <Image
                 src={event.images[0]}
                 alt={`${event.title} main photo`}
