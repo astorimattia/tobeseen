@@ -39,12 +39,12 @@ export default function Contact() {
     <section id="subscribe" className="mx-auto max-w-6xl px-4 py-16">
       <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-900/40 p-8">
         <SectionHeading
-          eyebrow="Stay Updated"
-          title="Subscribe to our quarterly newsletter"
+          eyebrow="Get Exclusive Access"
+          title="Be the First to Explore New Work"
         />
         <div className="mt-4 text-center">
           <p className="text-zinc-300 text-sm leading-relaxed max-w-2xl mx-auto">
-            Every three months, receive new work, rituals, photos, materials, and information about hidden rituals around the world.
+            Unlock behind the scenes content, early previews of upcoming projects, and deep dives into hidden rituals and extreme traditions worldwide. Join our community and stay ahead of the curve.
           </p>
         </div>
         {isSubscribed ? (

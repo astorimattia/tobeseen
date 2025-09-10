@@ -22,6 +22,7 @@ export default function FullScreenImageViewer({
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
   const [showLoading, setShowLoading] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -42,6 +43,7 @@ export default function FullScreenImageViewer({
 
   useEffect(() => {
     if (isOpen) {
+      startLoading();
       setCurrentIndex(initialIndex);
     }
   }, [isOpen, initialIndex]);
@@ -117,10 +119,11 @@ export default function FullScreenImageViewer({
     if (loadingTimeoutRef.current) {
       clearTimeout(loadingTimeoutRef.current);
     }
-    // Show loading overlay after 0.35 seconds
+    setIsImageLoading(true);
+    // Show loading overlay after 0.2 seconds
     loadingTimeoutRef.current = setTimeout(() => {
       setShowLoading(true);
-    }, 350);
+    }, 200);
   };
 
   const stopLoading = () => {
@@ -134,10 +137,12 @@ export default function FullScreenImageViewer({
 
   const handleImageLoad = () => {
     stopLoading();
+    setIsImageLoading(false);
   };
 
   const handleImageError = () => {
     stopLoading();
+    setIsImageLoading(false);
   };
 
   // Cleanup timeout on unmount
@@ -206,7 +211,7 @@ export default function FullScreenImageViewer({
             src={images[currentIndex]}
             alt={`${title} photo ${currentIndex + 1}`}
             fill
-            className="object-contain"
+            className={`object-contain ${isImageLoading ? 'invisible' : ''}`}
             priority
             quality={95}
             sizes="100vw"
