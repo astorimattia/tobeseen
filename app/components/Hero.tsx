@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 export default function Hero() {
   const router = useRouter();
-  
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        // Autoplay was prevented. Show a UI element to let the user manually start playback.
+        console.log("Autoplay prevented: ", error);
+      });
+    }
+  }, []);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -32,6 +42,7 @@ export default function Hero() {
         
         {/* Background video */}
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
