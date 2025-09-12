@@ -83,7 +83,7 @@ export default function WorkPage() {
         <div className="mx-auto max-w-6xl px-4 py-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs text-zinc-400 hover:text-white transition"
+            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition"
           >
             ← Back to home
           </Link>
