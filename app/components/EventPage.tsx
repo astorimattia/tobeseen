@@ -251,6 +251,7 @@ export default function EventPage({
         isOpen={isFullScreenOpen}
         onClose={closeFullScreen}
         title={event.title}
+        mode={isAnalogMode ? 'analog' : 'digital'}
       />
     </>
   );

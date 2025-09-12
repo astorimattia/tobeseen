@@ -9,6 +9,7 @@ interface FullScreenImageViewerProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  mode?: 'digital' | 'analog';
 }
 
 export default function FullScreenImageViewer({
@@ -16,7 +17,8 @@ export default function FullScreenImageViewer({
   initialIndex,
   isOpen,
   onClose,
-  title
+  title,
+  mode = 'digital'
 }: FullScreenImageViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
@@ -177,7 +179,16 @@ export default function FullScreenImageViewer({
 
       {/* Title */}
       <div className="absolute top-4 left-4 z-[10000] text-white max-w-[60%]">
-        <h2 className="text-lg font-medium truncate">{title}</h2>
+        <div className="flex items-center gap-3 mb-1">
+          <h2 className="text-lg font-medium truncate">{title}</h2>
+          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+            mode === 'analog' 
+              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' 
+              : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+          }`}>
+            {mode === 'analog' ? 'Analog' : 'Digital'}
+          </div>
+        </div>
         <p className="text-sm text-zinc-400">
           {currentIndex + 1} of {images.length}
         </p>
