@@ -11,6 +11,7 @@ interface Event {
   title: string;
   story: string;
   images: string[];
+  analogImages?: string[];
   documentaryDate?: string;
 }
 
@@ -36,6 +37,18 @@ export default function EventPage({
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isAnalogMode, setIsAnalogMode] = useState(false);
+
+  // Get current images based on toggle state
+  const currentImages = isAnalogMode && event.analogImages ? event.analogImages : event.images;
+  const hasAnalogImages = event.analogImages && event.analogImages.length > 0;
+
+  // Reset selected image index when switching modes
+  useEffect(() => {
+    setSelectedImageIndex(0);
+    setLoadedImages(new Set());
+    setImageErrors(new Set());
+  }, [isAnalogMode]);
 
   const handleImageClick = useCallback((index: number) => {
     setSelectedImageIndex(index);
@@ -121,19 +134,42 @@ export default function EventPage({
         <article className="space-y-8 mt-4 md:mt-8">
           <div className="space-y-6">
             <h1 className="text-2xl md:text-4xl font-bold leading-tight">{event.title}</h1>
-            <p className="text-base md:text-lg text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
-            {event.documentaryDate && (
-              <p className="text-sm md:text-base text-zinc-400 italic">
-                🎬 Documentary coming {event.documentaryDate}
-              </p>
+            <p className="text-sm md:text-base text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
+            
+            {/* Digital/Analog Toggle */}
+            {(hasAnalogImages || event.id === 'tinku' || event.id === 'tultepec') && (
+              <div className="flex items-center justify-center mt-6">
+                <div className="flex items-center bg-zinc-800/50 rounded-full p-1 border border-white/10">
+                  <button
+                    onClick={() => setIsAnalogMode(false)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
+                      !isAnalogMode
+                        ? 'bg-white text-black'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    Digital
+                  </button>
+                  <button
+                    onClick={() => setIsAnalogMode(true)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
+                      isAnalogMode
+                        ? 'bg-white text-black'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    Analog
+                  </button>
+                </div>
+              </div>
             )}
           </div>
 
           {/* Hero Image */}
-          {event.images.length > 0 && (
-            <div className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
+          {currentImages.length > 0 && (
+            <div key={`hero-${isAnalogMode ? 'analog' : 'digital'}`} className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
               <Image
-                src={event.images[0]}
+                src={currentImages[0]}
                 alt={`${event.title} main photo`}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -160,10 +196,10 @@ export default function EventPage({
           )}
 
           {/* Photo Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6">
-            {event.images.slice(1).map((src, i) => (
+          <div key={`grid-${isAnalogMode ? 'analog' : 'digital'}`} className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6">
+            {currentImages.slice(1).map((src, i) => (
               <button
-                key={i}
+                key={`${isAnalogMode ? 'analog' : 'digital'}-${i}`}
                 onClick={() => handleImageClick(i + 1)}
                 className="relative aspect-[4/3] overflow-hidden group cursor-pointer bg-zinc-800"
                 aria-label={`View ${event.title} photo ${i + 1} in full screen`}
@@ -210,7 +246,7 @@ export default function EventPage({
 
       {/* Full screen image viewer */}
       <FullScreenImageViewer
-        images={event.images}
+        images={currentImages}
         initialIndex={selectedImageIndex}
         isOpen={isFullScreenOpen}
         onClose={closeFullScreen}

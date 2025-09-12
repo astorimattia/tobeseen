@@ -55,7 +55,7 @@ export default function EventNavigation({
       <div className="flex items-center justify-between p-2 md:p-0">
         <button
           onClick={onPrevious}
-          className="group flex items-center justify-center gap-1 px-3 py-2 md:px-4 md:py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[50px] sm:w-[130px]"
+          className="group flex items-center justify-center gap-1 px-3 py-2 md:px-4 md:py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[50px] sm:w-[130px] cursor-pointer"
           aria-label="Previous event"
         >
           <svg 
@@ -87,7 +87,7 @@ export default function EventNavigation({
 
         <button
           onClick={onNext}
-          className="group flex items-center justify-center gap-1 px-3 py-2 md:px-4 md:py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[50px] sm:w-[130px]"
+          className="group flex items-center justify-center gap-1 px-3 py-2 md:px-4 md:py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 backdrop-blur-sm border border-white/20 w-[50px] sm:w-[130px] cursor-pointer"
           aria-label="Next event"
         >
           <span className="text-2xs md:text-xs font-medium hidden sm:inline">Next</span>

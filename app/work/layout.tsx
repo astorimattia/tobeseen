@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     url: "/work",
     images: [
       {
-        url: "/tultepec.webp",
+        url: "/digital/tultepec.webp",
         width: 1200,
         height: 630,
         alt: "Feria Internacional de la Pirotecnia - Dangerous fireworks festival",

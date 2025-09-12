@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     siteName: "Sacratos",
     images: [
       {
-        url: "https://sacratos.com/tultepec.webp",
+        url: "https://sacratos.com/digital/tultepec.webp",
         width: 1200,
         height: 630,
         alt: "Feria Internacional de la Pirotecnia - Bulls loaded with rockets thrown against thousands of people",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Sacratos - Stories of Raw Devotion",
     description: "Documentary photography and stories from the world's most dangerous and hidden cultural events.",
-    images: ["https://sacratos.com/tultepec.webp"],
+    images: ["https://sacratos.com/digital/tultepec.webp"],
     creator: "@sacratos",
   },
   robots: {

@@ -8,7 +8,7 @@ const GALLERY: GalleryItem[] = [
     title: "Feria Internacional de la Pirotecnia, Mexico",
     subtitle:
       "200 bulls loaded with rockets are thrown against thousands of people, 53 wounded.",
-    image: "/tultepec.webp",
+    image: "/digital/tultepec.webp",
   },
   {
     id: "vegetarian",
@@ -29,7 +29,7 @@ const GALLERY: GalleryItem[] = [
     title: "Tinku de Macha, Bolivia",
     subtitle:
       "Day 1: Dance. Day 2: Fight. Day 3: Mourn. At 4,000m, the blood seals a harvest year.",
-    image: "/tinku.webp",
+    image: "/digital/tinku.webp",
   },
 ];
 

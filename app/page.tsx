@@ -12,10 +12,10 @@ import ImagePreloader from "./components/ImagePreloader";
 export default function Page() {
   // Critical images to preload for main page
   const criticalImages = [
-    "/tultepec.webp",
-    "/vegetarian.webp", 
-    "/hammers.webp",
-    "/tinku.webp",
+    "/digital/tultepec.webp",
+    "/digital/vegetarian.webp", 
+    "/digital/hammers.webp",
+    "/digital/tinku.webp",
     "/daniele.png",
     "/mattia.png"
   ];
