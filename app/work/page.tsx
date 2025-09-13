@@ -10,13 +10,6 @@ import ExclusiveAccessModal from "../components/ExclusiveAccessModal";
 
 const EVENTS = [
   {
-    id: "bastar-dussera",
-    title: "Bastar Dusserha, India",
-    story: "One of the longest festivals in the world (75 days), Bastar Dusserha is a unique celebration of Goddess Danteshwari, involving rituals, processions, and tribal traditions.",
-    images: ["/digital/tultepec.webp"],
-    documentaryDate: "Coming Soon",
-  },
-  {
     id: "tultepec",
     title: "Feria Internacional de la Pirotecnia, Mexico",
     story: "Every year, 200 man made bulls loaded with fireworks are thrown into crowds. The streets become a battlefield with fire and explosion, it's a tradition that tests the limits of human courage and the power of fire.",
