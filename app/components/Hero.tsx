@@ -60,12 +60,7 @@ export default function Hero() {
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%',
-            WebkitMediaControls: 'none',
-            WebkitMediaControlsPanel: 'none',
-            WebkitMediaControlsPlayButton: 'none',
-            WebkitMediaControlsStartPlaybackButton: 'none',
-            WebkitMediaControlsOverlayPlayButton: 'none'
+            height: '100%'
           }}
         >
           Your browser does not support the video tag.
