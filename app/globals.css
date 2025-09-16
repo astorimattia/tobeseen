@@ -49,6 +49,44 @@ video {
   display: block;
 }
 
+/* Hide video controls and play button on mobile */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+video::-webkit-media-controls-play-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+}
+
+/* Additional mobile-specific video styling */
+@media (max-width: 768px) {
+  video {
+    -webkit-playsinline: true;
+    -webkit-media-controls: none;
+    -webkit-media-controls-panel: none;
+    -webkit-media-controls-play-button: none;
+    -webkit-media-controls-start-playback-button: none;
+    -webkit-media-controls-overlay-play-button: none;
+  }
+  
+  /* Force hide any video controls on mobile */
+  video[controls] {
+    -webkit-media-controls: none !important;
+  }
+}
+
 /* Ensure proper z-index stacking */
 .z-0 { z-index: 0 !important; }
 .z-1 { z-index: 1 !important; }

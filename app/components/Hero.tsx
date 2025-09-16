@@ -51,6 +51,8 @@ export default function Hero() {
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
+          webkit-playsinline="true"
+          x5-playsinline="true"
           src="/bg.webm"
           className="h-full w-full object-cover pointer-events-none"
           style={{ 
@@ -58,7 +60,12 @@ export default function Hero() {
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%'
+            height: '100%',
+            WebkitMediaControls: 'none',
+            WebkitMediaControlsPanel: 'none',
+            WebkitMediaControlsPlayButton: 'none',
+            WebkitMediaControlsStartPlaybackButton: 'none',
+            WebkitMediaControlsOverlayPlayButton: 'none'
           }}
         >
           Your browser does not support the video tag.
