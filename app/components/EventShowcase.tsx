@@ -73,7 +73,13 @@ export default function EventShowcase({ id, title, story, images, documentaryDat
                 src={src}
                 alt={`${title} photo ${i + 1}`}
                 fill
-                className={`object-cover group-hover:scale-105 transition-transform duration-300 ${
+                className={`${
+                  // Specific positioning for certain images
+                  (id === 'vegetarian' && (i === 6 || i === 10)) || // Vegetarian photos 7 and 11 (0-indexed)
+                  (id === 'tultepec' && i === 2) // Feria Internacional photo 3 (0-indexed)
+                    ? 'object-top' 
+                    : 'object-cover'
+                } group-hover:scale-105 transition-transform duration-300 ${
                   loadedImages.has(i) ? 'opacity-100' : 'opacity-0'
                 }`}
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"

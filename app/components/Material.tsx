@@ -15,14 +15,14 @@ const GALLERY: GalleryItem[] = [
     title: "Vegetarian Festival, Thailand",
     subtitle:
       "Spirit mediums pierce their skin to get rid of evil.",
-    image: "/vegetarian8.webp",
+    image: "/digital/vegetarian.webp",
   },
   {
     id: "hammers",
     title: "Exploding Hammers, Mexico",
     subtitle:
       "Hammers packed with explosives slam stone anvils.",
-    image: "/hammers2.webp",
+    image: "/digital/hammers.webp",
   },
   {
     id: "tinku",
