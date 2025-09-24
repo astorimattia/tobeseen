@@ -17,6 +17,27 @@ export async function POST(req: Request) {
     // Try to save the email to a file (optional - may fail in serverless)
     try {
       const filePath = './subscribers.txt';
+      
+      // Check if email already exists
+      let existingEmails: string[] = [];
+      try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        existingEmails = fileContent.split('\n').filter(line => line.trim() !== '');
+      } catch (readError) {
+        // File doesn't exist yet, that's fine
+        console.log('Subscribers file does not exist yet, creating new one');
+      }
+      
+      // Check for duplicate email
+      if (existingEmails.includes(email)) {
+        console.log(`Email already exists: ${email}`);
+        return new Response(JSON.stringify({ message: 'Email already subscribed!' }), {
+          status: 409, // Conflict status code
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+      
+      // Add new email
       await fs.appendFile(filePath, email + '\n');
       console.log(`Email saved to file: ${email}`);
     } catch (fileError) {

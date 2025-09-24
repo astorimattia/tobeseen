@@ -10,6 +10,7 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
   onClose,
 }) => {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Handle Escape key to close modal
   useEffect(() => {
@@ -32,6 +33,11 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent multiple submissions
+    if (isLoading) return;
+    
+    setIsLoading(true);
     try {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
@@ -52,6 +58,8 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
     } catch (error) {
       console.error('Error subscribing:', error);
       alert('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,12 +109,14 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
             onChange={(e) => setEmail(e.target.value)}
             className="flex-1 w-full sm:max-w-xs md:max-w-sm rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
             required
+            disabled={isLoading}
           />
           <button
             type="submit"
-            className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer"
+            className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={isLoading}
           >
-            Subscribe
+            {isLoading ? 'Subscribing...' : 'Subscribe'}
           </button>
         </form>
       </div>
