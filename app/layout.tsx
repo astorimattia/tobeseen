@@ -29,6 +29,20 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.webp", type: "image/webp" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#000000" },
+    ],
+  },
   openGraph: {
     title: "Sacratos - Stories of Raw Devotion",
     description: "Documentary photography and stories from the world's most dangerous and hidden cultural events. From exploding hammers in Mexico to spirit mediums in Thailand, we capture the chaos, beauty, and truth that mainstream media misses.",
@@ -77,8 +91,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.webp" type="image/webp" />
-        <link rel="apple-touch-icon" href="/favicon.webp" />
         <meta name="theme-color" content="#000000" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         
