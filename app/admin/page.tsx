@@ -28,15 +28,43 @@ interface AnalyticsData {
     };
 }
 
+const getCountryName = (code: string) => {
+    try {
+        const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+        return regionNames.of(code) || code;
+    } catch {
+        return code;
+    }
+};
+
 export default function AdminPage() {
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
     const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
-    const [activeTab, setActiveTab] = useState('subscribers'); // 'subscribers' | 'analytics'
+    const [activeTab, setActiveTab] = useState('analytics'); // 'subscribers' | 'analytics'
     const [timeRange, setTimeRange] = useState('0'); // '0' = Today, '7', '30', 'all'
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [sortConfig, setSortConfig] = useState<{ key: keyof Subscriber; direction: 'asc' | 'desc' }>({ key: 'date', direction: 'desc' });
+
+    const sortedSubscribers = [...subscribers].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+    });
+
+    const requestSort = (key: keyof Subscriber) => {
+        let direction: 'asc' | 'desc' = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
 
     // helper to set cookie
     const setCookie = (name: string, value: string, days: number) => {
@@ -182,7 +210,7 @@ export default function AdminPage() {
                         <p className="text-gray-400 text-sm mt-1">
                             {activeTab === 'subscribers'
                                 ? `Total Subscribers: ${subscribers.length}`
-                                : `Views (${timeRange === 'all' ? 'All Time' : timeRange === '0' ? 'Today' : `Last ${timeRange} Days`}): ${analytics?.overview?.views || 0}`}
+                                : `Views${timeRange === 'all' ? ' (All Time)' : timeRange === '0' ? '' : ` (Last ${timeRange} Days)`}: ${analytics?.overview?.views || 0}`}
                         </p>
                     </div>
                     <button
@@ -197,15 +225,6 @@ export default function AdminPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-800 pb-2 mb-6 gap-4">
                     <div className="flex space-x-4">
                         <button
-                            onClick={() => setActiveTab('subscribers')}
-                            className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'subscribers'
-                                ? 'border-indigo-500 text-indigo-400'
-                                : 'border-transparent text-gray-400 hover:text-white'
-                                }`}
-                        >
-                            Subscribers
-                        </button>
-                        <button
                             onClick={() => setActiveTab('analytics')}
                             className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'analytics'
                                 ? 'border-indigo-500 text-indigo-400'
@@ -213,6 +232,15 @@ export default function AdminPage() {
                                 }`}
                         >
                             Analytics
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('subscribers')}
+                            className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'subscribers'
+                                ? 'border-indigo-500 text-indigo-400'
+                                : 'border-transparent text-gray-400 hover:text-white'
+                                }`}
+                        >
+                            Subscribers
                         </button>
                     </div>
 
@@ -232,16 +260,19 @@ export default function AdminPage() {
 
                 {activeTab === 'subscribers' ? (
                     <div className="bg-gray-900 shadow overflow-hidden sm:rounded-md border border-gray-800">
+                        <div className="px-4 py-3 border-b border-gray-800 flex justify-between bg-gray-800/50">
+                            <button onClick={() => requestSort('email')} className="text-xs font-semibold text-gray-400 uppercase tracking-wider hover:text-white flex items-center gap-1">
+                                Email {sortConfig.key === 'email' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                            </button>
+                            <button onClick={() => requestSort('date')} className="text-xs font-semibold text-gray-400 uppercase tracking-wider hover:text-white flex items-center gap-1">
+                                Joined {sortConfig.key === 'date' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                            </button>
+                        </div>
                         <ul className="divide-y divide-gray-800">
-                            {subscribers.map((sub) => (
+                            {sortedSubscribers.map((sub) => (
                                 <li key={sub.email} className="px-4 py-4 sm:px-6 hover:bg-gray-800/50 transition-colors">
                                     <div className="flex items-center justify-between">
-                                        <p className="text-sm font-medium text-indigo-400 truncate">{sub.email}</p>
-                                        <div className="ml-2 flex-shrink-0 flex">
-                                            <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100/10 text-green-400">
-                                                Active
-                                            </p>
-                                        </div>
+                                        <a href={`mailto:${sub.email}`} className="text-sm font-medium text-indigo-400 truncate hover:text-indigo-300">{sub.email}</a>
                                     </div>
                                     <div className="mt-2 sm:flex sm:justify-between">
                                         <div className="sm:flex">
@@ -301,7 +332,7 @@ export default function AdminPage() {
                                         <ul className="space-y-3">
                                             {analytics.data.countries.map((p, i) => (
                                                 <li key={i} className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-300 truncate">{p.name}</span>
+                                                    <span className="text-sm text-gray-300 truncate">{getCountryName(p.name)}</span>
                                                     <span className="text-sm font-mono text-gray-500">{p.value}</span>
                                                 </li>
                                             ))}
@@ -340,7 +371,7 @@ export default function AdminPage() {
                                                         )}
                                                     </td>
                                                     <td className="px-4 py-3 text-gray-300 font-mono text-xs">{v.ip}</td>
-                                                    <td className="px-4 py-3 text-gray-300">{v.country}</td>
+                                                    <td className="px-4 py-3 text-gray-300">{v.country ? getCountryName(v.country) : 'Unknown'}</td>
                                                     <td className="px-4 py-3 text-gray-500 text-xs">{new Date(v.lastSeen).toLocaleString()}</td>
                                                 </tr>
                                             ))
