@@ -81,8 +81,8 @@ export async function GET(req: Request) {
             for (let i = 0; i < dates.length; i++) {
                 chartData.push({
                     date: dates[i],
-                    views: parseInt((dailyViews[i] as string) || '0'),
-                    visitors: (dailyVisitors[i] as number) || 0
+                    views: parseInt((dailyViews[i] as unknown as string) || '0'),
+                    visitors: (dailyVisitors[i] as unknown as number) || 0
                 });
             }
         }
@@ -155,7 +155,7 @@ export async function GET(req: Request) {
         console.error('Analytics fetch error:', error);
         return NextResponse.json({
             overview: { views: 0, visitors: 0 },
-            overview: { views: 0, visitors: 0 },
+
             data: { chart: [], pages: [], countries: [], referrers: [], recentVisitors: [] }
         });
     } finally {
