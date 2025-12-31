@@ -1,0 +1,73 @@
+import { createClient } from 'redis';
+import { NextResponse } from 'next/server';
+
+// Initialize Redis client
+const getRedisClient = () => {
+    const redisUrl = process.env.REDIS_URL;
+    if (!redisUrl) {
+        throw new Error('REDIS_URL is not set');
+    }
+    return createClient({ url: redisUrl });
+};
+
+export async function POST(req: Request) {
+    try {
+        const body = await req.json();
+        const { path, country, referrer, visitorId } = body;
+
+        // Basic validation
+        if (!path) {
+            return NextResponse.json({ error: 'Missing path' }, { status: 400 });
+        }
+
+        const redis = getRedisClient();
+        if (!redis.isOpen) await redis.connect();
+
+        const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
+        const pipeline = redis.multi();
+
+        // 1. Total Page Views
+        pipeline.incr(`analytics:views:${today}`);
+
+        // 2. Unique Visitors (HyperLogLog)
+        if (visitorId) {
+            pipeline.pfAdd(`analytics:visitors:${today}`, visitorId);
+        }
+
+        // 3. Top Pages (Sorted Set)
+        pipeline.zIncrBy(`analytics:pages:${today}`, 1, path);
+
+        // 4. Top Countries (Sorted Set)
+        if (country) {
+            pipeline.zIncrBy(`analytics:countries:${today}`, 1, country);
+        }
+
+        // 5. Top Referrers (Sorted Set)
+        if (referrer) {
+            // Simple domain extraction
+            try {
+                const domain = new URL(referrer).hostname;
+                pipeline.zIncrBy(`analytics:referrers:${today}`, 1, domain);
+            } catch {
+                // Invalid URL or internal, skip or track as direct/other
+            }
+        }
+
+        // Set expiry for keys (e.g., 90 days) to keep DB clean
+        const EXPIRY = 60 * 60 * 24 * 90; // 90 days
+        pipeline.expire(`analytics:views:${today}`, EXPIRY);
+        pipeline.expire(`analytics:visitors:${today}`, EXPIRY);
+        pipeline.expire(`analytics:pages:${today}`, EXPIRY);
+        pipeline.expire(`analytics:countries:${today}`, EXPIRY);
+        pipeline.expire(`analytics:referrers:${today}`, EXPIRY);
+
+        await pipeline.exec();
+
+        return NextResponse.json({ success: true });
+
+    } catch (error) {
+        console.error('Analytics tracking error:', error);
+        return NextResponse.json({ error: 'Tracking failed' }, { status: 500 });
+    }
+}
