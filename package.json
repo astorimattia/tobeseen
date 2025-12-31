@@ -9,12 +9,15 @@
     "lint": "eslint",
     "optimize-images": "node scripts/optimize-images.js",
     "build:optimized": "npm run optimize-images && npm run build",
-    "migrate-subscribers": "tsx scripts/migrate-subscribers-to-redis.ts"
+    "migrate-subscribers": "tsx scripts/migrate-subscribers-to-redis.ts",
+    "import-legacy": "tsx scripts/import-legacy-subscribers.ts",
+    "check-subscribers": "tsx scripts/check-redis-subscribers.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.4",
     "@react-three/fiber": "^9.3.0",
     "@vercel/kv": "^3.0.0",
+    "csv-parse": "^6.1.0",
     "framer-motion": "^12.23.12",
     "next": "15.5.9",
     "react": "19.1.0",
@@ -34,6 +37,7 @@
     "@types/react-dom": "^19",
     "@types/three": "^0.179.0",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "postcss": "^8.5.6",

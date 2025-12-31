@@ -15,7 +15,7 @@ function getRedisClient() {
 export async function POST(req: Request) {
   const redis = getRedisClient();
   let redisConnected = false;
-  
+
   try {
     const { email } = await req.json();
 
@@ -36,19 +36,19 @@ export async function POST(req: Request) {
 
     // Save the email to Redis
     try {
-      // Check if email already exists using Redis SISMEMBER
-      const exists = await redis.sIsMember(SUBSCRIBERS_KEY, email);
-      
-      if (exists) {
+      // Check if email already exists using Redis ZSCORE (for Sorted Sets)
+      const score = await redis.zScore(SUBSCRIBERS_KEY, email);
+
+      if (score !== null) {
         console.log(`Email already exists: ${email}`);
         return new Response(JSON.stringify({ message: 'Email already subscribed!' }), {
           status: 409, // Conflict status code
           headers: { 'Content-Type': 'application/json' },
         });
       }
-      
-      // Add new email to Redis set
-      await redis.sAdd(SUBSCRIBERS_KEY, email);
+
+      // Add new email to Redis Sorted Set with current timestamp as score
+      await redis.zAdd(SUBSCRIBERS_KEY, { score: Date.now(), value: email });
       console.log(`Email saved to Redis: ${email}`);
     } catch (redisError) {
       console.error('Could not save email to Redis:', redisError);
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     // Try to send notification email using Resend
     let emailSent = false;
     let emailError: string | null = null;
-    
+
     try {
       const resendConfigured = process.env.RESEND_API_KEY && process.env.NOTIFICATION_EMAIL;
 
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
         RESEND_API_KEY_LENGTH: process.env.RESEND_API_KEY?.length || 0,
         RESEND_API_KEY_PREFIX: process.env.RESEND_API_KEY?.substring(0, 10) || 'NOT_SET',
         NOTIFICATION_EMAIL: !!process.env.NOTIFICATION_EMAIL,
-        NOTIFICATION_EMAIL_VALUE: process.env.NOTIFICATION_EMAIL ? 
+        NOTIFICATION_EMAIL_VALUE: process.env.NOTIFICATION_EMAIL ?
           process.env.NOTIFICATION_EMAIL.split(',').map(e => e.trim()) : [],
         NODE_ENV: process.env.NODE_ENV,
         VERCEL_ENV: process.env.VERCEL_ENV,
@@ -133,7 +133,7 @@ export async function POST(req: Request) {
           console.error('❌ [EMAIL ERROR] Error details:', JSON.stringify(error, null, 2));
           console.error('❌ [EMAIL ERROR] Error name:', error.name);
           console.error('❌ [EMAIL ERROR] Error message:', error.message);
-          
+
           // Handle specific Resend validation errors
           if (
             typeof error === 'object' &&
@@ -147,7 +147,7 @@ export async function POST(req: Request) {
             console.error('   2. Set RESEND_FROM_EMAIL to use your verified domain (e.g., "noreply@yourdomain.com")');
             console.error('   3. Or ensure NOTIFICATION_EMAIL matches your Resend account email (mattiastori@gmail.com)');
           }
-          
+
           // Re-throw to ensure it's logged in production monitoring
           throw new Error(`Resend API error: ${JSON.stringify(error)}`);
         } else {
@@ -160,12 +160,12 @@ export async function POST(req: Request) {
         const missingVars = [];
         if (!process.env.RESEND_API_KEY) missingVars.push('RESEND_API_KEY');
         if (!process.env.NOTIFICATION_EMAIL) missingVars.push('NOTIFICATION_EMAIL');
-        
+
         emailError = `Missing environment variables: ${missingVars.join(', ')}`;
         console.error('❌ [EMAIL ERROR] Resend configuration not available, skipping email notification');
         console.error('❌ [EMAIL ERROR] Missing environment variables:', missingVars);
         console.error('❌ [EMAIL ERROR] Environment check:', JSON.stringify(envCheck, null, 2));
-        
+
         // In production, this should be a warning but not break the subscription
         // Consider using a monitoring service to alert on this
       }
@@ -177,11 +177,11 @@ export async function POST(req: Request) {
       console.error('❌ [EMAIL ERROR] Error message:', emailErrorCaught instanceof Error ? emailErrorCaught.message : String(emailErrorCaught));
       console.error('❌ [EMAIL ERROR] Error stack:', emailErrorCaught instanceof Error ? emailErrorCaught.stack : 'No stack trace');
       console.error('❌ [EMAIL ERROR] Full error:', JSON.stringify(emailErrorCaught, Object.getOwnPropertyNames(emailErrorCaught), 2));
-      
+
       // Continue execution - email sending is optional, subscription should still succeed
       // But log it prominently so it can be caught in production monitoring
     }
-    
+
     // Final status log
     console.error(`📊 [EMAIL STATUS] Email sent: ${emailSent}, Error: ${emailError || 'None'}`);
 
