@@ -135,8 +135,13 @@ export async function POST(req: Request) {
           console.error('❌ [EMAIL ERROR] Error message:', error.message);
           
           // Handle specific Resend validation errors
-          const errorAny = error as any;
-          if (errorAny.statusCode === 403 && error.name === 'validation_error') {
+          if (
+            typeof error === 'object' &&
+            error !== null &&
+            'statusCode' in error &&
+            (error as { statusCode?: number }).statusCode === 403 &&
+            error.name === 'validation_error'
+          ) {
             console.error('❌ [EMAIL ERROR] Resend is in testing mode. Solutions:');
             console.error('   1. Verify a domain at https://resend.com/domains');
             console.error('   2. Set RESEND_FROM_EMAIL to use your verified domain (e.g., "noreply@yourdomain.com")');
