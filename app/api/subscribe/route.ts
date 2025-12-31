@@ -1,7 +1,21 @@
-import fs from 'fs/promises';
+import { createClient } from 'redis';
 import { Resend } from 'resend';
 
+const SUBSCRIBERS_KEY = 'subscribers';
+
+// Create Redis client
+function getRedisClient() {
+  const redisUrl = process.env.REDIS_URL;
+  if (!redisUrl) {
+    throw new Error('REDIS_URL environment variable is not set');
+  }
+  return createClient({ url: redisUrl });
+}
+
 export async function POST(req: Request) {
+  const redis = getRedisClient();
+  let redisConnected = false;
+  
   try {
     const { email } = await req.json();
 
@@ -14,22 +28,18 @@ export async function POST(req: Request) {
 
     console.log(`New subscriber email: ${email}`);
 
-    // Try to save the email to a file (optional - may fail in serverless)
+    // Connect to Redis if not already connected
+    if (!redis.isOpen) {
+      await redis.connect();
+      redisConnected = true;
+    }
+
+    // Save the email to Redis
     try {
-      const filePath = './subscribers.txt';
+      // Check if email already exists using Redis SISMEMBER
+      const exists = await redis.sIsMember(SUBSCRIBERS_KEY, email);
       
-      // Check if email already exists
-      let existingEmails: string[] = [];
-      try {
-        const fileContent = await fs.readFile(filePath, 'utf-8');
-        existingEmails = fileContent.split('\n').filter(line => line.trim() !== '');
-      } catch (readError) {
-        // File doesn't exist yet, that's fine
-        console.log('Subscribers file does not exist yet, creating new one');
-      }
-      
-      // Check for duplicate email
-      if (existingEmails.includes(email)) {
+      if (exists) {
         console.log(`Email already exists: ${email}`);
         return new Response(JSON.stringify({ message: 'Email already subscribed!' }), {
           status: 409, // Conflict status code
@@ -37,12 +47,16 @@ export async function POST(req: Request) {
         });
       }
       
-      // Add new email
-      await fs.appendFile(filePath, email + '\n');
-      console.log(`Email saved to file: ${email}`);
-    } catch (fileError) {
-      console.warn('Could not save email to file (serverless environment):', fileError);
-      // Continue execution - file saving is optional
+      // Add new email to Redis set
+      await redis.sAdd(SUBSCRIBERS_KEY, email);
+      console.log(`Email saved to Redis: ${email}`);
+    } catch (redisError) {
+      console.error('Could not save email to Redis:', redisError);
+      // Return error if Redis fails - this is critical functionality
+      return new Response(JSON.stringify({ message: 'Failed to save subscription. Please try again later.' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Try to send notification email using Resend
@@ -176,5 +190,10 @@ export async function POST(req: Request) {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
+  } finally {
+    // Close Redis connection
+    if (redisConnected && redis.isOpen) {
+      await redis.quit();
+    }
   }
 }
