@@ -27,6 +27,7 @@ export default function FullScreenImageViewer({
   const [isImageLoading, setIsImageLoading] = useState(false);
   const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [useFallback, setUseFallback] = useState(false);
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -35,11 +36,13 @@ export default function FullScreenImageViewer({
 
   const goToPrevious = React.useCallback(() => {
     startLoading();
+    setUseFallback(false); // Reset fallback when navigating
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
   }, [images.length]);
 
   const goToNext = React.useCallback(() => {
     startLoading();
+    setUseFallback(false); // Reset fallback when navigating
     setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
   }, [images.length]);
 
@@ -47,6 +50,7 @@ export default function FullScreenImageViewer({
     if (isOpen) {
       startLoading();
       setCurrentIndex(initialIndex);
+      setUseFallback(false); // Reset fallback when opening
     }
   }, [isOpen, initialIndex]);
 
@@ -143,8 +147,18 @@ export default function FullScreenImageViewer({
   };
 
   const handleImageError = () => {
-    stopLoading();
-    setIsImageLoading(false);
+    // Try fallback if not already using it
+    if (!useFallback) {
+      setUseFallback(true);
+      setIsImageLoading(true);
+      // Retry loading with fallback
+      setTimeout(() => {
+        setIsImageLoading(false);
+      }, 100);
+    } else {
+      stopLoading();
+      setIsImageLoading(false);
+    }
   };
 
   // Cleanup timeout on unmount
@@ -218,19 +232,30 @@ export default function FullScreenImageViewer({
       {/* Main image */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full max-w-full max-h-full">
-          <Image
-            src={images[currentIndex]}
-            alt={`${title} photo ${currentIndex + 1}`}
-            fill
-            className={`object-contain ${isImageLoading ? 'invisible' : ''}`}
-            priority
-            quality={95}
-            sizes="100vw"
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-          />
+          {useFallback ? (
+            <img
+              src={images[currentIndex]}
+              alt={`${title} photo ${currentIndex + 1}`}
+              className={`object-contain w-full h-full ${isImageLoading ? 'invisible' : ''}`}
+              style={{ position: 'absolute', inset: 0 }}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          ) : (
+            <Image
+              src={images[currentIndex]}
+              alt={`${title} photo ${currentIndex + 1}`}
+              fill
+              className={`object-contain ${isImageLoading ? 'invisible' : ''}`}
+              priority
+              quality={95}
+              sizes="100vw"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+            />
+          )}
         </div>
       </div>
 
@@ -250,6 +275,7 @@ export default function FullScreenImageViewer({
             key={index}
             onClick={() => {
               startLoading();
+              setUseFallback(false); // Reset fallback when navigating
               setCurrentIndex(index);
             }}
             className={`w-2 h-2 rounded-full transition-colors ${

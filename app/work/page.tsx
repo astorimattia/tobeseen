@@ -8,6 +8,10 @@ import ImagePreloader from "../components/ImagePreloader";
 import Contact from "../components/Contact";
 import ExclusiveAccessModal from "../components/ExclusiveAccessModal";
 
+export default function WorkPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageFallbacks, setImageFallbacks] = useState<Set<string>>(new Set());
+
 const EVENTS = [
   {
     id: "tultepec",
@@ -56,8 +60,6 @@ const EVENTS = [
   },
 ];
 
-export default function WorkPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   // Preload first few images from each event for faster loading
   const preloadImages = [
     "/digital/tultepec.webp", "/digital/tultepec2.webp", "/digital/tultepec3.webp",
@@ -101,15 +103,34 @@ export default function WorkPage() {
               >
                 {/* Event Image */}
                 <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image
-                    src={event.images[0]}
-                    alt={event.title}
-                    fill
-                    className={`object-cover ${isComingSoon ? "blur-md" : "group-hover:scale-105 transition-transform duration-500"}`}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    quality={85}
-                    priority={index < 2}
-                  />
+                  {imageFallbacks.has(event.id) ? (
+                    <img
+                      src={event.images[0]}
+                      alt={event.title}
+                      className={`object-cover w-full h-full ${isComingSoon ? "blur-md" : "group-hover:scale-105 transition-transform duration-500"}`}
+                      style={{ position: 'absolute', inset: 0 }}
+                      onError={() => {
+                        if (!imageFallbacks.has(event.id)) {
+                          setImageFallbacks(prev => new Set(prev).add(event.id));
+                        }
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      src={event.images[0]}
+                      alt={event.title}
+                      fill
+                      className={`object-cover ${isComingSoon ? "blur-md" : "group-hover:scale-105 transition-transform duration-500"}`}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      quality={85}
+                      priority={index < 2}
+                      onError={() => {
+                        if (!imageFallbacks.has(event.id)) {
+                          setImageFallbacks(prev => new Set(prev).add(event.id));
+                        }
+                      }}
+                    />
+                  )}
                   <div className={`absolute inset-0 ${isComingSoon ? 'bg-gradient-to-t from-[#FF9933]/60 via-[#FFFFFF]/60 to-[#138808]/60' : 'bg-gradient-to-t from-black/60 via-transparent to-transparent'}`} />
                   {isComingSoon && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-xl font-bold">

@@ -35,6 +35,7 @@ export default function EventPage({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+  const [imageFallbacks, setImageFallbacks] = useState<Set<number>>(new Set());
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isAnalogMode, setIsAnalogMode] = useState(false);
@@ -48,6 +49,7 @@ export default function EventPage({
     setSelectedImageIndex(0);
     setLoadedImages(new Set());
     setImageErrors(new Set());
+    setImageFallbacks(new Set());
   }, [isAnalogMode]);
 
   const handleImageClick = useCallback((index: number) => {
@@ -64,8 +66,18 @@ export default function EventPage({
   }, []);
 
   const handleImageError = useCallback((index: number) => {
-    setImageErrors(prev => new Set(prev).add(index));
-  }, []);
+    // Try fallback if not already using it
+    if (!imageFallbacks.has(index)) {
+      setImageFallbacks(prev => new Set(prev).add(index));
+      setImageErrors(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(index); // Remove error to retry with fallback
+        return newSet;
+      });
+    } else {
+      setImageErrors(prev => new Set(prev).add(index));
+    }
+  }, [imageFallbacks]);
 
   const navigateToEvent = useCallback((eventId: string) => {
     router.push(`/work/${eventId}`);
@@ -168,18 +180,29 @@ export default function EventPage({
           {/* Hero Image */}
           {currentImages.length > 0 && (
             <div key={`hero-${isAnalogMode ? 'analog' : 'digital'}`} className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
-              <Image
-                src={currentImages[0]}
-                alt={`${event.title} main photo`}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="100vw"
-                priority
-                onLoad={() => handleImageLoad(0)}
-                onError={() => handleImageError(0)}
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-              />
+              {imageFallbacks.has(0) ? (
+                <img
+                  src={currentImages[0]}
+                  alt={`${event.title} main photo`}
+                  className="object-cover transition-transform duration-300 group-hover:scale-105 w-full h-full"
+                  style={{ position: 'absolute', inset: 0 }}
+                  onLoad={() => handleImageLoad(0)}
+                  onError={() => handleImageError(0)}
+                />
+              ) : (
+                <Image
+                  src={currentImages[0]}
+                  alt={`${event.title} main photo`}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="100vw"
+                  priority
+                  onLoad={() => handleImageLoad(0)}
+                  onError={() => handleImageError(0)}
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                />
+              )}
               {/* Loading placeholder */}
               {!loadedImages.has(0) && !imageErrors.has(0) && (
                 <div className="absolute inset-0 bg-zinc-800 animate-pulse flex items-center justify-center">
@@ -218,26 +241,45 @@ export default function EventPage({
                   </div>
                 )}
 
-                <Image
-                  src={src}
-                  alt={`${event.title} photo ${i + 1}`}
-                  fill
-                  className={`object-cover group-hover:scale-105 transition-transform duration-300 ${
-                    loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{
-                    objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' : 
-                                   event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
-                  }}
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  quality={85}
-                  loading={i < 8 ? "eager" : "lazy"} // Load first 8 images eagerly, rest lazy
-                  priority={i < 4} // Prioritize first 4 images
-                  onLoad={() => handleImageLoad(i + 1)}
-                  onError={() => handleImageError(i + 1)}
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
+                {imageFallbacks.has(i + 1) ? (
+                  <img
+                    src={src}
+                    alt={`${event.title} photo ${i + 1}`}
+                    className={`object-cover group-hover:scale-105 transition-transform duration-300 w-full h-full ${
+                      loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' : 
+                                     event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
+                    }}
+                    loading={i < 8 ? "eager" : "lazy"}
+                    onLoad={() => handleImageLoad(i + 1)}
+                    onError={() => handleImageError(i + 1)}
+                  />
+                ) : (
+                  <Image
+                    src={src}
+                    alt={`${event.title} photo ${i + 1}`}
+                    fill
+                    className={`object-cover group-hover:scale-105 transition-transform duration-300 ${
+                      loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    style={{
+                      objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' : 
+                                     event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
+                    }}
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    quality={85}
+                    loading={i < 8 ? "eager" : "lazy"} // Load first 8 images eagerly, rest lazy
+                    priority={i < 4} // Prioritize first 4 images
+                    onLoad={() => handleImageLoad(i + 1)}
+                    onError={() => handleImageError(i + 1)}
+                    placeholder="blur"
+                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  />
+                )}
               </button>
             ))}
           </div>

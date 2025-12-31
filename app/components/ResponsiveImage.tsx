@@ -38,6 +38,7 @@ export default function ResponsiveImage({
 }: ResponsiveImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   const [isInView, setIsInView] = useState(priority);
   const imgRef = useRef<HTMLDivElement>(null);
 
@@ -92,9 +93,24 @@ export default function ResponsiveImage({
   }, [onLoad]);
 
   const handleError = useCallback(() => {
-    setHasError(true);
-    onError?.();
-  }, [onError]);
+    // If Next.js Image fails, try fallback to regular img tag
+    if (!useFallback) {
+      setUseFallback(true);
+      setHasError(false); // Reset error to try fallback
+    } else {
+      setHasError(true);
+      onError?.();
+    }
+  }, [onError, useFallback]);
+
+  // Get the direct image URL (remove Next.js optimization if present)
+  const getFallbackSrc = useCallback(() => {
+    // If src is already a direct path, use it as-is
+    if (src.startsWith('/') || src.startsWith('http')) {
+      return src;
+    }
+    return src;
+  }, [src]);
 
   // Default sizes if not provided
   const defaultSizes = sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw";
@@ -117,24 +133,41 @@ export default function ResponsiveImage({
 
       {/* Only render image when in view */}
       {isInView && (
-        <Image
-          src={src}
-          alt={alt}
-          fill={fill}
-          width={width}
-          height={height}
-          className={`transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          sizes={defaultSizes}
-          quality={quality}
-          priority={priority}
-          loading={loading}
-          onLoad={handleLoad}
-          onError={handleError}
-          placeholder={placeholder}
-          blurDataURL={blurDataURL}
-        />
+        <>
+          {useFallback ? (
+            // Fallback to regular img tag if Next.js Image optimization fails
+            <img
+              src={getFallbackSrc()}
+              alt={alt}
+              className={`transition-opacity duration-300 ${
+                isLoaded ? 'opacity-100' : 'opacity-0'
+              } ${fill ? 'w-full h-full object-cover' : ''}`}
+              style={fill ? { position: 'absolute', inset: 0 } : { width, height }}
+              loading={loading}
+              onLoad={handleLoad}
+              onError={handleError}
+            />
+          ) : (
+            <Image
+              src={src}
+              alt={alt}
+              fill={fill}
+              width={width}
+              height={height}
+              className={`transition-opacity duration-300 ${
+                isLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              sizes={defaultSizes}
+              quality={quality}
+              priority={priority}
+              loading={loading}
+              onLoad={handleLoad}
+              onError={handleError}
+              placeholder={placeholder}
+              blurDataURL={blurDataURL}
+            />
+          )}
+        </>
       )}
     </div>
   );

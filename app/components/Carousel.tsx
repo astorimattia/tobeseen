@@ -16,6 +16,8 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
   const timer = useRef<NodeJS.Timeout | null>(null);
   const touchStart = useRef<number | null>(null);
   const touchEnd = useRef<number | null>(null);
+  const [imageFallbacks, setImageFallbacks] = useState<Set<number>>(new Set());
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     if (timer.current) clearInterval(timer.current);
@@ -72,23 +74,52 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
             key={item.id}
             className={`absolute inset-0 transition-opacity duration-700 ${i === index ? "opacity-100" : "opacity-0"}`}
           >
-            <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              className={`object-cover ${
-                item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
-                item.id === 'hammers' ? 'object-[35%_center] md:object-center' :
-                item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
-                'object-center'
-              }`}
-              sizes="(max-width: 768px) 100vw, 100vw"
-              quality={90}
-              priority={i === index}
-              loading={i === index ? "eager" : "lazy"}
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-            />
+            {imageFallbacks.has(i) ? (
+              <img
+                src={item.image}
+                alt={item.title}
+                className={`object-cover w-full h-full ${
+                  item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
+                  item.id === 'hammers' ? 'object-[35%_center] md:object-center' :
+                  item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
+                  'object-center'
+                }`}
+                style={{ position: 'absolute', inset: 0 }}
+                loading={i === index ? "eager" : "lazy"}
+                onError={() => {
+                  if (!imageFallbacks.has(i)) {
+                    setImageFallbacks(prev => new Set(prev).add(i));
+                  } else {
+                    setImageErrors(prev => new Set(prev).add(i));
+                  }
+                }}
+              />
+            ) : (
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className={`object-cover ${
+                  item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
+                  item.id === 'hammers' ? 'object-[35%_center] md:object-center' :
+                  item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
+                  'object-center'
+                }`}
+                sizes="(max-width: 768px) 100vw, 100vw"
+                quality={90}
+                priority={i === index}
+                loading={i === index ? "eager" : "lazy"}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                onError={() => {
+                  if (!imageFallbacks.has(i)) {
+                    setImageFallbacks(prev => new Set(prev).add(i));
+                  } else {
+                    setImageErrors(prev => new Set(prev).add(i));
+                  }
+                }}
+              />
+            )}
             <figcaption className="absolute inset-x-0 bottom-8 p-4 text-center">
               <div className="text-sm md:text-sm text-white font-medium">{item.title}</div>
               <div className="text-lg md:text-lg font-bold text-white">{item.subtitle}</div>

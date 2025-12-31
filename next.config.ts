@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     // Configure allowed qualities for Next.js 16 compatibility
     qualities: [25, 50, 75, 85, 90, 95, 100],
+    // Allow unoptimized images as fallback when optimization service is unavailable
+    unoptimized: process.env.UNOPTIMIZED_IMAGES === 'true',
   },
   // Enable experimental features for better performance
   experimental: {
