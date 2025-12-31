@@ -50,6 +50,30 @@ export async function POST(req: Request) {
       // Add new email to Redis Sorted Set with current timestamp as score
       await redis.zAdd(SUBSCRIBERS_KEY, { score: Date.now(), value: email });
       console.log(`Email saved to Redis: ${email}`);
+
+      // Link Identity (Email) to VisitorId
+      // Re-construct visitorId same as middleware
+      const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
+      const userAgent = req.headers.get('user-agent') || '';
+      const visitorId = btoa(`${ip}-${userAgent}`).slice(0, 32);
+
+      // Store the link
+      await redis.set(`analytics:identity:${visitorId}`, email);
+      // Update visitor meta with email immediately if exists
+      const metaKey = `analytics:visitor:${visitorId}`;
+      const existingMeta = await redis.hGetAll(metaKey);
+      if (existingMeta && Object.keys(existingMeta).length > 0) {
+        await redis.hSet(metaKey, 'email', email);
+      } else {
+        // Create meta if doesn't exist (edge case)
+        await redis.hSet(metaKey, {
+          ip,
+          userAgent,
+          email,
+          lastSeen: new Date().toISOString()
+        });
+      }
+
     } catch (redisError) {
       console.error('Could not save email to Redis:', redisError);
       // Return error if Redis fails - this is critical functionality

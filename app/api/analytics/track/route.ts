@@ -13,7 +13,7 @@ const getRedisClient = () => {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { path, country, referrer, visitorId } = body;
+        const { path, country, referrer, visitorId, ip, userAgent } = body;
 
         // Basic validation
         if (!path) {
@@ -45,16 +45,34 @@ export async function POST(req: Request) {
 
         // 5. Top Referrers (Sorted Set)
         if (referrer) {
-            // Simple domain extraction
             try {
                 const domain = new URL(referrer).hostname;
                 pipeline.zIncrBy(`analytics:referrers:${today}`, 1, domain);
             } catch {
-                // Invalid URL or internal, skip or track as direct/other
+                // Invalid URL
             }
         }
 
-        // Set expiry for keys (e.g., 90 days) to keep DB clean
+        // 6. Visitor Metadata & Identity
+        if (visitorId) {
+            const metaKey = `analytics:visitor:${visitorId}`;
+            pipeline.hSet(metaKey, {
+                ip: ip || 'unknown',
+                country: country || 'unknown',
+                userAgent: userAgent || 'unknown',
+                lastSeen: new Date().toISOString()
+            });
+            // Update Recent Visitors List (Keep specific unique list if desired, but LIFO list is easier)
+            // We'll use LREM to remove if exists then LPUSH to move to top, or just LPUSH and distinct on read.
+            // LREM is expensive. Let's just LPUSH and cap. Read side will dedupe.
+            pipeline.lPush('analytics:recent_visitors', visitorId);
+            pipeline.lTrim('analytics:recent_visitors', 0, 199); // Keep last 200
+
+            // expire meta after 90 days
+            pipeline.expire(metaKey, 60 * 60 * 24 * 90);
+        }
+
+        // Set expiry for keys
         const EXPIRY = 60 * 60 * 24 * 90; // 90 days
         pipeline.expire(`analytics:views:${today}`, EXPIRY);
         pipeline.expire(`analytics:visitors:${today}`, EXPIRY);

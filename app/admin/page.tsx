@@ -17,6 +17,14 @@ interface AnalyticsData {
         pages: { name: string; value: number }[];
         countries: { name: string; value: number }[];
         referrers: { name: string; value: number }[];
+        recentVisitors?: {
+            id: string;
+            ip?: string;
+            country?: string;
+            userAgent?: string;
+            lastSeen: string;
+            email?: string;
+        }[];
     };
 }
 
@@ -26,7 +34,7 @@ export default function AdminPage() {
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
     const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
     const [activeTab, setActiveTab] = useState('subscribers'); // 'subscribers' | 'analytics'
-    const [timeRange, setTimeRange] = useState('0'); // '0' = Today, '7' = Last 7 days, '30' = Last 30 days
+    const [timeRange, setTimeRange] = useState('0'); // '0' = Today, '7', '30', 'all'
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -52,10 +60,16 @@ export default function AdminPage() {
             // Build date range
             const end = new Date();
             const start = new Date();
-            start.setDate(start.getDate() - parseInt(timeRange));
 
-            const to = end.toISOString().slice(0, 10);
-            const from = start.toISOString().slice(0, 10);
+            let from, to;
+            if (timeRange === 'all') {
+                from = 'all';
+                to = end.toISOString().slice(0, 10);
+            } else {
+                start.setDate(start.getDate() - parseInt(timeRange));
+                to = end.toISOString().slice(0, 10);
+                from = start.toISOString().slice(0, 10);
+            }
 
             // Fetch both concurrently
             const [subRes, analyticsRes] = await Promise.all([
@@ -97,6 +111,7 @@ export default function AdminPage() {
         } else if (cookieSecret) {
             verifyAndLoad(cookieSecret);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Refresh analytics when timeRange changes
@@ -104,6 +119,7 @@ export default function AdminPage() {
         if (isAuthenticated && password) {
             verifyAndLoad(password);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timeRange]);
 
     const handleLogin = (e: React.FormEvent) => {
@@ -166,7 +182,7 @@ export default function AdminPage() {
                         <p className="text-gray-400 text-sm mt-1">
                             {activeTab === 'subscribers'
                                 ? `Total Subscribers: ${subscribers.length}`
-                                : `Views (${timeRange === '0' ? 'Today' : `Last ${timeRange} Days`}): ${analytics?.overview?.views || 0}`}
+                                : `Views (${timeRange === 'all' ? 'All Time' : timeRange === '0' ? 'Today' : `Last ${timeRange} Days`}): ${analytics?.overview?.views || 0}`}
                         </p>
                     </div>
                     <button
@@ -178,25 +194,40 @@ export default function AdminPage() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex space-x-4 mb-6 border-b border-gray-800 pb-2">
-                    <button
-                        onClick={() => setActiveTab('subscribers')}
-                        className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'subscribers'
-                            ? 'border-indigo-500 text-indigo-400'
-                            : 'border-transparent text-gray-400 hover:text-white'
-                            }`}
-                    >
-                        Subscribers
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('analytics')}
-                        className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'analytics'
-                            ? 'border-indigo-500 text-indigo-400'
-                            : 'border-transparent text-gray-400 hover:text-white'
-                            }`}
-                    >
-                        Analytics (Today)
-                    </button>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-800 pb-2 mb-6 gap-4">
+                    <div className="flex space-x-4">
+                        <button
+                            onClick={() => setActiveTab('subscribers')}
+                            className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'subscribers'
+                                ? 'border-indigo-500 text-indigo-400'
+                                : 'border-transparent text-gray-400 hover:text-white'
+                                }`}
+                        >
+                            Subscribers
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('analytics')}
+                            className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'analytics'
+                                ? 'border-indigo-500 text-indigo-400'
+                                : 'border-transparent text-gray-400 hover:text-white'
+                                }`}
+                        >
+                            Analytics
+                        </button>
+                    </div>
+
+                    {activeTab === 'analytics' && (
+                        <select
+                            value={timeRange}
+                            onChange={(e) => setTimeRange(e.target.value)}
+                            className="bg-gray-900 border border-gray-700 text-white text-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block p-2"
+                        >
+                            <option value="0">Today</option>
+                            <option value="7">Last 7 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="all">All Time</option>
+                        </select>
+                    )}
                 </div>
 
                 {activeTab === 'subscribers' ? (
@@ -279,6 +310,49 @@ export default function AdminPage() {
                                         <p className="text-sm text-gray-500 text-center py-4">No data yet</p>
                                     )}
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Recent Visitors Table */}
+                        <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+                            <div className="px-4 py-3 bg-gray-800/50 border-b border-gray-800">
+                                <h3 className="text-sm font-medium text-white">Recent/Identified Visitors</h3>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full text-left text-sm whitespace-nowrap">
+                                    <thead className="text-gray-400 border-b border-gray-800">
+                                        <tr>
+                                            <th className="px-4 py-3 font-medium">Identity (Email)</th>
+                                            <th className="px-4 py-3 font-medium">IP Address</th>
+                                            <th className="px-4 py-3 font-medium">Location</th>
+                                            <th className="px-4 py-3 font-medium">Last Seen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-800">
+                                        {(analytics && analytics.data.recentVisitors && analytics.data.recentVisitors.length > 0) ? (
+                                            analytics.data.recentVisitors.map((v, i) => (
+                                                <tr key={i} className="hover:bg-gray-800/50 transition-colors">
+                                                    <td className="px-4 py-3 font-medium text-indigo-400">
+                                                        {v.email ? (
+                                                            <span className="font-bold">{v.email}</span>
+                                                        ) : (
+                                                            <span className="text-gray-600 italic">Anonymous</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-gray-300 font-mono text-xs">{v.ip}</td>
+                                                    <td className="px-4 py-3 text-gray-300">{v.country}</td>
+                                                    <td className="px-4 py-3 text-gray-500 text-xs">{new Date(v.lastSeen).toLocaleString()}</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={4} className="px-4 py-6 text-center text-gray-500">
+                                                    No recent visitor data
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

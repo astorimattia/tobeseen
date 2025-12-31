@@ -30,10 +30,9 @@ async function trackVisit(request: NextRequest) {
         const userAgent = request.headers.get('user-agent') || '';
         const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
 
-        // Create a privacy-friendly visitor hash (simple day-based hash)
-        // In production, consider a more robust hashing if collision is a concern, but this is fine for basic stats
-        const today = new Date().toISOString().slice(0, 10);
-        const visitorId = btoa(`${ip}-${userAgent}-${today}`).slice(0, 32);
+        // Persistent visitorId (IP + UserAgent) - No date, so it tracks "Who" over time
+        // Using base64 to allow safe key usage, but it effectively identifies the user-device
+        const visitorId = btoa(`${ip}-${userAgent}`).slice(0, 32);
 
         // Send to our internal API
         // Note: We use the full URL including origin because fetch in middleware needs absolute URL
@@ -46,7 +45,9 @@ async function trackVisit(request: NextRequest) {
                 path,
                 country,
                 referrer,
-                visitorId
+                visitorId,
+                ip,        // Pass raw IP for "Who they are"
+                userAgent  // Pass UA for "Who they are"
             }),
         });
     } catch (error) {
