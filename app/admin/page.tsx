@@ -1,6 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer
+} from 'recharts';
 
 interface Subscriber {
     email: string;
@@ -14,6 +23,7 @@ interface AnalyticsData {
         visitors: number;
     };
     data: {
+        chart?: { date: string; views: number; visitors: number }[];
         pages: { name: string; value: number }[];
         countries: { name: string; value: number }[];
         referrers: { name: string; value: number }[];
@@ -21,6 +31,7 @@ interface AnalyticsData {
             id: string;
             ip?: string;
             country?: string;
+            city?: string;
             userAgent?: string;
             lastSeen: string;
             email?: string;
@@ -299,6 +310,73 @@ export default function AdminPage() {
                             </div>
                         </div>
 
+                        {/* Traffic Chart */}
+                        <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+                            <div className="px-4 py-3 bg-gray-800/50 border-b border-gray-800">
+                                <h3 className="text-sm font-medium text-white">Traffic Overview</h3>
+                            </div>
+                            <div className="p-4 h-72">
+                                {analytics?.data?.chart && analytics.data.chart.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart
+                                            data={analytics.data.chart}
+                                            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                                        >
+                                            <defs>
+                                                <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#818cf8" stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor="#818cf8" stopOpacity={0} />
+                                                </linearGradient>
+                                                <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#34d399" stopOpacity={0.3} />
+                                                    <stop offset="95%" stopColor="#34d399" stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
+                                            <XAxis
+                                                dataKey="date"
+                                                stroke="#9ca3af"
+                                                fontSize={12}
+                                                tickFormatter={(str) => {
+                                                    const date = new Date(str);
+                                                    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                                                }}
+                                            />
+                                            <YAxis stroke="#9ca3af" fontSize={12} />
+                                            <Tooltip
+                                                contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', color: '#f3f4f6' }}
+                                                itemStyle={{ color: '#f3f4f6' }}
+                                                labelStyle={{ color: '#9ca3af' }}
+                                                labelFormatter={(label) => new Date(label).toLocaleDateString()}
+                                            />
+                                            <Area
+                                                type="monotone"
+                                                dataKey="views"
+                                                stroke="#818cf8"
+                                                fillOpacity={1}
+                                                fill="url(#colorViews)"
+                                                name="Total Views"
+                                                strokeWidth={2}
+                                            />
+                                            <Area
+                                                type="monotone"
+                                                dataKey="visitors"
+                                                stroke="#34d399"
+                                                fillOpacity={1}
+                                                fill="url(#colorVisitors)"
+                                                name="Unique Visitors"
+                                                strokeWidth={2}
+                                            />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-gray-500 text-sm">
+                                        No chart data available
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                         {/* Top Lists */}
                         <div className="grid md:grid-cols-2 gap-6">
                             {/* Top Pages */}
@@ -371,7 +449,10 @@ export default function AdminPage() {
                                                         )}
                                                     </td>
                                                     <td className="px-4 py-3 text-gray-300 font-mono text-xs">{v.ip}</td>
-                                                    <td className="px-4 py-3 text-gray-300">{v.country ? getCountryName(v.country) : 'Unknown'}</td>
+                                                    <td className="px-4 py-3 text-gray-300">
+                                                        {v.country ? getCountryName(v.country) : 'Unknown'}
+                                                        {v.city && v.city !== 'unknown' && <span className="text-gray-500 text-xs ml-1">({v.city})</span>}
+                                                    </td>
                                                     <td className="px-4 py-3 text-gray-500 text-xs">{new Date(v.lastSeen).toLocaleString()}</td>
                                                 </tr>
                                             ))

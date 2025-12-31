@@ -26,6 +26,7 @@ async function trackVisit(request: NextRequest) {
         // Extract data
         const path = url.pathname;
         const country = request.headers.get('x-vercel-ip-country') || 'Unknown';
+        const city = request.headers.get('x-vercel-ip-city') || '';
         const referrer = request.headers.get('referer') || '';
         const userAgent = request.headers.get('user-agent') || '';
         const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
@@ -44,6 +45,7 @@ async function trackVisit(request: NextRequest) {
             body: JSON.stringify({
                 path,
                 country,
+                city,
                 referrer,
                 visitorId,
                 ip,        // Pass raw IP for "Who they are"

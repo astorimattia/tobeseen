@@ -13,7 +13,7 @@ const getRedisClient = () => {
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { path, country, referrer, visitorId, ip, userAgent } = body;
+        const { path, country, city, referrer, visitorId, ip, userAgent } = body;
 
         // Basic validation
         if (!path) {
@@ -59,6 +59,7 @@ export async function POST(req: Request) {
             pipeline.hSet(metaKey, {
                 ip: ip || 'unknown',
                 country: country || 'unknown',
+                city: city || 'unknown',
                 userAgent: userAgent || 'unknown',
                 lastSeen: new Date().toISOString()
             });

@@ -59,6 +59,34 @@ export async function GET(req: Request) {
 
         const uniqueVisitors = await redis.pfCount(visitorKeys);
 
+        // Chart Data (Views & Visitors per day)
+        const chartData = [];
+        if (dates.length > 0) {
+            // We already got total views from `viewKeys`.
+            // Now we need daily unique visitors.
+            // Redis pfCount multiple keys merges them (Count of Union).
+            // To get daily counts, we need individual pfCounts.
+
+            const chartPipeline = redis.multi();
+            viewKeys.forEach(k => chartPipeline.get(k));
+            visitorKeys.forEach(k => chartPipeline.pfCount(k));
+
+            const results = await chartPipeline.exec();
+
+            // Results are flattened: [ViewDay1, ViewDay2..., VisitorDay1, VisitorDay2...]
+            const mid = dates.length;
+            const dailyViews = results.slice(0, mid);
+            const dailyVisitors = results.slice(mid);
+
+            for (let i = 0; i < dates.length; i++) {
+                chartData.push({
+                    date: dates[i],
+                    views: parseInt((dailyViews[i] as string) || '0'),
+                    visitors: (dailyVisitors[i] as number) || 0
+                });
+            }
+        }
+
         // Helper for Top Lists Aggregation
         const getTop = async (keys: string[]) => {
             if (keys.length === 0) return [];
@@ -115,6 +143,7 @@ export async function GET(req: Request) {
                 visitors: uniqueVisitors,
             },
             data: {
+                chart: chartData,
                 pages: pages.map(p => ({ name: p.value, value: p.score })),
                 countries: countries.map(c => ({ name: c.value, value: c.score })),
                 referrers: referrers.map(r => ({ name: r.value, value: r.score })),
@@ -126,7 +155,8 @@ export async function GET(req: Request) {
         console.error('Analytics fetch error:', error);
         return NextResponse.json({
             overview: { views: 0, visitors: 0 },
-            data: { pages: [], countries: [], referrers: [], recentVisitors: [] }
+            overview: { views: 0, visitors: 0 },
+            data: { chart: [], pages: [], countries: [], referrers: [], recentVisitors: [] }
         });
     } finally {
         if (redis.isOpen) await redis.quit();
