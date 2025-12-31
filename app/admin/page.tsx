@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Subscriber {
     email: string;
@@ -26,19 +26,41 @@ export default function AdminPage() {
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
     const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
     const [activeTab, setActiveTab] = useState('subscribers'); // 'subscribers' | 'analytics'
+    const [timeRange, setTimeRange] = useState('0'); // '0' = Today, '7' = Last 7 days, '30' = Last 30 days
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
+    // helper to set cookie
+    const setCookie = (name: string, value: string, days: number) => {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    };
+
+    // helper to get cookie
+    const getCookie = (name: string) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+    };
+
+    const verifyAndLoad = async (pwd: string) => {
         setLoading(true);
         setError('');
 
         try {
+            // Build date range
+            const end = new Date();
+            const start = new Date();
+            start.setDate(start.getDate() - parseInt(timeRange));
+
+            const to = end.toISOString().slice(0, 10);
+            const from = start.toISOString().slice(0, 10);
+
             // Fetch both concurrently
             const [subRes, analyticsRes] = await Promise.all([
-                fetch(`/api/admin/subscribers?key=${password}`),
-                fetch(`/api/admin/analytics?key=${password}`)
+                fetch(`/api/admin/subscribers?key=${pwd}`),
+                fetch(`/api/admin/analytics?key=${pwd}&from=${from}&to=${to}`)
             ]);
 
             const subData = await subRes.json();
@@ -48,14 +70,50 @@ export default function AdminPage() {
                 setSubscribers(subData.subscribers);
                 setAnalytics(analyticsData);
                 setIsAuthenticated(true);
+                setPassword(pwd); // Sync state
+                setCookie('admin_secret', pwd, 30); // Persist login
             } else {
-                setError(subData.error || 'Invalid credentials');
+                setError(subData.error || analyticsData.error || 'Invalid credentials');
+                // If invalid, clear cookie
+                setCookie('admin_secret', '', -1);
             }
         } catch {
             setError('Failed to connect to server');
         } finally {
             setLoading(false);
         }
+    };
+
+    // Initial load: Check URL param or Cookie
+    useEffect(() => {
+        if (isAuthenticated) return; // Don't run if already logged in
+
+        const params = new URLSearchParams(window.location.search);
+        const urlSecret = params.get('secret');
+        const cookieSecret = getCookie('admin_secret');
+
+        if (urlSecret) {
+            verifyAndLoad(urlSecret);
+        } else if (cookieSecret) {
+            verifyAndLoad(cookieSecret);
+        }
+    }, []);
+
+    // Refresh analytics when timeRange changes
+    useEffect(() => {
+        if (isAuthenticated && password) {
+            verifyAndLoad(password);
+        }
+    }, [timeRange]);
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        verifyAndLoad(password);
+    };
+
+    const handleLogout = () => {
+        setCookie('admin_secret', '', -1);
+        window.location.href = '/admin'; // Hard reload to clear state
     };
 
     if (!isAuthenticated) {
@@ -108,11 +166,11 @@ export default function AdminPage() {
                         <p className="text-gray-400 text-sm mt-1">
                             {activeTab === 'subscribers'
                                 ? `Total Subscribers: ${subscribers.length}`
-                                : `Today's Views: ${analytics?.overview?.views || 0}`}
+                                : `Views (${timeRange === '0' ? 'Today' : `Last ${timeRange} Days`}): ${analytics?.overview?.views || 0}`}
                         </p>
                     </div>
                     <button
-                        onClick={() => window.location.reload()}
+                        onClick={handleLogout}
                         className="text-sm text-gray-400 hover:text-white"
                     >
                         Logout
