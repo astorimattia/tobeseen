@@ -52,13 +52,36 @@ export async function POST(req: Request) {
       console.log(`Email saved to Redis: ${email}`);
 
       // Link Identity (Email) to VisitorId
-      // Re-construct visitorId same as middleware
+      // Link Identity (Email) to VisitorId
+      // Link Identity (Email) to VisitorId
       const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
       const userAgent = req.headers.get('user-agent') || '';
+      const countryRaw = req.headers.get('x-vercel-ip-country') || 'Unknown';
+      const cityRaw = req.headers.get('x-vercel-ip-city') || 'Unknown';
+
+      // Decode location
+      const country = decodeURIComponent(countryRaw);
+      const city = decodeURIComponent(cityRaw);
+
       const visitorId = btoa(`${ip}-${userAgent}`).slice(0, 32);
+
+      // Store Subscriber Metadata (New)
+      console.log(`Saving metadata for ${email}: ${country}, ${city}`);
+      await redis.hSet(`subscriber:${email}`, {
+        ip,
+        country,
+        city,
+        userAgent,
+        joinedAt: new Date().toISOString()
+      });
 
       // Store the link
       await redis.set(`analytics:identity:${visitorId}`, email);
+
+      // Update Recent Identified Visitors List
+      await redis.lPush('analytics:recent_identified_visitors', visitorId);
+      await redis.lTrim('analytics:recent_identified_visitors', 0, 199);
+
       // Update visitor meta with email immediately if exists
       const metaKey = `analytics:visitor:${visitorId}`;
       const existingMeta = await redis.hGetAll(metaKey);
@@ -70,6 +93,8 @@ export async function POST(req: Request) {
           ip,
           userAgent,
           email,
+          country,
+          city,
           lastSeen: new Date().toISOString()
         });
       }

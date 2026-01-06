@@ -20,27 +20,63 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Missing path' }, { status: 400 });
         }
 
+        // 1. Ignore Admin Paths
+        if (path.startsWith('/admin')) {
+            return NextResponse.json({ success: true, ignored: true });
+        }
+
         const redis = getRedisClient();
         if (!redis.isOpen) await redis.connect();
 
+        // Decode location data to avoid %20
+        const safeCountry = country ? decodeURIComponent(country) : null;
+        const safeCity = city ? decodeURIComponent(city) : null;
+
         const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+        const currentHour = new Date().toISOString().slice(0, 13); // YYYY-MM-DDTHH
+
+        // Check if visitor is identified
+        let isIdentified = false;
+        if (visitorId) {
+            const identity = await redis.get(`analytics:identity:${visitorId}`);
+            isIdentified = !!identity;
+        }
 
         const pipeline = redis.multi();
 
         // 1. Total Page Views
         pipeline.incr(`analytics:views:${today}`);
+        pipeline.incr(`analytics:views:${currentHour}`); // Add Hourly
 
         // 2. Unique Visitors (HyperLogLog)
         if (visitorId) {
             pipeline.pfAdd(`analytics:visitors:${today}`, visitorId);
+            pipeline.pfAdd(`analytics:visitors:${currentHour}`, visitorId); // Add Hourly
         }
 
         // 3. Top Pages (Sorted Set)
         pipeline.zIncrBy(`analytics:pages:${today}`, 1, path);
 
+        // 3b. Top Visitors (Sorted Set by View Count)
+        if (visitorId) {
+            pipeline.zIncrBy(`analytics:visitors:top:${today}`, 1, visitorId);
+        }
+
         // 4. Top Countries (Sorted Set)
-        if (country) {
-            pipeline.zIncrBy(`analytics:countries:${today}`, 1, country);
+        if (safeCountry) {
+            pipeline.zIncrBy(`analytics:countries:${today}`, 1, safeCountry);
+
+            // 4a. Top Cities per Country
+            if (safeCity) {
+                // Key: analytics:cities:{country}:{date}
+                // We use daily aggregation for now
+                pipeline.zIncrBy(`analytics:cities:${safeCountry}:${today}`, 1, safeCity);
+
+                // 4b. Global Top Cities (for the "Top Cities" card when no country selected)
+                pipeline.zIncrBy(`analytics:cities:all:${today}`, 1, safeCity);
+                // Expire similar to other keys? 
+                // We'll set expiry later. We need to add it to the expire step.
+            }
         }
 
         // 5. Top Referrers (Sorted Set)
@@ -58,28 +94,43 @@ export async function POST(req: Request) {
             const metaKey = `analytics:visitor:${visitorId}`;
             pipeline.hSet(metaKey, {
                 ip: ip || 'unknown',
-                country: country || 'unknown',
-                city: city || 'unknown',
+                country: safeCountry || 'unknown',
+                city: safeCity || 'unknown',
                 userAgent: userAgent || 'unknown',
                 lastSeen: new Date().toISOString()
             });
-            // Update Recent Visitors List (Keep specific unique list if desired, but LIFO list is easier)
-            // We'll use LREM to remove if exists then LPUSH to move to top, or just LPUSH and distinct on read.
-            // LREM is expensive. Let's just LPUSH and cap. Read side will dedupe.
-            pipeline.lPush('analytics:recent_visitors', visitorId);
-            pipeline.lTrim('analytics:recent_visitors', 0, 199); // Keep last 200
 
-            // expire meta after 90 days
-            pipeline.expire(metaKey, 60 * 60 * 24 * 90);
+            // Update Recent Identified Visitors List ONLY if identified
+            if (isIdentified) {
+                pipeline.lPush('analytics:recent_identified_visitors', visitorId);
+                pipeline.lTrim('analytics:recent_identified_visitors', 0, 199);
+            }
+
+            // We still track "recent_visitors" (raw) if we want? The user said "only show identified...".
+            // But "still count the unknown in all other places".
+            // Update: User requested to hide "blank" entries (no email, no public IP, no location).
+            const hasValidIp = ip && ip !== '::1' && ip !== '127.0.0.1' && ip !== 'unknown';
+            const hasLocation = safeCountry && safeCountry !== 'unknown';
+
+            if (isIdentified || hasValidIp || hasLocation) {
+                // Deduplicate: Remove existing occurrence first so this visitor moves to the top
+                pipeline.lRem('analytics:recent_visitors', 0, visitorId);
+                pipeline.lPush('analytics:recent_visitors', visitorId);
+                pipeline.lTrim('analytics:recent_visitors', 0, 199);
+            }
         }
 
         // Set expiry for keys
-        const EXPIRY = 60 * 60 * 24 * 90; // 90 days
-        pipeline.expire(`analytics:views:${today}`, EXPIRY);
-        pipeline.expire(`analytics:visitors:${today}`, EXPIRY);
-        pipeline.expire(`analytics:pages:${today}`, EXPIRY);
-        pipeline.expire(`analytics:countries:${today}`, EXPIRY);
-        pipeline.expire(`analytics:referrers:${today}`, EXPIRY);
+        const HOURLY_EXPIRY = 60 * 60 * 48; // 48 hours for graph granularity
+
+        // We only expire hourly keys. Daily keys are kept forever (or until eviction).
+        pipeline.expire(`analytics:views:${currentHour}`, HOURLY_EXPIRY);
+        pipeline.expire(`analytics:visitors:${currentHour}`, HOURLY_EXPIRY);
+
+        // Expire city keys? They can grow. Let's keep them daily for now.
+        // We probably don't need to explicitly expire daily keys if we want history.
+
+        // Daily keys (views:today, etc) have NO expiration now.
 
         await pipeline.exec();
 

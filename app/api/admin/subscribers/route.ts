@@ -31,17 +31,45 @@ export async function GET(req: Request) {
         // usually zRangeWithScores with REV option is preferred in newer ones, but let's stick to standard zRange and reverse in JS or use zRange with options if needed.
         // Actually, let's just use zRangeWithScores and reverse the array in JS for simplicity and compatibility.
 
-        const subscribers = await redis.zRangeWithScores('subscribers', 0, -1);
+        // Pagination parameters
+        const { searchParams } = new URL(req.url); // Re-obtained for clarity, though accessible above
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '15');
+        const start = (page - 1) * limit;
+        const end = start + limit - 1;
 
-        // Format for frontend: [{ email, date }, ...]
-        // Reverse to show newest first
-        const formatted = subscribers.reverse().map(sub => ({
-            email: sub.value,
-            timestamp: sub.score,
-            date: new Date(sub.score).toLocaleString()
+        // Get total count
+        const total = await redis.zCard('subscribers');
+        const totalPages = Math.ceil(total / limit);
+
+        // Fetch paginated subscribers with scores (timestamps)
+        // REV: true for latest first
+        const subscribers = await redis.zRangeWithScores('subscribers', start, end, { REV: true });
+
+        // Format for frontend: [{ email, date, country, city }, ...]
+        const formatted = await Promise.all(subscribers.map(async (sub) => {
+            const email = sub.value;
+            // Fetch metadata
+            const meta = await redis.hGetAll(`subscriber:${email}`);
+
+            return {
+                email,
+                timestamp: sub.score,
+                date: new Date(sub.score).toLocaleString(),
+                country: meta?.country || 'Unknown',
+                city: meta?.city || 'Unknown'
+            };
         }));
 
-        return NextResponse.json({ count: formatted.length, subscribers: formatted });
+        return NextResponse.json({
+            subscribers: formatted,
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages
+            }
+        });
 
     } catch (error) {
         console.error('Redis error:', error);
