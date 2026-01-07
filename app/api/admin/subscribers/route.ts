@@ -126,7 +126,7 @@ export async function GET(req: Request) {
             }));
 
             // 1. Filter
-            let filtered = candidates.filter(sub => {
+            const filtered = candidates.filter(sub => {
                 // Date Filter
                 if (sub.timestamp < minScore || sub.timestamp > maxScore) return false;
 
