@@ -248,7 +248,7 @@ export async function GET(req: Request) {
         const search = searchParams.get('search')?.toLowerCase();
         let recentIds: string[] = [];
         let totalFilteredVisitors = 0;
-        let filtered: Record<string, unknown>[] = []; // Placeholder if needed
+
         let finalVisitors: Record<string, unknown>[] = [];
 
         // Determine source key
