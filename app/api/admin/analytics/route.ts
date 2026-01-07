@@ -7,10 +7,7 @@ const getRedisClient = () => {
     return createClient({ url: redisUrl });
 };
 
-interface ZRangeItem {
-    value: string;
-    score: number;
-}
+
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -125,18 +122,16 @@ export async function GET(req: Request) {
                     // Hourly: label is "HH:00", key suffix has full date
                     // keys[i].view is "analytics:views:YYYY-MM-DDTHH"
                     // Extract date string from key
-                    const datePart = k.view.split(':').pop(); // 2024-01-01T12
-                    const startDate = new Date(`${datePart}:00:00Z`); // Treat as UTC for storage consistency? 
+                    // const startDate = new Date(`${datePart}:00:00Z`); // Unused
                     // Actually, dates used in range loop are local/ISO string slices...
                     // Let's stick to the construction logic:
                     // Dates were generated as current.toISOString().slice(0, 10);
                     // Single day loop: const keySuffix = `${dateStr}T${hourStr}`;
 
                     // Reconstruct proper date object
+                    // Reconstruct proper date object
                     const dateStr = k.view.split(':').pop(); // YYYY-MM-DDTHH
-                    const s = new Date(dateStr + ':00:00Z'); // Assume UTC to match server time logic usually
-                    // Wait, `dates.push(current.toISOString().slice(0, 10));` uses UTC.
-                    // So our "Days" are UTC days.
+                    // const s = new Date(dateStr + ':00:00Z'); // Unused
 
                     startTime = new Date(`${dateStr}:00:00.000Z`).getTime();
                     endTime = new Date(`${dateStr}:59:59.999Z`).getTime();
@@ -253,6 +248,7 @@ export async function GET(req: Request) {
         const search = searchParams.get('search')?.toLowerCase();
         let recentIds: string[] = [];
         let totalFilteredVisitors = 0;
+        let finalVisitors: any[] = [];
 
         // Determine source key
         let recentVisitorsKey = 'analytics:recent_visitors';
@@ -322,7 +318,7 @@ export async function GET(req: Request) {
             // We return the full objects since we already fetched them
             // But the downstream expects "visitors" array. 
             // We can just assign `visitors` directly here and skip the later map.
-            var finalVisitors = filtered.slice(start, end);
+            finalVisitors = filtered.slice(start, end);
 
         } else {
             // Case C: Standard Pagination (No Search)

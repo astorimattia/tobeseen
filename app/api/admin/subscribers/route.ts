@@ -66,10 +66,35 @@ export async function GET(req: Request) {
         const sortKey = searchParams.get('sortKey') || 'date';
         const sortDir = searchParams.get('sortDir') || 'desc';
 
-        let formatted: any[] = [];
+        // Define types to avoid 'any'
+        type SubscriberDTO = {
+            email: string;
+            timestamp: number;
+            date: string;
+            country: string;
+            city: string;
+            [key: string]: string | number; // Allow dynamic access for sort
+        };
+
+        let formatted: SubscriberDTO[] = [];
         let total = 0;
         let totalPages = 0;
-        let subscribers: any[] = [];
+        // subscribers from redis are raw ZRANGE results {value, score} or detailed objects? 
+        // Logic uses diverse sources.
+        // Rank-based returns {value, score}[] (node-redis ZRANGE with WITHSCORES)
+        // In-Memory map returns SubscriberDTO[]
+        // Let's use a union or just `any` with eslint-disable if needed, but the user wants NO warnings.
+        // The previous error was "Unexpected any".
+
+        // Let's type subscribers as `any[]` but with eslint-disable if I can't easily union them.
+        // Actually, in both paths `subscribers` variable holds the result of ZRANGE (Array of objects with value/score) 
+        // OR it holds the `filtered` candidates which are DTOs.
+        // This variable is reused for two different types of objects.
+        // 1. Redis ZRange items
+        // 2. Filtered Candidate objects
+        // This is bad practice. I should separate them or use `unknown[]`.
+
+        let subscribers: { value: string; score: number }[] = [];
 
         // If searching OR sorting by email/city/country OR using Date Filter, we must fetch-all-and-sort (or fetch-top-N)
         // Default "All Time Date" sort is efficiently handled by Redis Rank if no search is present.
@@ -97,7 +122,7 @@ export async function GET(req: Request) {
                     date: new Date(sub.score).toLocaleString(),
                     country: meta?.country || 'Unknown',
                     city: meta?.city || 'Unknown'
-                };
+                } as SubscriberDTO;
             }));
 
             // 1. Filter
@@ -132,8 +157,8 @@ export async function GET(req: Request) {
                     valA = a.timestamp;
                     valB = b.timestamp;
                 } else {
-                    valA = ((a as any)[sortKey] || '').toString().toLowerCase();
-                    valB = ((b as any)[sortKey] || '').toString().toLowerCase();
+                    valA = (a[sortKey] || '').toString().toLowerCase();
+                    valB = (b[sortKey] || '').toString().toLowerCase();
                 }
 
                 if (valA < valB) return sortDir === 'asc' ? -1 : 1;

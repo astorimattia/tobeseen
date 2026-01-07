@@ -212,11 +212,6 @@ export default function AdminPage() {
         if (isAuthenticated && password) {
             verifyAndLoad(password, subPage, visitorPage);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [analyticsTimeRange, subscribersTimeRange, subPage, visitorPage, selectedCountry, selectedVisitor, debouncedSearch, debouncedSubSearch]);
 
     // Search Debounce (Visitors)
