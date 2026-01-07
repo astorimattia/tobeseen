@@ -106,7 +106,6 @@ export async function POST(req: Request) {
             // Update Recent Identified Visitors List ONLY if identified
             if (isIdentified) {
                 pipeline.lPush('analytics:recent_identified_visitors', visitorId);
-                pipeline.lTrim('analytics:recent_identified_visitors', 0, 199);
             }
 
             // We still track "recent_visitors" (raw) if we want? The user said "only show identified...".
@@ -119,7 +118,6 @@ export async function POST(req: Request) {
                 // Deduplicate: Remove existing occurrence first so this visitor moves to the top
                 pipeline.lRem('analytics:recent_visitors', 0, visitorId);
                 pipeline.lPush('analytics:recent_visitors', visitorId);
-                pipeline.lTrim('analytics:recent_visitors', 0, 199);
             }
         }
 
