@@ -250,13 +250,34 @@ export async function GET(req: Request) {
             }));
 
         // 2. Recent Visitor Identities
-        // Switch back to ALL Recent Visitors as requested
-        const recentVisitorsKey = 'analytics:recent_visitors';
-        const visitorStart = (visitorPage - 1) * visitorLimit;
-        const visitorEnd = visitorStart + visitorLimit - 1;
+        let recentIds: string[] = [];
+        let totalVisitors = 0;
 
-        const totalVisitors = await redis.lLen(recentVisitorsKey);
-        const recentIds = await redis.lRange(recentVisitorsKey, visitorStart, visitorEnd);
+        if (visitorFilter) {
+            // Case A: Filter by Specific Visitor ID
+            // Just check if this visitor exists/has data. 
+            // We can check if their metadata exists.
+            const meta = await redis.exists(`analytics:visitor:${visitorFilter}`);
+            if (meta) {
+                recentIds = [visitorFilter];
+                totalVisitors = 1;
+            } else {
+                recentIds = [];
+                totalVisitors = 0;
+            }
+        } else {
+            // Case B: Normal List or Country Filter
+            let recentVisitorsKey = 'analytics:recent_visitors';
+            if (countryFilter) {
+                recentVisitorsKey = `analytics:recent_visitors:country:${countryFilter}`;
+            }
+
+            const visitorStart = (visitorPage - 1) * visitorLimit;
+            const visitorEnd = visitorStart + visitorLimit - 1;
+
+            totalVisitors = await redis.lLen(recentVisitorsKey);
+            recentIds = await redis.lRange(recentVisitorsKey, visitorStart, visitorEnd);
+        }
 
         const visitors = await Promise.all(recentIds.map(async (vid) => {
             const [meta, email] = await Promise.all([

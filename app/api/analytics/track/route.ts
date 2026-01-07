@@ -118,6 +118,13 @@ export async function POST(req: Request) {
                 // Deduplicate: Remove existing occurrence first so this visitor moves to the top
                 pipeline.lRem('analytics:recent_visitors', 0, visitorId);
                 pipeline.lPush('analytics:recent_visitors', visitorId);
+
+                // Add to country specific list if we have a valid country
+                if (safeCountry && safeCountry !== 'unknown') {
+                    const countryKey = `analytics:recent_visitors:country:${safeCountry}`;
+                    pipeline.lRem(countryKey, 0, visitorId);
+                    pipeline.lPush(countryKey, visitorId);
+                }
             }
         }
 

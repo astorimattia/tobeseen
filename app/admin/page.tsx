@@ -620,6 +620,7 @@ export default function AdminPage() {
                                                             onClick={() => {
                                                                 setSelectedVisitor(selectedVisitor === v.id ? null : v.id);
                                                                 setPagesPage(1); // Reset pages pagination
+                                                                setVisitorPage(1); // Reset visitor pagination
                                                             }}
                                                         >
                                                             <div className="flex flex-col overflow-hidden mr-2">
@@ -683,7 +684,7 @@ export default function AdminPage() {
                                         {selectedVisitor ? `Pages by Visitor` : 'Top Pages'}
                                     </h3>
                                     {selectedVisitor && (
-                                        <button onClick={() => setSelectedVisitor(null)} className="flex-shrink-0 text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer border border-indigo-500/30 rounded px-1.5 py-0.5">
+                                        <button onClick={() => { setSelectedVisitor(null); setVisitorPage(1); }} className="flex-shrink-0 text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer border border-indigo-500/30 rounded px-1.5 py-0.5">
                                             Clear
                                         </button>
                                     )}
@@ -753,6 +754,7 @@ export default function AdminPage() {
                                                             onClick={() => {
                                                                 setSelectedCountry(selectedCountry === p.name ? null : p.name);
                                                                 setCityPage(1);
+                                                                setVisitorPage(1); // Reset visitor pagination
                                                             }}
                                                         >
                                                             <span className={`text-sm truncate ${selectedCountry === p.name ? 'text-indigo-300 font-medium' : 'text-gray-300 group-hover:text-white'}`}>{getCountryName(p.name)}</span>
@@ -859,7 +861,13 @@ export default function AdminPage() {
                         {/* Recent Visitors Table */}
                         <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col">
                             <div className="px-4 py-3 bg-gray-800/50 border-b border-gray-800">
-                                <h3 className="text-sm font-medium text-white">Recent/Identified Visitors</h3>
+                                <h3 className="text-sm font-medium text-white">
+                                    {selectedVisitor
+                                        ? 'Selected Visitor Identity'
+                                        : selectedCountry
+                                            ? `Recent Visitors from ${getCountryName(selectedCountry)}`
+                                            : 'Recent/Identified Visitors'}
+                                </h3>
                             </div>
                             <div className="overflow-x-auto flex-1">
                                 <table className="min-w-full text-left text-sm whitespace-nowrap">
