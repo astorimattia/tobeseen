@@ -86,6 +86,8 @@ export default function AdminPage() {
     const [cityPage, setCityPage] = useState(1);
     const [pagesPage, setPagesPage] = useState(1);
     const [visitorsPage, setVisitorsPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
 
 
 
@@ -150,6 +152,8 @@ export default function AdminPage() {
 
             if (selectedVisitor) {
                 analyticsUrl += `&visitorId=${encodeURIComponent(selectedVisitor)}`;
+            } else if (debouncedSearch) {
+                analyticsUrl += `&search=${encodeURIComponent(debouncedSearch)}`;
             }
 
             const [subRes, analyticsRes] = await Promise.all([
@@ -201,7 +205,17 @@ export default function AdminPage() {
             verifyAndLoad(password, subPage, visitorPage);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeRange, subPage, visitorPage, selectedCountry, selectedVisitor]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timeRange, subPage, visitorPage, selectedCountry, selectedVisitor, debouncedSearch]);
+
+    // Search Debounce
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchTerm);
+            setVisitorPage(1); // Reset pagination on search
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -860,7 +874,7 @@ export default function AdminPage() {
 
                         {/* Recent Visitors Table */}
                         <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col">
-                            <div className="px-4 py-3 bg-gray-800/50 border-b border-gray-800">
+                            <div className="px-4 py-3 bg-gray-800/50 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                                 <h3 className="text-sm font-medium text-white">
                                     {selectedVisitor
                                         ? 'Selected Visitor Identity'
@@ -868,6 +882,15 @@ export default function AdminPage() {
                                             ? `Recent Visitors from ${getCountryName(selectedCountry)}`
                                             : 'Recent/Identified Visitors'}
                                 </h3>
+                                {!selectedVisitor && (
+                                    <input
+                                        type="text"
+                                        placeholder="Search email, ip, city..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="bg-gray-900 border border-gray-700 text-white text-xs rounded px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-600 outline-none w-48"
+                                    />
+                                )}
                             </div>
                             <div className="overflow-x-auto flex-1">
                                 <table className="min-w-full text-left text-sm whitespace-nowrap">

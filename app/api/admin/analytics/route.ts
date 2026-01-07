@@ -250,52 +250,118 @@ export async function GET(req: Request) {
             }));
 
         // 2. Recent Visitor Identities
+        const search = searchParams.get('search')?.toLowerCase();
         let recentIds: string[] = [];
-        let totalVisitors = 0;
+        let totalFilteredVisitors = 0;
+
+        // Determine source key
+        let recentVisitorsKey = 'analytics:recent_visitors';
+        if (countryFilter) {
+            recentVisitorsKey = `analytics:recent_visitors:country:${countryFilter}`;
+        }
 
         if (visitorFilter) {
-            // Case A: Filter by Specific Visitor ID
-            // Just check if this visitor exists/has data. 
-            // We can check if their metadata exists.
+            // Case A: Filter by Specific Visitor ID (Search is ignored or redundant)
             const meta = await redis.exists(`analytics:visitor:${visitorFilter}`);
             if (meta) {
                 recentIds = [visitorFilter];
-                totalVisitors = 1;
-            } else {
-                recentIds = [];
-                totalVisitors = 0;
+                totalFilteredVisitors = 1;
             }
+        } else if (search) {
+            // Case B: Search Mode (Limited to last 2000 to avoid perf kill)
+            // We need to fetch MORE than page size, filter them, and THEN slice for pagination.
+            const SEARCH_LIMIT = 2000;
+            const candidates = await redis.lRange(recentVisitorsKey, 0, SEARCH_LIMIT - 1);
+
+            // We need to fetch metadata to filter
+            const allCandidates = await Promise.all(candidates.map(async (vid) => {
+                const [meta, email] = await Promise.all([
+                    redis.hGetAll(`analytics:visitor:${vid}`),
+                    redis.get(`analytics:identity:${vid}`)
+                ]);
+                return {
+                    id: vid,
+                    email: email || null,
+                    ip: meta.ip || null,
+                    country: meta.country || null,
+                    city: meta.city || null,
+                    userAgent: meta.userAgent || null,
+                    lastSeen: meta.lastSeen || null
+                };
+            }));
+
+            // Filter in memory
+            const filtered = allCandidates.filter(v => {
+                const s = search;
+
+                let countryName = '';
+                if (v.country) {
+                    try {
+                        const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+                        countryName = regionNames.of(v.country) || v.country;
+                    } catch {
+                        countryName = v.country;
+                    }
+                }
+
+                return (
+                    (v.email && v.email.toLowerCase().includes(s)) ||
+                    (v.ip && v.ip.toLowerCase().includes(s)) ||
+                    (v.city && v.city.toLowerCase().includes(s)) ||
+                    (countryName && countryName.toLowerCase().includes(s)) ||
+                    (v.country && v.country.toLowerCase().includes(s)) ||
+                    (v.userAgent && v.userAgent.toLowerCase().includes(s))
+                );
+            });
+
+            totalFilteredVisitors = filtered.length;
+
+            // Now Paginate the FILTERED results
+            const start = (visitorPage - 1) * visitorLimit;
+            const end = start + visitorLimit;
+            // We return the full objects since we already fetched them
+            // But the downstream expects "visitors" array. 
+            // We can just assign `visitors` directly here and skip the later map.
+            var finalVisitors = filtered.slice(start, end);
+
         } else {
-            // Case B: Normal List or Country Filter
-            let recentVisitorsKey = 'analytics:recent_visitors';
-            if (countryFilter) {
-                recentVisitorsKey = `analytics:recent_visitors:country:${countryFilter}`;
-            }
+            // Case C: Standard Pagination (No Search)
+            const total = await redis.lLen(recentVisitorsKey);
+            totalFilteredVisitors = total;
 
-            const visitorStart = (visitorPage - 1) * visitorLimit;
-            const visitorEnd = visitorStart + visitorLimit - 1;
-
-            totalVisitors = await redis.lLen(recentVisitorsKey);
-            recentIds = await redis.lRange(recentVisitorsKey, visitorStart, visitorEnd);
+            const start = (visitorPage - 1) * visitorLimit;
+            const end = start + visitorLimit - 1;
+            recentIds = await redis.lRange(recentVisitorsKey, start, end);
         }
 
-        const visitors = await Promise.all(recentIds.map(async (vid) => {
-            const [meta, email] = await Promise.all([
-                redis.hGetAll(`analytics:visitor:${vid}`),
-                redis.get(`analytics:identity:${vid}`)
-            ]);
-            return {
-                id: vid,
-                ...meta,
-                email: email || null
-            };
-        }));
+        let visitors;
+        if (search && !visitorFilter) {
+            // calculated above
+            visitors = finalVisitors!;
+        } else {
+            // hydrate hydration (Standard or VisitorFilter case)
+            visitors = await Promise.all(recentIds.map(async (vid) => {
+                const [meta, email] = await Promise.all([
+                    redis.hGetAll(`analytics:visitor:${vid}`),
+                    redis.get(`analytics:identity:${vid}`)
+                ]);
+                return {
+                    id: vid,
+                    email: email || null,
+                    ip: meta.ip || null,
+                    country: meta.country || null,
+                    city: meta.city || null,
+                    userAgent: meta.userAgent || null,
+                    lastSeen: meta.lastSeen || null
+                };
+            }));
+        }
 
         const visitorPagination = {
             page: visitorPage,
             limit: visitorLimit,
-            total: totalVisitors,
-            totalPages: Math.ceil(totalVisitors / visitorLimit)
+            total: totalFilteredVisitors,
+            totalPages: Math.ceil(totalFilteredVisitors / visitorLimit)
         };
 
         return NextResponse.json({
