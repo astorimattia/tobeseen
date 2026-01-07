@@ -20,6 +20,7 @@ export async function GET(req: Request) {
     const visitorPageStr = searchParams.get('visitorPage') || '1';
     const visitorLimitStr = searchParams.get('visitorLimit') || '10';
     const countryFilter = searchParams.get('country'); // Enable drill down
+    const visitorFilter = searchParams.get('visitorId'); // Enable drill down by visitor
 
     const visitorPage = parseInt(visitorPageStr);
     const visitorLimit = parseInt(visitorLimitStr);
@@ -172,12 +173,14 @@ export async function GET(req: Request) {
         }
 
         // --- Top Lists (pages, countries, referrers) always use daily aggregation for now ---
-        const pageKeys = dates.map(d => `analytics:pages:${d}`);
+        const pageKeys = visitorFilter
+            ? dates.map(d => `analytics:visitors:${visitorFilter}:pages:${d}`)
+            : dates.map(d => `analytics:pages:${d}`);
+
         const countryKeys = dates.map(d => `analytics:countries:${d}`);
         const referrerKeys = dates.map(d => `analytics:referrers:${d}`);
         const visitorTopKeys = dates.map(d => `analytics:visitors:top:${d}`);
 
-        // City Keys (if country filter is set)
         // City Keys (if country filter is set, else Global)
         const cityKeys = countryFilter
             ? dates.map(d => `analytics:cities:${countryFilter}:${d}`)

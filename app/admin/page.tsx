@@ -81,6 +81,7 @@ export default function AdminPage() {
     const [error, setError] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: keyof Subscriber; direction: 'asc' | 'desc' }>({ key: 'date', direction: 'desc' });
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+    const [selectedVisitor, setSelectedVisitor] = useState<string | null>(null);
     const [countryPage, setCountryPage] = useState(1);
     const [cityPage, setCityPage] = useState(1);
     const [pagesPage, setPagesPage] = useState(1);
@@ -145,7 +146,11 @@ export default function AdminPage() {
             // Fetch both concurrently
             // Add cache: 'no-store' to prevent stale data
             const headers = { 'Cache-Control': 'no-store' };
-            const analyticsUrl = `/api/admin/analytics?key=${pwd}&from=${from}&to=${to}&visitorPage=${visP}&visitorLimit=15${selectedCountry ? `&country=${encodeURIComponent(selectedCountry)}` : ''}`;
+            let analyticsUrl = `/api/admin/analytics?key=${pwd}&from=${from}&to=${to}&visitorPage=${visP}&visitorLimit=15${selectedCountry ? `&country=${encodeURIComponent(selectedCountry)}` : ''}`;
+
+            if (selectedVisitor) {
+                analyticsUrl += `&visitorId=${encodeURIComponent(selectedVisitor)}`;
+            }
 
             const [subRes, analyticsRes] = await Promise.all([
                 fetch(`/api/admin/subscribers?key=${pwd}&page=${subP}&limit=15`, { headers, cache: 'no-store' }),
@@ -196,7 +201,7 @@ export default function AdminPage() {
             verifyAndLoad(password, subPage, visitorPage);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeRange, subPage, visitorPage, selectedCountry]);
+    }, [timeRange, subPage, visitorPage, selectedCountry, selectedVisitor]);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -429,7 +434,6 @@ export default function AdminPage() {
 
                                         {/* Details Horizontal */}
                                         <div className="flex items-center text-xs text-gray-500 gap-4">
-                                            <span>Joined {sub.date}</span>
                                             {(sub.city || sub.country) && (sub.city !== 'Unknown' || sub.country !== 'Unknown') && (
                                                 <span className="flex items-center">
                                                     {sub.city && sub.city !== 'Unknown' ? decodeURIComponent(sub.city) : ''}
@@ -437,6 +441,7 @@ export default function AdminPage() {
                                                     {sub.country && sub.country !== 'Unknown' ? getCountryName(sub.country) : ''}
                                                 </span>
                                             )}
+                                            <span>Joined {sub.date}</span>
                                         </div>
                                     </div>
                                 </li>
@@ -597,10 +602,91 @@ export default function AdminPage() {
                         {/* Top Lists */}
                         {/* 2x2 Grid Layout: Pages | Visitors | Countries | Cities */}
                         <div className="grid md:grid-cols-2 gap-6">
-                            {/* Top Pages */}
+                            {/* Top Visitors */}
                             <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[340px]">
                                 <div className="px-4 border-b border-gray-800 flex-shrink-0 h-[48px] flex items-center bg-gray-800/50">
-                                    <h3 className="text-sm font-medium text-white">Top Pages</h3>
+                                    <h3 className="text-sm font-medium text-white">Top Visitors</h3>
+                                </div>
+                                {analytics && analytics.data.topVisitors && analytics.data.topVisitors.length > 0 ? (
+                                    <>
+                                        <div className="p-4 flex-1 overflow-hidden">
+                                            <ul className="space-y-3">
+                                                {analytics.data.topVisitors
+                                                    .slice((visitorsPage - 1) * 7, visitorsPage * 7)
+                                                    .map((v, i) => (
+                                                        <li
+                                                            key={i}
+                                                            className={`flex justify-between items-center group cursor-pointer transition-colors ${selectedVisitor === v.id ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
+                                                            onClick={() => {
+                                                                setSelectedVisitor(selectedVisitor === v.id ? null : v.id);
+                                                                setPagesPage(1); // Reset pages pagination
+                                                            }}
+                                                        >
+                                                            <div className="flex flex-col overflow-hidden mr-2">
+                                                                {v.email ? (
+                                                                    <span className={`text-sm font-medium truncate ${selectedVisitor === v.id ? 'text-indigo-300' : 'text-indigo-400 group-hover:text-indigo-300'}`} title={v.email}>{v.email}</span>
+                                                                ) : (
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className={`text-sm truncate font-mono text-xs ${selectedVisitor === v.id ? 'text-indigo-300' : 'text-gray-300 group-hover:text-white'}`}>{v.ip || 'Unknown'}</span>
+                                                                        {(v.city || v.country) && (
+                                                                            <span className={`text-xs truncate ${selectedVisitor === v.id ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                                                {v.city && v.city !== 'unknown' ? decodeURIComponent(v.city) : ''}
+                                                                                {v.city && v.country ? ', ' : ''}
+                                                                                {v.country ? getCountryName(v.country) : ''}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <span className="text-sm font-mono text-gray-500 flex-shrink-0">{v.value}</span>
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                        </div>
+                                        <div className="px-4 flex justify-between items-center border-t border-gray-800 h-[42px] flex-shrink-0 bg-gray-900">
+                                            <div className="w-[60px]">
+                                                {visitorsPage > 1 && (
+                                                    <button
+                                                        onClick={() => setVisitorsPage(p => Math.max(1, p - 1))}
+                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
+                                                    >
+                                                        Previous
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <span className="text-xs text-gray-500">
+                                                {visitorsPage} / {Math.ceil(analytics.data.topVisitors.length / 7)}
+                                            </span>
+                                            <div className="w-[60px] flex justify-end">
+                                                {visitorsPage < Math.ceil(analytics.data.topVisitors.length / 7) && (
+                                                    <button
+                                                        onClick={() => setVisitorsPage(p => Math.min(Math.ceil((analytics.data.topVisitors?.length || 0) / 7), p + 1))}
+                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
+                                                    >
+                                                        Next
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="p-4 flex-1 flex items-center justify-center">
+                                        <p className="text-sm text-gray-500">No data yet</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Top Pages */}
+                            <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[340px]">
+                                <div className="px-4 border-b border-gray-800 flex-shrink-0 h-[48px] flex items-center justify-between bg-gray-800/50">
+                                    <h3 className="text-sm font-medium text-white truncate max-w-[200px]" title={selectedVisitor ? `Pages visited by ${selectedVisitor}` : 'Top Pages'}>
+                                        {selectedVisitor ? `Pages by Visitor` : 'Top Pages'}
+                                    </h3>
+                                    {selectedVisitor && (
+                                        <button onClick={() => setSelectedVisitor(null)} className="flex-shrink-0 text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer border border-indigo-500/30 rounded px-1.5 py-0.5">
+                                            Clear
+                                        </button>
+                                    )}
                                 </div>
                                 {analytics && analytics.data.pages.length > 0 ? (
                                     <>
@@ -634,73 +720,6 @@ export default function AdminPage() {
                                                 {pagesPage < Math.ceil(analytics.data.pages.length / 7) && (
                                                     <button
                                                         onClick={() => setPagesPage(p => Math.min(Math.ceil(analytics.data.pages.length / 7), p + 1))}
-                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
-                                                    >
-                                                        Next
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div className="p-4 flex-1 flex items-center justify-center">
-                                        <p className="text-sm text-gray-500">No data yet</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Top Visitors */}
-                            <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[340px]">
-                                <div className="px-4 border-b border-gray-800 flex-shrink-0 h-[48px] flex items-center bg-gray-800/50">
-                                    <h3 className="text-sm font-medium text-white">Top Visitors</h3>
-                                </div>
-                                {analytics && analytics.data.topVisitors && analytics.data.topVisitors.length > 0 ? (
-                                    <>
-                                        <div className="p-4 flex-1 overflow-hidden">
-                                            <ul className="space-y-3">
-                                                {analytics.data.topVisitors
-                                                    .slice((visitorsPage - 1) * 7, visitorsPage * 7)
-                                                    .map((v, i) => (
-                                                        <li key={i} className="flex justify-between items-center">
-                                                            <div className="flex flex-col overflow-hidden mr-2">
-                                                                {v.email ? (
-                                                                    <span className="text-sm text-indigo-400 font-medium truncate" title={v.email}>{v.email}</span>
-                                                                ) : (
-                                                                    <div className="flex flex-col">
-                                                                        <span className="text-sm text-gray-300 truncate font-mono text-xs">{v.ip || 'Unknown'}</span>
-                                                                        {(v.city || v.country) && (
-                                                                            <span className="text-xs text-gray-500 truncate">
-                                                                                {v.city && v.city !== 'unknown' ? decodeURIComponent(v.city) : ''}
-                                                                                {v.city && v.country ? ', ' : ''}
-                                                                                {v.country ? getCountryName(v.country) : ''}
-                                                                            </span>
-                                                                        )}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            <span className="text-sm font-mono text-gray-500 flex-shrink-0">{v.value}</span>
-                                                        </li>
-                                                    ))}
-                                            </ul>
-                                        </div>
-                                        <div className="px-4 flex justify-between items-center border-t border-gray-800 h-[42px] flex-shrink-0 bg-gray-900">
-                                            <div className="w-[60px]">
-                                                {visitorsPage > 1 && (
-                                                    <button
-                                                        onClick={() => setVisitorsPage(p => Math.max(1, p - 1))}
-                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
-                                                    >
-                                                        Previous
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <span className="text-xs text-gray-500">
-                                                {visitorsPage} / {Math.ceil(analytics.data.topVisitors.length / 7)}
-                                            </span>
-                                            <div className="w-[60px] flex justify-end">
-                                                {visitorsPage < Math.ceil(analytics.data.topVisitors.length / 7) && (
-                                                    <button
-                                                        onClick={() => setVisitorsPage(p => Math.min(Math.ceil((analytics.data.topVisitors?.length || 0) / 7), p + 1))}
                                                         className="text-xs text-gray-400 hover:text-white cursor-pointer"
                                                     >
                                                         Next

@@ -60,6 +60,9 @@ export async function POST(req: Request) {
         // 3b. Top Visitors (Sorted Set by View Count)
         if (visitorId) {
             pipeline.zIncrBy(`analytics:visitors:top:${today}`, 1, visitorId);
+
+            // 3c. Pages per Visitor (Sorted Set) - Enables filtering "Top Pages" by Visitor
+            pipeline.zIncrBy(`analytics:visitors:${visitorId}:pages:${today}`, 1, path);
         }
 
         // 4. Top Countries (Sorted Set)
