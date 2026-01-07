@@ -74,12 +74,12 @@ export default function AdminPage() {
     const [subPagination, setSubPagination] = useState<PaginationMeta | null>(null);
     const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
     const [activeTab, setActiveTab] = useState('analytics'); // 'subscribers' | 'analytics'
-    const [timeRange, setTimeRange] = useState('7'); // '0' = Today, '7', '30', 'all'
+    const [analyticsTimeRange, setAnalyticsTimeRange] = useState('7'); // Default 7 Days
+    const [subscribersTimeRange, setSubscribersTimeRange] = useState('all'); // Default All Time
     const [subPage, setSubPage] = useState(1);
     const [visitorPage, setVisitorPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [sortConfig, setSortConfig] = useState<{ key: keyof Subscriber; direction: 'asc' | 'desc' }>({ key: 'date', direction: 'desc' });
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
     const [selectedVisitor, setSelectedVisitor] = useState<string | null>(null);
     const [countryPage, setCountryPage] = useState(1);
@@ -88,29 +88,13 @@ export default function AdminPage() {
     const [visitorsPage, setVisitorsPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [subSearchTerm, setSubSearchTerm] = useState('');
+    const [debouncedSubSearch, setDebouncedSubSearch] = useState('');
+
+    // Sorting is default by Date Descending from backend
+    const sortedSubscribers = subscribers;
 
 
-
-    const sortedSubscribers = [...subscribers].sort((a, b) => {
-        const valA = (a[sortConfig.key] || '').toString().toLowerCase();
-        const valB = (b[sortConfig.key] || '').toString().toLowerCase();
-
-        if (valA < valB) {
-            return sortConfig.direction === 'asc' ? -1 : 1;
-        }
-        if (valA > valB) {
-            return sortConfig.direction === 'asc' ? 1 : -1;
-        }
-        return 0;
-    });
-
-    const requestSort = (key: keyof Subscriber) => {
-        let direction: 'asc' | 'desc' = 'asc';
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
-        }
-        setSortConfig({ key, direction });
-    };
 
     // helper to set cookie
     const setCookie = (name: string, value: string, days: number) => {
@@ -132,23 +116,36 @@ export default function AdminPage() {
 
         try {
             // Build date range
-            const end = new Date();
-            const start = new Date();
-
-            let from, to;
-            if (timeRange === 'all') {
-                from = 'all';
-                to = end.toISOString().slice(0, 10);
+            // Analytics Dates (based on analyticsTimeRange)
+            let analyticsFrom, analyticsTo;
+            const analyticsEnd = new Date();
+            const analyticsStart = new Date();
+            if (analyticsTimeRange === 'all') {
+                analyticsFrom = 'all';
+                analyticsTo = analyticsEnd.toISOString().slice(0, 10);
             } else {
-                start.setDate(start.getDate() - parseInt(timeRange));
-                to = end.toISOString().slice(0, 10);
-                from = start.toISOString().slice(0, 10);
+                analyticsStart.setDate(analyticsStart.getDate() - parseInt(analyticsTimeRange));
+                analyticsTo = analyticsEnd.toISOString().slice(0, 10);
+                analyticsFrom = analyticsStart.toISOString().slice(0, 10);
+            }
+
+            // Subscribers Dates (based on subscribersTimeRange)
+            let subFrom, subTo;
+            const subEnd = new Date();
+            const subStart = new Date();
+            if (subscribersTimeRange === 'all') {
+                subFrom = 'all';
+                subTo = subEnd.toISOString().slice(0, 10);
+            } else {
+                subStart.setDate(subStart.getDate() - parseInt(subscribersTimeRange));
+                subTo = subEnd.toISOString().slice(0, 10);
+                subFrom = subStart.toISOString().slice(0, 10);
             }
 
             // Fetch both concurrently
             // Add cache: 'no-store' to prevent stale data
             const headers = { 'Cache-Control': 'no-store' };
-            let analyticsUrl = `/api/admin/analytics?key=${pwd}&from=${from}&to=${to}&visitorPage=${visP}&visitorLimit=15${selectedCountry ? `&country=${encodeURIComponent(selectedCountry)}` : ''}`;
+            let analyticsUrl = `/api/admin/analytics?key=${pwd}&from=${analyticsFrom}&to=${analyticsTo}&visitorPage=${visP}&visitorLimit=15${selectedCountry ? `&country=${encodeURIComponent(selectedCountry)}` : ''}`;
 
             if (selectedVisitor) {
                 analyticsUrl += `&visitorId=${encodeURIComponent(selectedVisitor)}`;
@@ -156,8 +153,19 @@ export default function AdminPage() {
                 analyticsUrl += `&search=${encodeURIComponent(debouncedSearch)}`;
             }
 
+            let subUrl = `/api/admin/subscribers?key=${pwd}&page=${subP}&limit=15`;
+            if (debouncedSubSearch) {
+                subUrl += `&search=${encodeURIComponent(debouncedSubSearch)}`;
+            }
+            // Add date filter
+            if (subFrom && subFrom !== 'all') subUrl += `&from=${subFrom}`;
+            if (subTo) subUrl += `&to=${subTo}`;
+
+            // Add sorting (Always Date Descending)
+            subUrl += `&sortKey=date&sortDir=desc`;
+
             const [subRes, analyticsRes] = await Promise.all([
-                fetch(`/api/admin/subscribers?key=${pwd}&page=${subP}&limit=15`, { headers, cache: 'no-store' }),
+                fetch(subUrl, { headers, cache: 'no-store' }),
                 fetch(analyticsUrl, { headers, cache: 'no-store' })
             ]);
 
@@ -206,9 +214,12 @@ export default function AdminPage() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timeRange, subPage, visitorPage, selectedCountry, selectedVisitor, debouncedSearch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [analyticsTimeRange, subscribersTimeRange, subPage, visitorPage, selectedCountry, selectedVisitor, debouncedSearch, debouncedSubSearch]);
 
-    // Search Debounce
+    // Search Debounce (Visitors)
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchTerm);
@@ -216,6 +227,17 @@ export default function AdminPage() {
         }, 300);
         return () => clearTimeout(timer);
     }, [searchTerm]);
+
+    // Search Debounce (Subscribers)
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSubSearch(subSearchTerm);
+            setSubPage(1); // Reset pagination on search
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [subSearchTerm]);
+
+
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -381,7 +403,7 @@ export default function AdminPage() {
                         <p className="text-gray-400 text-sm mt-1">
                             {activeTab === 'subscribers'
                                 ? `Total Subscribers: ${subPagination?.total || subscribers.length}`
-                                : `Views${timeRange === 'all' ? ' (All Time)' : timeRange === '0' ? '' : ` (Last ${timeRange} Days)`}: ${analytics?.overview?.views || 0}`}
+                                : `Views${analyticsTimeRange === 'all' ? ' (All Time)' : analyticsTimeRange === '0' ? '' : ` (Last ${analyticsTimeRange} Days)`}: ${analytics?.overview?.views || 0}`}
                         </p>
                     </div>
                     <button
@@ -415,29 +437,36 @@ export default function AdminPage() {
                         </button>
                     </div>
 
-                    {activeTab === 'analytics' && (
-                        <select
-                            value={timeRange}
-                            onChange={(e) => setTimeRange(e.target.value)}
-                            className="bg-gray-900 border border-gray-700 text-white text-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block p-2"
-                        >
-                            <option value="0">Today</option>
-                            <option value="7">Last 7 Days</option>
-                            <option value="30">Last 30 Days</option>
-                            <option value="all">All Time</option>
-                        </select>
-                    )}
+                    <select
+                        value={activeTab === 'analytics' ? analyticsTimeRange : subscribersTimeRange}
+                        onChange={(e) => {
+                            if (activeTab === 'analytics') setAnalyticsTimeRange(e.target.value);
+                            else setSubscribersTimeRange(e.target.value);
+                        }}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block p-2"
+                    >
+                        <option value="0">Today</option>
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="all">All Time</option>
+                    </select>
                 </div>
 
                 {activeTab === 'subscribers' ? (
                     <div className="bg-gray-900 shadow overflow-hidden sm:rounded-md border border-gray-800 flex flex-col">
-                        <div className="px-4 py-3 border-b border-gray-800 flex justify-between bg-gray-800/50">
-                            <button onClick={() => requestSort('email')} className="text-xs font-semibold text-gray-400 uppercase tracking-wider hover:text-white flex items-center gap-1 cursor-pointer">
-                                Email {sortConfig.key === 'email' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                            </button>
-                            <button onClick={() => requestSort('date')} className="text-xs font-semibold text-gray-400 uppercase tracking-wider hover:text-white flex items-center gap-1 cursor-pointer">
-                                Joined {sortConfig.key === 'date' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-                            </button>
+                        <div className="px-4 py-3 border-b border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-800/50 gap-2">
+                            <div className="flex items-center gap-4">
+                                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1">
+                                    Email
+                                </span>
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Search email, country..."
+                                value={subSearchTerm}
+                                onChange={(e) => setSubSearchTerm(e.target.value)}
+                                className="bg-gray-900 border border-gray-700 text-white text-xs rounded px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 placeholder-gray-600 outline-none w-48"
+                            />
                         </div>
                         <ul className="divide-y divide-gray-800 flex-1">
                             {sortedSubscribers.map((sub) => (
@@ -935,8 +964,9 @@ export default function AdminPage() {
                             {analytics?.data?.pagination && <PaginationControls meta={analytics.data.pagination} onPageChange={setVisitorPage} />}
                         </div>
                     </div>
-                )}
-            </div>
-        </div>
+                )
+                }
+            </div >
+        </div >
     );
 }
