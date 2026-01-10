@@ -10,10 +10,9 @@ interface EventShowcaseProps {
   title: string;
   story: string;
   images: string[];
-  documentaryDate?: string;
 }
 
-export default function EventShowcase({ id, title, story, images, documentaryDate }: EventShowcaseProps) {
+export default function EventShowcase({ id, title, story, images }: EventShowcaseProps) {
   const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
@@ -52,11 +51,7 @@ export default function EventShowcase({ id, title, story, images, documentaryDat
       <article id={id} className="space-y-6">
         <h2 className="text-2xl font-semibold">{title}</h2>
         <p className="text-zinc-300 max-w-3xl">{story}</p>
-        {documentaryDate && (
-          <p className="text-zinc-400 text-sm italic">
-            🎬 Documentary coming {documentaryDate}
-          </p>
-        )}
+
 
         {/* Responsive photo grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -73,7 +68,7 @@ export default function EventShowcase({ id, title, story, images, documentaryDat
                   <div className="w-8 h-8 border-2 border-zinc-600 border-t-white rounded-full animate-spin"></div>
                 </div>
               )}
-              
+
               {/* Error placeholder */}
               {imageErrors.has(i) && (
                 <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
@@ -88,12 +83,11 @@ export default function EventShowcase({ id, title, story, images, documentaryDat
                   className={`${
                     // Specific positioning for certain images
                     (id === 'vegetarian' && (i === 6 || i === 10)) || // Vegetarian photos 7 and 11 (0-indexed)
-                    (id === 'tultepec' && i === 2) // Feria Internacional photo 3 (0-indexed)
-                      ? 'object-top' 
+                      (id === 'tultepec' && i === 2) // Feria Internacional photo 3 (0-indexed)
+                      ? 'object-top'
                       : 'object-cover'
-                  } group-hover:scale-105 transition-transform duration-300 w-full h-full ${
-                    loadedImages.has(i) ? 'opacity-100' : 'opacity-0'
-                  }`}
+                    } group-hover:scale-105 transition-transform duration-300 w-full h-full ${loadedImages.has(i) ? 'opacity-100' : 'opacity-0'
+                    }`}
                   style={{ position: 'absolute', inset: 0 }}
                   loading={i < 6 ? "eager" : "lazy"}
                   onLoad={() => handleImageLoad(i)}
@@ -107,12 +101,11 @@ export default function EventShowcase({ id, title, story, images, documentaryDat
                   className={`${
                     // Specific positioning for certain images
                     (id === 'vegetarian' && (i === 6 || i === 10)) || // Vegetarian photos 7 and 11 (0-indexed)
-                    (id === 'tultepec' && i === 2) // Feria Internacional photo 3 (0-indexed)
-                      ? 'object-top' 
+                      (id === 'tultepec' && i === 2) // Feria Internacional photo 3 (0-indexed)
+                      ? 'object-top'
                       : 'object-cover'
-                  } group-hover:scale-105 transition-transform duration-300 ${
-                    loadedImages.has(i) ? 'opacity-100' : 'opacity-0'
-                  }`}
+                    } group-hover:scale-105 transition-transform duration-300 ${loadedImages.has(i) ? 'opacity-100' : 'opacity-0'
+                    }`}
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   quality={85}
                   loading={i < 6 ? "eager" : "lazy"} // Load first 6 images eagerly, rest lazy

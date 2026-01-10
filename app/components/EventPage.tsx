@@ -12,7 +12,6 @@ interface Event {
   story: string;
   images: string[];
   analogImages?: string[];
-  documentaryDate?: string;
 }
 
 interface EventPageProps {
@@ -23,12 +22,12 @@ interface EventPageProps {
   prevEventId: string;
 }
 
-export default function EventPage({ 
-  event, 
-  currentIndex, 
-  totalEvents, 
-  nextEventId, 
-  prevEventId 
+export default function EventPage({
+  event,
+  currentIndex,
+  totalEvents,
+  nextEventId,
+  prevEventId
 }: EventPageProps) {
   const router = useRouter();
   const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
@@ -98,7 +97,7 @@ export default function EventPage({
   const handleTouchEnd = useCallback(() => {
     if (isFullScreenOpen) return; // Don't navigate when fullscreen is open
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -114,7 +113,7 @@ export default function EventPage({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isFullScreenOpen) return; // Don't navigate when fullscreen is open
-      
+
       if (e.key === 'ArrowLeft') {
         navigateToEvent(prevEventId);
       } else if (e.key === 'ArrowRight') {
@@ -128,7 +127,7 @@ export default function EventPage({
 
   return (
     <>
-      <div 
+      <div
         className="mx-auto max-w-6xl px-4 py-4 md:py-8"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -147,28 +146,26 @@ export default function EventPage({
           <div className="space-y-6">
             <h1 className="text-2xl md:text-4xl font-bold leading-tight">{event.title}</h1>
             <p className="text-sm md:text-base text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
-            
+
             {/* Digital/Analog Toggle */}
             {(hasAnalogImages || event.id === 'tinku' || event.id === 'tultepec') && (
               <div className="flex items-center justify-center mt-6">
                 <div className="flex items-center bg-zinc-800/50 rounded-full p-1 border border-white/10">
                   <button
                     onClick={() => setIsAnalogMode(false)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
-                      !isAnalogMode
-                        ? 'bg-white text-black'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${!isAnalogMode
+                      ? 'bg-white text-black'
+                      : 'text-zinc-400 hover:text-white'
+                      }`}
                   >
                     Digital
                   </button>
                   <button
                     onClick={() => setIsAnalogMode(true)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
-                      isAnalogMode
-                        ? 'bg-white text-black'
-                        : 'text-zinc-400 hover:text-white'
-                    }`}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${isAnalogMode
+                      ? 'bg-white text-black'
+                      : 'text-zinc-400 hover:text-white'
+                      }`}
                   >
                     Analog
                   </button>
@@ -185,7 +182,11 @@ export default function EventPage({
                   src={currentImages[0]}
                   alt={`${event.title} main photo`}
                   className="object-cover transition-transform duration-300 group-hover:scale-105 w-full h-full"
-                  style={{ position: 'absolute', inset: 0 }}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center'
+                  }}
                   onLoad={() => handleImageLoad(0)}
                   onError={() => handleImageError(0)}
                 />
@@ -201,6 +202,10 @@ export default function EventPage({
                   onError={() => handleImageError(0)}
                   placeholder="blur"
                   blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                  style={{
+                    objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center'
+                  }}
+                  unoptimized={event.id === 'mautkakuan'}
                 />
               )}
               {/* Loading placeholder */}
@@ -233,7 +238,7 @@ export default function EventPage({
                     <div className="w-8 h-8 border-2 border-zinc-600 border-t-white rounded-full animate-spin"></div>
                   </div>
                 )}
-                
+
                 {/* Error placeholder */}
                 {imageErrors.has(i + 1) && (
                   <div className="absolute inset-0 bg-zinc-800 flex items-center justify-center">
@@ -245,14 +250,13 @@ export default function EventPage({
                   <img
                     src={src}
                     alt={`${event.title} photo ${i + 1}`}
-                    className={`object-cover group-hover:scale-105 transition-transform duration-300 w-full h-full ${
-                      loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
-                    }`}
+                    className={`object-cover group-hover:scale-105 transition-transform duration-300 w-full h-full ${loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
+                      }`}
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' : 
-                                     event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
+                      objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' :
+                        event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
                     }}
                     loading={i < 8 ? "eager" : "lazy"}
                     onLoad={() => handleImageLoad(i + 1)}
@@ -263,12 +267,11 @@ export default function EventPage({
                     src={src}
                     alt={`${event.title} photo ${i + 1}`}
                     fill
-                    className={`object-cover group-hover:scale-105 transition-transform duration-300 ${
-                      loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
-                    }`}
+                    className={`object-cover group-hover:scale-105 transition-transform duration-300 ${loadedImages.has(i + 1) ? 'opacity-100' : 'opacity-0'
+                      }`}
                     style={{
-                      objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' : 
-                                     event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
+                      objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' :
+                        event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
                     }}
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     quality={85}

@@ -24,7 +24,7 @@ const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
 async function optimizeImage(inputPath, outputPath, config) {
   try {
     const { width, quality } = config;
-    
+
     await sharp(inputPath)
       .resize(width, null, {
         withoutEnlargement: true,
@@ -32,7 +32,7 @@ async function optimizeImage(inputPath, outputPath, config) {
       })
       .webp({ quality })
       .toFile(outputPath);
-    
+
     console.log(`✓ Optimized: ${path.basename(inputPath)} -> ${path.basename(outputPath)}`);
   } catch (error) {
     console.error(`✗ Error optimizing ${inputPath}:`, error.message);
@@ -41,31 +41,35 @@ async function optimizeImage(inputPath, outputPath, config) {
 
 async function processDirectory(dir) {
   const files = fs.readdirSync(dir);
-  
+
   for (const file of files) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
-    
+
+    if (path.resolve(filePath) === path.resolve(outputDir)) {
+      continue;
+    }
+
     if (stat.isDirectory()) {
       await processDirectory(filePath);
     } else if (stat.isFile()) {
       const ext = path.extname(file).toLowerCase();
-      
+
       if (imageExtensions.includes(ext)) {
         const baseName = path.basename(file, ext);
         const relativePath = path.relative(publicDir, filePath);
         const outputSubDir = path.dirname(path.join(outputDir, relativePath));
-        
+
         // Create output subdirectory if it doesn't exist
         if (!fs.existsSync(outputSubDir)) {
           fs.mkdirSync(outputSubDir, { recursive: true });
         }
-        
+
         // Generate optimized versions
         for (const config of configs) {
           const outputFileName = `${baseName}${config.suffix}.webp`;
           const outputPath = path.join(outputSubDir, outputFileName);
-          
+
           await optimizeImage(filePath, outputPath, config);
         }
       }
@@ -77,7 +81,7 @@ async function main() {
   console.log('🚀 Starting image optimization...');
   console.log(`📁 Processing directory: ${publicDir}`);
   console.log(`📁 Output directory: ${outputDir}`);
-  
+
   try {
     await processDirectory(publicDir);
     console.log('✅ Image optimization completed!');
