@@ -25,6 +25,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: true, ignored: true });
         }
 
+        // 2. Ignore Localhost
+        if (ip === '::1' || ip === '127.0.0.1') {
+            return NextResponse.json({ success: true, ignored: true });
+        }
+
         const redis = getRedisClient();
         if (!redis.isOpen) await redis.connect();
 
