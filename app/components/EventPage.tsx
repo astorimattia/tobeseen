@@ -177,7 +177,7 @@ export default function EventPage({
           {/* Hero Image */}
           {currentImages.length > 0 && (
             <div key={`hero-${isAnalogMode ? 'analog' : 'digital'}`} className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
-              {imageFallbacks.has(0) ? (
+              {imageFallbacks.has(0) || event.id === 'mautkakuan' ? (
                 <img
                   src={currentImages[0]}
                   alt={`${event.title} main photo`}
