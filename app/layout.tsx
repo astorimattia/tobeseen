@@ -93,7 +93,7 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#000000" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
+
         {/* Additional Meta Tags */}
         <meta name="author" content="Sacratos Team" />
         <meta name="robots" content="index, follow" />
@@ -101,7 +101,7 @@ export default function RootLayout({
         <meta name="revisit-after" content="7 days" />
         <meta name="distribution" content="global" />
         <meta name="rating" content="general" />
-        
+
         {/* Social Media Meta Tags */}
         <meta property="og:site_name" content="Sacratos" />
         <meta property="og:type" content="website" />
@@ -109,11 +109,11 @@ export default function RootLayout({
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Feria Internacional de la Pirotecnia - Dangerous fireworks festival in Mexico" />
-        
+
         {/* Twitter Additional Meta */}
         <meta name="twitter:site" content="@sacratos" />
         <meta name="twitter:creator" content="@sacratos" />
-        
+
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{

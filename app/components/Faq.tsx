@@ -10,11 +10,11 @@ export default function Faq() {
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
             <span>Why are you doing this?</span>
             <span className="transition group-open:rotate-180" aria-hidden>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
             </span>
           </summary>
           <p className="mt-3 text-zinc-300">
-          To capture humanity where it’s most raw and ambiguous. Not to give answers, but to raise questions. Real stories come from people’s mouths, and we want to let them speak. Our hope is that you walk away wondering why, just as a devotee explains why they do what they do. Photos show the spark. Stories reveal the soul.
+            To capture humanity where it’s most raw and ambiguous. Not to give answers, but to raise questions. Real stories come from people’s mouths, and we want to let them speak. Our hope is that you walk away wondering why, just as a devotee explains why they do what they do. Photos show the spark. Stories reveal the soul.
           </p>
         </details>
 
@@ -22,7 +22,7 @@ export default function Faq() {
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
             <span>Why only photos for now?</span>
             <span className="transition group-open:rotate-180" aria-hidden>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
             </span>
           </summary>
           <p className="mt-3 text-zinc-300">This started as a photo project. Trip after trip, our followers asked to see more, pushing us to evolve it into a fuller story, documentaries we are now making. Photos remain the fast lane to share the journey as we build the long form.</p>
@@ -32,10 +32,22 @@ export default function Faq() {
           <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
             <span>Contact us</span>
             <span className="transition group-open:rotate-180" aria-hidden>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
             </span>
           </summary>
           <p className="mt-3 text-zinc-300">For story tips, collaboration ideas or anything else, email us at <a href="mailto:mattiastori@gmail.com?subject=Regarding%20Sacratos" className="hover:underline font-bold">mattiastori@gmail.com</a>.</p>
+        </details>
+
+        <details className="group rounded-xl bg-zinc-900/30 p-5">
+          <summary className="flex cursor-pointer list-none items-center justify-between text-lg font-medium">
+            <span>How can I support the project?</span>
+            <span className="transition group-open:rotate-180" aria-hidden>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
+            </span>
+          </summary>
+          <p className="mt-3 text-zinc-300">
+            For now, you can support us here on <a href="https://ko-fi.com/sacratos" target="_blank" rel="noopener noreferrer" className="hover:underline font-bold">Ko-fi</a>. In the future, we will have more products like books, magazines, and exclusive paid content.
+          </p>
         </details>
       </div>
     </section>
