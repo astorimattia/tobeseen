@@ -105,7 +105,7 @@ export default function WorkPage() {
                 >
                   {/* Event Image */}
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    {imageFallbacks.has(event.id) ? (
+                    {imageFallbacks.has(event.id) || event.id === 'mautkakuan' ? (
                       <img
                         src={event.images[0]}
                         alt={event.title}

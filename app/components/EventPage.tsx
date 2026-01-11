@@ -43,6 +43,17 @@ export default function EventPage({
   const currentImages = isAnalogMode && event.analogImages ? event.analogImages : event.images;
   const hasAnalogImages = event.analogImages && event.analogImages.length > 0;
 
+  // Force loading state to clear after a timeout as a fail-safe for the mautkakuan image
+  useEffect(() => {
+    if (event.id === 'mautkakuan' && !loadedImages.has(0)) {
+      const timer = setTimeout(() => {
+        setLoadedImages(prev => new Set(prev).add(0));
+      }, 3000); // 3 second timeout fallback
+
+      return () => clearTimeout(timer);
+    }
+  }, [event.id, loadedImages]);
+
   // Reset selected image index when switching modes
   useEffect(() => {
     setSelectedImageIndex(0);
@@ -179,6 +190,11 @@ export default function EventPage({
             <div key={`hero-${isAnalogMode ? 'analog' : 'digital'}`} className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
               {imageFallbacks.has(0) || event.id === 'mautkakuan' ? (
                 <img
+                  ref={el => {
+                    if (el && el.complete && !loadedImages.has(0)) {
+                      handleImageLoad(0);
+                    }
+                  }}
                   src={currentImages[0]}
                   alt={`${event.title} main photo`}
                   className="object-cover transition-transform duration-300 group-hover:scale-105 w-full h-full"
