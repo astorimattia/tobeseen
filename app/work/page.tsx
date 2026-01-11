@@ -14,6 +14,12 @@ export default function WorkPage() {
 
   const EVENTS = [
     {
+      id: "banni",
+      title: "Banni Festival, India",
+      story: "In a 'mock' fight that leaves hundreds injured every year, thousands of devotees clash with long bamboo sticks to secure the idol of their god. It's a midnight battlefield where bloodshed is considered a sacred offering.",
+      images: ["/digital/banni.webp", "/digital/banni2.webp", "/digital/banni3.webp", "/digital/banni4.webp", "/digital/banni5.webp", "/digital/banni6.webp", "/digital/banni7.webp", "/digital/banni8.webp", "/digital/banni9.webp", "/digital/banni10.webp", "/digital/banni11.webp", "/digital/banni12.webp", "/digital/banni13.webp", "/digital/banni14.webp", "/digital/banni15.webp"],
+    },
+    {
       id: "mautkakuan",
       title: "Maut Ka Kuan, India",
       story: "Daredevils defy gravity riding motorcycles and cars on vertical wooden walls. In the 'Well of Death', the roar of engines and the smell of exhaust fill the air as riders perform death-defying stunts held only by centrifugal force.",

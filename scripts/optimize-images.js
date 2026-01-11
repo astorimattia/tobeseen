@@ -70,6 +70,12 @@ async function processDirectory(dir) {
           const outputFileName = `${baseName}${config.suffix}.webp`;
           const outputPath = path.join(outputSubDir, outputFileName);
 
+          // Check if output file already exists
+          if (fs.existsSync(outputPath)) {
+            // console.log(`✓ Skipped (already exists): ${path.basename(inputPath)} -> ${path.basename(outputPath)}`);
+            continue;
+          }
+
           await optimizeImage(filePath, outputPath, config);
         }
       }
