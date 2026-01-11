@@ -111,7 +111,7 @@ export default function WorkPage() {
                 >
                   {/* Event Image */}
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    {imageFallbacks.has(event.id) || event.id === 'mautkakuan' ? (
+                    {imageFallbacks.has(event.id) || event.id === 'mautkakuan' || event.id === 'banni' ? (
                       <img
                         src={event.images[0]}
                         alt={event.title}
@@ -139,7 +139,7 @@ export default function WorkPage() {
                         style={{
                           objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center'
                         }}
-                        unoptimized={event.id === 'mautkakuan'}
+                        unoptimized={event.id === 'mautkakuan' || event.id === 'banni'}
                         onError={() => {
                           if (!imageFallbacks.has(event.id)) {
                             setImageFallbacks(prev => new Set(prev).add(event.id));

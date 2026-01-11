@@ -43,9 +43,9 @@ export default function EventPage({
   const currentImages = isAnalogMode && event.analogImages ? event.analogImages : event.images;
   const hasAnalogImages = event.analogImages && event.analogImages.length > 0;
 
-  // Force loading state to clear after a timeout as a fail-safe for the mautkakuan image
+  // Force loading state to clear after a timeout as a fail-safe for the mautkakuan and banni images
   useEffect(() => {
-    if (event.id === 'mautkakuan' && !loadedImages.has(0)) {
+    if ((event.id === 'mautkakuan' || event.id === 'banni') && !loadedImages.has(0)) {
       const timer = setTimeout(() => {
         setLoadedImages(prev => new Set(prev).add(0));
       }, 3000); // 3 second timeout fallback
@@ -188,7 +188,7 @@ export default function EventPage({
           {/* Hero Image */}
           {currentImages.length > 0 && (
             <div key={`hero-${isAnalogMode ? 'analog' : 'digital'}`} className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
-              {imageFallbacks.has(0) || event.id === 'mautkakuan' ? (
+              {imageFallbacks.has(0) || event.id === 'mautkakuan' || event.id === 'banni' ? (
                 <img
                   ref={el => {
                     if (el && el.complete && !loadedImages.has(0)) {
@@ -221,7 +221,7 @@ export default function EventPage({
                   style={{
                     objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center'
                   }}
-                  unoptimized={event.id === 'mautkakuan'}
+                  unoptimized={event.id === 'mautkakuan' || event.id === 'banni'}
                 />
               )}
               {/* Loading placeholder */}
