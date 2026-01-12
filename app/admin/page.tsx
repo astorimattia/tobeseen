@@ -536,7 +536,17 @@ export default function AdminPage() {
                                                     stroke="#9ca3af"
                                                     fontSize={12}
                                                     tickFormatter={(str) => {
-                                                        if (str.includes(':')) return str;
+                                                        if (str.includes(':')) {
+                                                            // Assume UTC HH:00, convert to PST
+                                                            const hour = parseInt(str.split(':')[0]);
+                                                            const date = new Date();
+                                                            date.setUTCHours(hour, 0, 0, 0);
+                                                            return date.toLocaleTimeString('en-US', {
+                                                                timeZone: 'America/Los_Angeles',
+                                                                hour: 'numeric',
+                                                                hour12: true
+                                                            });
+                                                        }
                                                         const date = new Date(str);
                                                         return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
                                                     }}
@@ -547,7 +557,17 @@ export default function AdminPage() {
                                                     itemStyle={{ color: '#f3f4f6' }}
                                                     labelStyle={{ color: '#9ca3af' }}
                                                     labelFormatter={(label) => {
-                                                        if (label.includes(':')) return `Time: ${label}`;
+                                                        if (label.includes(':')) {
+                                                            const hour = parseInt(label.split(':')[0]);
+                                                            const date = new Date();
+                                                            date.setUTCHours(hour, 0, 0, 0);
+                                                            const pstTime = date.toLocaleTimeString('en-US', {
+                                                                timeZone: 'America/Los_Angeles',
+                                                                hour: 'numeric',
+                                                                hour12: true
+                                                            });
+                                                            return `Time: ${pstTime} (PST)`;
+                                                        }
                                                         return new Date(label).toLocaleDateString();
                                                     }}
                                                 />
