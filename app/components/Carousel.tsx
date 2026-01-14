@@ -44,7 +44,7 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
 
   const handleTouchEnd = () => {
     if (!touchStart.current || !touchEnd.current) return;
-    
+
     const distance = touchStart.current - touchEnd.current;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -78,13 +78,17 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
               <img
                 src={item.image}
                 alt={item.title}
-                className={`object-cover w-full h-full ${
-                  item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
+                className={`object-cover w-full h-full ${item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
                   item.id === 'hammers' ? 'object-[35%_center] md:object-center' :
-                  item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
-                  'object-center'
-                }`}
-                style={{ position: 'absolute', inset: 0 }}
+                    item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
+                      item.id === 'mautkakuan' ? 'object-bottom' :
+                        'object-center'
+                  }`}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  filter: item.id === 'vegetarian' ? 'blur(8px)' : 'none',
+                }}
                 loading={i === index ? "eager" : "lazy"}
                 onError={() => {
                   if (!imageFallbacks.has(i)) {
@@ -99,18 +103,21 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
                 src={item.image}
                 alt={item.title}
                 fill
-                className={`object-cover ${
-                  item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
+                className={`object-cover ${item.id === 'tultepec' ? 'object-[65%_center] md:object-center' :
                   item.id === 'hammers' ? 'object-[35%_center] md:object-center' :
-                  item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
-                  'object-center'
-                }`}
+                    item.id === 'vegetarian' ? 'object-[75%_center] md:object-center' :
+                      item.id === 'mautkakuan' ? 'object-bottom' :
+                        'object-center'
+                  }`}
                 sizes="(max-width: 768px) 100vw, 100vw"
                 quality={90}
                 priority={i === index}
                 loading={i === index ? "eager" : "lazy"}
                 placeholder="blur"
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                style={{
+                  filter: item.id === 'vegetarian' ? 'blur(8px)' : 'none',
+                }}
                 onError={() => {
                   if (!imageFallbacks.has(i)) {
                     setImageFallbacks(prev => new Set(prev).add(i));
@@ -119,6 +126,15 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
                   }
                 }}
               />
+            )}
+
+            {/* Sensitive Content Overlay */}
+            {item.id === 'vegetarian' && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                <div className="px-3 py-1.5 rounded-lg border border-white/20 bg-black/50 backdrop-blur-sm text-xs font-medium text-white/90 tracking-wide uppercase">
+                  Sensitive Content
+                </div>
+              </div>
             )}
             <figcaption className="absolute inset-x-0 bottom-8 p-4 text-center">
               <div className="text-sm md:text-sm text-white font-medium">{item.title}</div>
@@ -132,16 +148,16 @@ export default function Carousel({ items }: { items: GalleryItem[] }) {
             </figcaption>
           </figure>
         ))}
-        
+
         {/* Left click zone for previous slide */}
-        <div 
+        <div
           className="absolute left-0 top-0 w-1/3 h-full cursor-pointer z-10"
           onClick={() => go(-1)}
           aria-label="Previous slide"
         />
-        
+
         {/* Right click zone for next slide */}
-        <div 
+        <div
           className="absolute right-0 top-0 w-1/3 h-full cursor-pointer z-10"
           onClick={() => go(1)}
           aria-label="Next slide"
