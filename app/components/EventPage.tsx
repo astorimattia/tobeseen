@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import FullScreenImageViewer from "./FullScreenImageViewer";
@@ -202,10 +203,8 @@ export default function EventPage({
             {/* Medium Article Link */}
             {event.mediumUrl && (
               <div className="mt-8 pt-8 border-t border-white/10">
-                <a
-                  href={event.mediumUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={`/work/${event.id}/story`}
                   className="group block bg-zinc-900 border border-white/10 rounded-lg p-6 hover:bg-zinc-800 transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
@@ -218,7 +217,7 @@ export default function EventPage({
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
-                        Read full story on Medium
+                        Read Full Story
                       </p>
                       <h3 className="text-lg font-semibold text-white group-hover:text-zinc-200 transition-colors truncate">
                         {event.mediumTitle || `Read more about ${event.title}`}
@@ -228,7 +227,7 @@ export default function EventPage({
                       →
                     </div>
                   </div>
-                </a>
+                </Link>
               </div>
             )}
           </div>
