@@ -119,7 +119,8 @@ export default function WorkPage() {
                         style={{
                           position: 'absolute',
                           inset: 0,
-                          objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center'
+                          objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center',
+                          filter: event.id === 'vegetarian' ? 'blur(8px)' : 'none',
                         }}
                         onError={() => {
                           if (!imageFallbacks.has(event.id)) {
@@ -137,7 +138,8 @@ export default function WorkPage() {
                         quality={85}
                         priority={index < 2}
                         style={{
-                          objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center'
+                          objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center',
+                          filter: event.id === 'vegetarian' ? 'blur(8px)' : 'none',
                         }}
                         unoptimized={event.id === 'mautkakuan' || event.id === 'banni'}
                         onError={() => {
@@ -148,6 +150,15 @@ export default function WorkPage() {
                       />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                    {/* Sensitive Content Label */}
+                    {event.id === 'vegetarian' && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="px-3 py-1.5 rounded-lg border border-white/20 bg-black/50 backdrop-blur-sm text-xs font-medium text-white/90 tracking-wide uppercase">
+                          Sensitive Content
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Event Content */}

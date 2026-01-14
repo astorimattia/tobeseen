@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import FullScreenImageViewer from "./FullScreenImageViewer";
 import EventNavigation from "./EventNavigation";
+import SensitiveContentFilter from "./SensitiveContentFilter";
 
 interface Event {
   id: string;
@@ -135,6 +136,19 @@ export default function EventPage({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [navigateToEvent, prevEventId, nextEventId, isFullScreenOpen]);
+
+  // Sensitive content state
+  const isSensitive = event.id === 'vegetarian';
+  const [hasConsented, setHasConsented] = useState(!isSensitive);
+
+  // If sensitive and not consented, show warning
+  if (isSensitive && !hasConsented) {
+    return (
+      <div className="flex bg-black min-h-screen items-center justify-center">
+        <SensitiveContentFilter onShowContent={() => setHasConsented(true)} />
+      </div>
+    );
+  }
 
   return (
     <>
