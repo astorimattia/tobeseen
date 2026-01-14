@@ -18,6 +18,8 @@ const EVENTS = [
     title: "Maut Ka Kuan, India",
     story: "Daredevils defy gravity riding motorcycles and cars on vertical wooden walls. In the 'Well of Death', the roar of engines and the smell of exhaust fill the air as riders perform death-defying stunts held only by centrifugal force.",
     images: ["/digital/mautkakuan.webp", "/digital/mautkakuan2.webp", "/digital/mautkakuan3.webp", "/digital/mautkakuan4.webp", "/digital/mautkakuan5.webp", "/digital/mautkakuan6.webp", "/digital/mautkakuan7.webp", "/digital/mautkakuan8.webp", "/digital/mautkakuan9.webp", "/digital/mautkakuan10.webp", "/digital/mautkakuan11.webp", "/digital/mautkakuan12.webp", "/digital/mautkakuan13.webp", "/digital/mautkakuan14.webp", "/digital/mautkakuan15.webp"],
+    mediumUrl: "https://medium.com/@dcolucci71043/riding-the-well-of-death-soma-basus-defiance-of-gravity-and-tradition-cbb8c87e4fbe",
+    mediumTitle: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
   },
   {
     id: "tultepec",

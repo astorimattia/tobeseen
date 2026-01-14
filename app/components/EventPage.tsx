@@ -13,6 +13,8 @@ interface Event {
   story: string;
   images: string[];
   analogImages?: string[];
+  mediumUrl?: string; // Optional field for Medium article URL
+  mediumTitle?: string; // Optional title for the Medium article
 }
 
 interface EventPageProps {
@@ -195,6 +197,38 @@ export default function EventPage({
                     Analog
                   </button>
                 </div>
+              </div>
+            )}
+            {/* Medium Article Link */}
+            {event.mediumUrl && (
+              <div className="mt-8 pt-8 border-t border-white/10">
+                <a
+                  href={event.mediumUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block bg-zinc-900 border border-white/10 rounded-lg p-6 hover:bg-zinc-800 transition-all duration-300"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0">
+                      <svg viewBox="0 0 1024 1024" className="w-8 h-8 fill-white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M248 408c-92.8 0-168 75.2-168 168s75.2 168 168 168 168-75.2 168-168-75.2-168-168-168zm0 280c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112zm528-280c-92.8 0-168 75.2-168 168s75.2 168 168 168 168-75.2 168-168-75.2-168-168-168zm0 280c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112zM512 80c-238.6 0-432 193.4-432 432s193.4 432 432 432 432-193.4 432-432S750.6 80 512 80zm0 800c-203.3 0-368-164.7-368-368S308.7 144 512 144s368 164.7 368 368-164.7 368-368 368z" />
+                        <path d="M792 376H232c-4.4 0-8 3.6-8 8v312c0 4.4 3.6 8 8 8h560c4.4 0 8-3.6 8-8V384c0-4.4-3.6-8-8-8zm-56 264H288V432h448v208z" fill="none" opacity="0" />
+                        <path d="M300 300h424v424H300z" fill="none" opacity="0" />
+                      </svg>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
+                        Read full story on Medium
+                      </p>
+                      <h3 className="text-lg font-semibold text-white group-hover:text-zinc-200 transition-colors truncate">
+                        {event.mediumTitle || `Read more about ${event.title}`}
+                      </h3>
+                    </div>
+                    <div className="flex-shrink-0 text-zinc-500 group-hover:translate-x-1 transition-transform duration-300">
+                      →
+                    </div>
+                  </div>
+                </a>
               </div>
             )}
           </div>
