@@ -40,32 +40,6 @@ export async function GET(req: Request) {
         // If fromParam/toParam are provided (YYYY-MM-DD), they represent days in that timezone.
 
         const now = new Date();
-        const getPstDate = (d: Date) => {
-            return new Date(d.toLocaleString('en-US', { timeZone }));
-        };
-
-        const targetDates: string[] = []; // YYYY-MM-DD in target timezone
-
-        let startDate: Date;
-        let endDate: Date;
-
-        if (fromParam === 'all') {
-            startDate = new Date('2024-01-01');
-            endDate = new Date(); // now
-        } else {
-            // If fromParam is provided (YYYY-MM-DD), treat it as start of day in target timezone
-            // But simpler: just string manipulation if we trust the input.
-            // If fromParam is NOT provided (default), we assume "today" in target timezone? 
-            // Existing logic was: fromParam ? new Date(fromParam) : new Date()
-            // Let's preserve existing behavior but interpret it in the timezone context if needed.
-
-            // If granularity is 'hour' (likely for 'Today' view), we need precise start/end in UTC
-            // derived from the target timezone's day.
-        }
-
-        // REVISED LOGIC:
-        // 1. Identify start/end timestamps (integers) based on inputs + timezone.
-        // 2. Generate appropriate keys logic.
 
         // Default to "Now"
         const nowInTz = new Date(now.toLocaleString('en-US', { timeZone }));
@@ -97,7 +71,7 @@ export async function GET(req: Request) {
         if (fromParam === 'all') {
             // ... existing "all" logic ...
             // simpler to just use UTC for "all time" or iterate from 2024-01-01
-            const current = new Date('2024-01-01T00:00:00Z');
+            let current = new Date('2024-01-01T00:00:00Z');
             const end = new Date();
             while (current <= end) {
                 dates.push(current.toISOString().slice(0, 10));
@@ -119,7 +93,7 @@ export async function GET(req: Request) {
             // - Top Lists / Totals: Generate UTC-equivalent days that cover the range.
             // - Chart: Use precise hourly keys.
 
-            const s = new Date(startYmd!);
+            let s = new Date(startYmd!);
             const e = new Date(endYmd!);
             // Just basic loop
             while (s <= e) {
@@ -151,61 +125,7 @@ export async function GET(req: Request) {
         if (granularity === 'hour' && startYmd && endYmd) {
             // Generate hourly keys for the specific timezone range
             // Start of range in UTC
-            // Construct string: "2024-01-14T00:00:00" (no Z) -> interpret as Local in TimeZone
-            // Use Intl or new Date hacks.
-
-            // Function to get UTC timestamp from Local YMD + TimeZone
-            const getUtcTime = (ymd: string, hour24: number) => {
-                // Create a date object that represents YMD HH:00:00 in the target TimeZone
-                // Then get its UTC time.
-                // We can use `new Date(string)` then check offsets? 
-                // Easier: Use Intl.
-                // Actually, simpler hack:
-                // Construct a date, then shift by the timezone offset of that date.
-                // But offset changes (DST).
-
-                // Robust way without libraries:
-                // Loop UTC hours, check their Local representation.
-                return;
-            };
-
-            // Range Start: startYmd 00:00:00 in timeZone
-            // Range End: endYmd 23:59:59 in timeZone
-
-            // Helper: find UTC start/end for the local range
-            const getRangeInUtc = (yMd: string, timeStr: string) => {
-                // formatted like 'America/Los_Angeles'
-                // We can use `new Date(str).toLocaleString('en-US', { timeZone: 'UTC' })` inverse? No.
-
-                // We need to find the UTC timestamp X such that X in timeZone is `yMd timeStr`.
-                // Brute force nearby UTC times?
-                // Or just assume specific offsets? No, DST.
-
-                // Let's iterate.
-                // Start with the UTC date of the same string, then adjust.
-                // e.g. 2024-01-14T00:00:00Z. In LA, this is 16:00 prev day.
-                // We want 00:00 LA. That is 08:00 UTC.
-
-                let d = new Date(`${yMd}T${timeStr}Z`);
-                // Shift by roughly +8 hours to start check
-                d.setHours(d.getHours() + 8);
-
-                // Fine tune
-                // We check `d.toLocaleString(..., { timeZone })` until it matches.
-                // This is too slow for runtime?
-                // Actually, `toLocaleString` is decent.
-
-                // Better approach:
-                // Create a date object from the string, assuming local system time, then ... no server is UTC.
-
-                // Let's assume standard US offsets for simplicity or rely on a small loop?
-                // Wait, we can use `new Date()` and `toLocaleString` to find the offset.
-            };
-
-            // DIFFERENT APPROACH:
-            // Just iterate UTC hours covering a wide enough range (start - 1 day to end + 1 day)
-            // Convert each UTC hour to TimeZone.
-            // If it falls within startYmd and endYmd, keep it.
+            // Limit loop to cover standard day range + buffer
 
             const searchStart = new Date(startYmd);
             searchStart.setDate(searchStart.getDate() - 1); // Buffer
@@ -232,7 +152,7 @@ export async function GET(req: Request) {
                 const p: Record<string, string> = {};
                 parts.forEach(({ type, value }) => p[type] = value);
                 const localYmd = `${p.year}-${p.month}-${p.day}`;
-                const localHour = parseInt(p.hour); // 0-23
+                // const localHour = parseInt(p.hour); // Unused
 
                 // Check if inside range [startYmd, endYmd] (inclusive of days)
                 if (localYmd >= startYmd && localYmd <= endYmd) {
