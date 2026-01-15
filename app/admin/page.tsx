@@ -118,34 +118,53 @@ export default function AdminPage() {
             // Build date range
             // Analytics Dates (based on analyticsTimeRange)
             let analyticsFrom, analyticsTo;
-            const analyticsEnd = new Date();
-            const analyticsStart = new Date();
+            const now = new Date();
+
+            // Helper to get YYYY-MM-DD in PST
+            const getPstDateStr = (date: Date) => {
+                return date.toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+            };
+
+            const pstToday = getPstDateStr(now);
+            let granularity = 'day';
+
             if (analyticsTimeRange === 'all') {
                 analyticsFrom = 'all';
-                analyticsTo = analyticsEnd.toISOString().slice(0, 10);
+                analyticsTo = pstToday;
+            } else if (analyticsTimeRange === '0') {
+                // Today (PST)
+                analyticsFrom = pstToday;
+                analyticsTo = pstToday;
+                granularity = 'hour';
             } else {
-                analyticsStart.setDate(analyticsStart.getDate() - parseInt(analyticsTimeRange));
-                analyticsTo = analyticsEnd.toISOString().slice(0, 10);
-                analyticsFrom = analyticsStart.toISOString().slice(0, 10);
+                // Last N Days
+                // We want N days up to Today (inclusive? usually yes)
+                // We calculate the start date by subtracting days from NOW, then getting PST string.
+                const start = new Date(now);
+                start.setDate(start.getDate() - parseInt(analyticsTimeRange));
+                analyticsFrom = getPstDateStr(start);
+                analyticsTo = pstToday;
             }
 
             // Subscribers Dates (based on subscribersTimeRange)
+            // Keep this logic simpler or consistent? Let's treat them consistent for now but stick to existing logic style slightly refactored
+            // Actually, subscribers might need PST too if we want consistence.
+
             let subFrom, subTo;
-            const subEnd = new Date();
-            const subStart = new Date();
             if (subscribersTimeRange === 'all') {
                 subFrom = 'all';
-                subTo = subEnd.toISOString().slice(0, 10);
+                subTo = pstToday;
             } else {
+                const subStart = new Date(now);
                 subStart.setDate(subStart.getDate() - parseInt(subscribersTimeRange));
-                subTo = subEnd.toISOString().slice(0, 10);
-                subFrom = subStart.toISOString().slice(0, 10);
+                subFrom = getPstDateStr(subStart);
+                subTo = pstToday;
             }
 
             // Fetch both concurrently
             // Add cache: 'no-store' to prevent stale data
             const headers = { 'Cache-Control': 'no-store' };
-            let analyticsUrl = `/api/admin/analytics?key=${pwd}&from=${analyticsFrom}&to=${analyticsTo}&visitorPage=${visP}&visitorLimit=15${selectedCountry ? `&country=${encodeURIComponent(selectedCountry)}` : ''}`;
+            let analyticsUrl = `/api/admin/analytics?key=${pwd}&from=${analyticsFrom}&to=${analyticsTo}&visitorPage=${visP}&visitorLimit=15&timeZone=America/Los_Angeles&granularity=${granularity}${selectedCountry ? `&country=${encodeURIComponent(selectedCountry)}` : ''}`;
 
             if (selectedVisitor) {
                 analyticsUrl += `&visitorId=${encodeURIComponent(selectedVisitor)}`;
@@ -536,19 +555,19 @@ export default function AdminPage() {
                                                     stroke="#9ca3af"
                                                     fontSize={12}
                                                     tickFormatter={(str) => {
-                                                        if (str.includes(':')) {
-                                                            // Assume UTC HH:00, convert to PST
-                                                            const hour = parseInt(str.split(':')[0]);
-                                                            const date = new Date();
-                                                            date.setUTCHours(hour, 0, 0, 0);
-                                                            return date.toLocaleTimeString('en-US', {
+                                                        if (str.includes('T')) {
+                                                            // ISO String (Hourly) - Format to PST Time
+                                                            return new Date(str).toLocaleTimeString('en-US', {
                                                                 timeZone: 'America/Los_Angeles',
                                                                 hour: 'numeric',
                                                                 hour12: true
                                                             });
                                                         }
-                                                        const date = new Date(str);
-                                                        return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                                                        // YYYY-MM-DD (Daily) - Format to MMM D (No TZ shift)
+                                                        // Treat as local date components to avoid shifting
+                                                        const [y, m, d] = str.split('-').map(Number);
+                                                        const date = new Date(y, m - 1, d);
+                                                        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                                                     }}
                                                 />
                                                 <YAxis stroke="#9ca3af" fontSize={12} />
@@ -557,18 +576,24 @@ export default function AdminPage() {
                                                     itemStyle={{ color: '#f3f4f6' }}
                                                     labelStyle={{ color: '#9ca3af' }}
                                                     labelFormatter={(label) => {
-                                                        if (label.includes(':')) {
-                                                            const hour = parseInt(label.split(':')[0]);
-                                                            const date = new Date();
-                                                            date.setUTCHours(hour, 0, 0, 0);
-                                                            const pstTime = date.toLocaleTimeString('en-US', {
+                                                        if (label.includes('T')) {
+                                                            const pstTime = new Date(label).toLocaleTimeString('en-US', {
                                                                 timeZone: 'America/Los_Angeles',
                                                                 hour: 'numeric',
                                                                 hour12: true
                                                             });
-                                                            return `Time: ${pstTime} (PST)`;
+                                                            // Also show the date
+                                                            const pstDate = new Date(label).toLocaleDateString('en-US', {
+                                                                timeZone: 'America/Los_Angeles',
+                                                                month: 'short',
+                                                                day: 'numeric'
+                                                            });
+                                                            return `${pstDate}, ${pstTime} (PST)`;
                                                         }
-                                                        return new Date(label).toLocaleDateString();
+                                                        // Daily
+                                                        const [y, m, d] = label.split('-').map(Number);
+                                                        const date = new Date(y, m - 1, d);
+                                                        return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                                                     }}
                                                 />
                                                 <Area
@@ -623,9 +648,17 @@ export default function AdminPage() {
                                                     stroke="#9ca3af"
                                                     fontSize={12}
                                                     tickFormatter={(str) => {
-                                                        if (str.includes(':')) return str;
-                                                        const date = new Date(str);
-                                                        return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                                                        if (str.includes('T')) {
+                                                            // ISO String (Hourly)
+                                                            return new Date(str).toLocaleTimeString('en-US', {
+                                                                timeZone: 'America/Los_Angeles',
+                                                                hour: 'numeric',
+                                                                hour12: true
+                                                            });
+                                                        }
+                                                        const [y, m, d] = str.split('-').map(Number);
+                                                        const date = new Date(y, m - 1, d);
+                                                        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                                                     }}
                                                 />
                                                 <YAxis stroke="#9ca3af" fontSize={12} allowDecimals={false} />
@@ -634,8 +667,22 @@ export default function AdminPage() {
                                                     itemStyle={{ color: '#f3f4f6' }}
                                                     labelStyle={{ color: '#9ca3af' }}
                                                     labelFormatter={(label) => {
-                                                        if (label.includes(':')) return `Time: ${label}`;
-                                                        return new Date(label).toLocaleDateString();
+                                                        if (label.includes('T')) {
+                                                            const pstTime = new Date(label).toLocaleTimeString('en-US', {
+                                                                timeZone: 'America/Los_Angeles',
+                                                                hour: 'numeric',
+                                                                hour12: true
+                                                            });
+                                                            const pstDate = new Date(label).toLocaleDateString('en-US', {
+                                                                timeZone: 'America/Los_Angeles',
+                                                                month: 'short',
+                                                                day: 'numeric'
+                                                            });
+                                                            return `${pstDate}, ${pstTime} (PST)`;
+                                                        }
+                                                        const [y, m, d] = label.split('-').map(Number);
+                                                        const date = new Date(y, m - 1, d);
+                                                        return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                                                     }}
                                                 />
                                                 <Area

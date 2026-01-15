@@ -19,6 +19,9 @@ export async function GET(req: Request) {
     const countryFilter = searchParams.get('country'); // Enable drill down
     const visitorFilter = searchParams.get('visitorId'); // Enable drill down by visitor
 
+    const timeZone = searchParams.get('timeZone') || 'UTC';
+    const granularity = searchParams.get('granularity') || 'day'; // 'day' | 'hour'
+
     const visitorPage = parseInt(visitorPageStr);
     const visitorLimit = parseInt(visitorLimitStr);
 
@@ -33,48 +36,240 @@ export async function GET(req: Request) {
         if (!redis.isOpen) await redis.connect();
 
         // Date Range Logic
-        const dates: string[] = [];
-        const end = toParam ? new Date(toParam) : new Date();
-        const start = fromParam === 'all'
-            ? new Date('2024-01-01')
-            : (fromParam ? new Date(fromParam) : new Date());
+        // We need to determine the range in the REQUESTED timezone.
+        // If fromParam/toParam are provided (YYYY-MM-DD), they represent days in that timezone.
 
-        const current = new Date(start);
-        current.setUTCHours(0, 0, 0, 0);
-        end.setUTCHours(0, 0, 0, 0);
+        const now = new Date();
+        const getPstDate = (d: Date) => {
+            return new Date(d.toLocaleString('en-US', { timeZone }));
+        };
 
-        while (current <= end) {
-            dates.push(current.toISOString().slice(0, 10));
-            current.setDate(current.getDate() + 1);
+        const targetDates: string[] = []; // YYYY-MM-DD in target timezone
+
+        let startDate: Date;
+        let endDate: Date;
+
+        if (fromParam === 'all') {
+            startDate = new Date('2024-01-01');
+            endDate = new Date(); // now
+        } else {
+            // If fromParam is provided (YYYY-MM-DD), treat it as start of day in target timezone
+            // But simpler: just string manipulation if we trust the input.
+            // If fromParam is NOT provided (default), we assume "today" in target timezone? 
+            // Existing logic was: fromParam ? new Date(fromParam) : new Date()
+            // Let's preserve existing behavior but interpret it in the timezone context if needed.
+
+            // If granularity is 'hour' (likely for 'Today' view), we need precise start/end in UTC
+            // derived from the target timezone's day.
         }
 
-        // 1. Aggregation
-        let totalViews = 0;
+        // REVISED LOGIC:
+        // 1. Identify start/end timestamps (integers) based on inputs + timezone.
+        // 2. Generate appropriate keys logic.
 
-        // Determine granular keys if single day
-        // If from===to, user likely wants "today" or a specific day.
-        // We check if dates.length === 1.
-        const isSingleDay = dates.length === 1;
+        // Default to "Now"
+        const nowInTz = new Date(now.toLocaleString('en-US', { timeZone }));
 
-        let targetKeys: { view: string, visitor: string, label: string }[] = [];
+        // Parse Inputs
+        // fromParam/toParam are YYYY-MM-DD.
+        // If fromParam is missing, default to today (in TZ).
 
-        if (isSingleDay) {
-            // Hourly granularity
-            // dates[0] is YYYY-MM-DD
-            const dateStr = dates[0];
-            for (let i = 0; i < 24; i++) {
-                // Hour: 00..23
-                const hourStr = i.toString().padStart(2, '0');
-                // Key format: analytics:views:YYYY-MM-DDTHH
-                const keySuffix = `${dateStr}T${hourStr}`;
-                targetKeys.push({
-                    view: `analytics:views:${keySuffix}`,
-                    visitor: `analytics:visitors:${keySuffix}`,
-                    label: `${hourStr}:00`
-                });
+        let startYmd = fromParam; // YYYY-MM-DD
+        let endYmd = toParam;     // YYYY-MM-DD
+
+        if (!startYmd && fromParam !== 'all') {
+            // Default: Today
+            const y = nowInTz.getFullYear();
+            const m = String(nowInTz.getMonth() + 1).padStart(2, '0');
+            const d = String(nowInTz.getDate()).padStart(2, '0');
+            startYmd = `${y}-${m}-${d}`;
+        }
+
+        if (!endYmd && fromParam !== 'all') {
+            const y = nowInTz.getFullYear();
+            const m = String(nowInTz.getMonth() + 1).padStart(2, '0');
+            const d = String(nowInTz.getDate()).padStart(2, '0');
+            endYmd = `${y}-${m}-${d}`;
+        }
+
+        // Calculate Days Range
+        const dates: string[] = [];
+        if (fromParam === 'all') {
+            // ... existing "all" logic ...
+            // simpler to just use UTC for "all time" or iterate from 2024-01-01
+            const current = new Date('2024-01-01T00:00:00Z');
+            const end = new Date();
+            while (current <= end) {
+                dates.push(current.toISOString().slice(0, 10));
+                current.setDate(current.getDate() + 1);
             }
         } else {
-            // Daily granularity
+            // Iterate from startYmd to endYmd
+            // These are LOCAL dates (e.g. 2024-01-14 in PST)
+            // But our daily keys are usually stored as UTC-based YYYY-MM-DD.
+            // Wait, `track/route.ts` uses `new Date().toISOString().slice(0, 10)`.
+            // `toISOString` is ALWAYS UTC.
+            // So our database is strictly UTC-based for daily keys.
+            // If I request "2024-01-14" in PST, that partially overlaps UTC 2024-01-14 and UTC 2024-01-15.
+            // For DAILY OVERVIEW (total numbers), we can't easily split the UTC daily keys.
+            // We have to approximate or accept UTC days for the "Big Numbers" or "Top Lists".
+            // However, for the TRAFFIC CHART (granularity=hour), we CAN be precise.
+
+            // So: 
+            // - Top Lists / Totals: Generate UTC-equivalent days that cover the range.
+            // - Chart: Use precise hourly keys.
+
+            const s = new Date(startYmd!);
+            const e = new Date(endYmd!);
+            // Just basic loop
+            while (s <= e) {
+                dates.push(s.toISOString().slice(0, 10));
+                s.setDate(s.getDate() + 1);
+                // Note: this simple date loop might be slightly off if timezones shift dates weirdly, 
+                // but for YYYY-MM-DD iteration it's usually fine.
+            }
+        }
+
+
+        // 1. Aggregation (Totals)
+        // We will continue to use the loose "UTC Dates" for the big totals for now, 
+        // because we don't have hourly granularity for things like "Top Pages" easily 
+        // (unless we summed up 24 hourly ZSETS which is expensive/complex).
+        // So keeping Total Views / Top Lists based on the rough UTC days is acceptable compromise?
+        // Actually, if we are purely "Today PST", that is 08:00 UTC to 08:00 UTC next day.
+        // If we use UTC Day keys, we are showing "Today UTC" (00-00 to 00-00).
+        // This is a discrepancy.
+        // But re-architecting the entire analytics to be hourly for everything is out of scope?
+        // The user specifically asked for "Traffic Overview".
+        // "Traffic Overview" usually refers to the CHART.
+        // I will focus strictly on the CHART being PST-correct.
+
+        let totalViews = 0;
+        // Determine granular keys
+        let targetKeys: { view: string, visitor: string, label: string }[] = [];
+
+        if (granularity === 'hour' && startYmd && endYmd) {
+            // Generate hourly keys for the specific timezone range
+            // Start of range in UTC
+            // Construct string: "2024-01-14T00:00:00" (no Z) -> interpret as Local in TimeZone
+            // Use Intl or new Date hacks.
+
+            // Function to get UTC timestamp from Local YMD + TimeZone
+            const getUtcTime = (ymd: string, hour24: number) => {
+                // Create a date object that represents YMD HH:00:00 in the target TimeZone
+                // Then get its UTC time.
+                // We can use `new Date(string)` then check offsets? 
+                // Easier: Use Intl.
+                // Actually, simpler hack:
+                // Construct a date, then shift by the timezone offset of that date.
+                // But offset changes (DST).
+
+                // Robust way without libraries:
+                // Loop UTC hours, check their Local representation.
+                return;
+            };
+
+            // Range Start: startYmd 00:00:00 in timeZone
+            // Range End: endYmd 23:59:59 in timeZone
+
+            // Helper: find UTC start/end for the local range
+            const getRangeInUtc = (yMd: string, timeStr: string) => {
+                // formatted like 'America/Los_Angeles'
+                // We can use `new Date(str).toLocaleString('en-US', { timeZone: 'UTC' })` inverse? No.
+
+                // We need to find the UTC timestamp X such that X in timeZone is `yMd timeStr`.
+                // Brute force nearby UTC times?
+                // Or just assume specific offsets? No, DST.
+
+                // Let's iterate.
+                // Start with the UTC date of the same string, then adjust.
+                // e.g. 2024-01-14T00:00:00Z. In LA, this is 16:00 prev day.
+                // We want 00:00 LA. That is 08:00 UTC.
+
+                let d = new Date(`${yMd}T${timeStr}Z`);
+                // Shift by roughly +8 hours to start check
+                d.setHours(d.getHours() + 8);
+
+                // Fine tune
+                // We check `d.toLocaleString(..., { timeZone })` until it matches.
+                // This is too slow for runtime?
+                // Actually, `toLocaleString` is decent.
+
+                // Better approach:
+                // Create a date object from the string, assuming local system time, then ... no server is UTC.
+
+                // Let's assume standard US offsets for simplicity or rely on a small loop?
+                // Wait, we can use `new Date()` and `toLocaleString` to find the offset.
+            };
+
+            // DIFFERENT APPROACH:
+            // Just iterate UTC hours covering a wide enough range (start - 1 day to end + 1 day)
+            // Convert each UTC hour to TimeZone.
+            // If it falls within startYmd and endYmd, keep it.
+
+            const searchStart = new Date(startYmd);
+            searchStart.setDate(searchStart.getDate() - 1); // Buffer
+
+            const searchEnd = new Date(endYmd);
+            searchEnd.setDate(searchEnd.getDate() + 2); // Buffer
+
+            let current = new Date(searchStart);
+            const validKeys: typeof targetKeys = [];
+
+            while (current < searchEnd) {
+                // Format current UTC time to Target TimeZone
+                const parts = new Intl.DateTimeFormat('en-US', {
+                    timeZone,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    hour12: false,
+                    hourCycle: 'h23'
+                }).formatToParts(current);
+
+                // parse parts
+                const p: Record<string, string> = {};
+                parts.forEach(({ type, value }) => p[type] = value);
+                const localYmd = `${p.year}-${p.month}-${p.day}`;
+                const localHour = parseInt(p.hour); // 0-23
+
+                // Check if inside range [startYmd, endYmd] (inclusive of days)
+                if (localYmd >= startYmd && localYmd <= endYmd) {
+                    // This UTC hour belongs to the local range.
+
+                    // Key construction:
+                    // The redis keys are UTC based: `analytics:views:YYYY-MM-DDTHH`
+                    // We need the key corresponding to THIS `current` UTC hour.
+                    const utcY = current.getUTCFullYear();
+                    const utcM = String(current.getUTCMonth() + 1).padStart(2, '0');
+                    const utcD = String(current.getUTCDate()).padStart(2, '0');
+                    const utcH = String(current.getUTCHours()).padStart(2, '0');
+
+                    const utcKeySuffix = `${utcY}-${utcM}-${utcD}T${utcH}`;
+
+                    validKeys.push({
+                        view: `analytics:views:${utcKeySuffix}`,
+                        visitor: `analytics:visitors:${utcKeySuffix}`,
+                        // Label should be the LOCAL time
+                        label: current.toISOString() // Pass full ISO, frontend formats it
+                    });
+                }
+
+                current.setTime(current.getTime() + 3600 * 1000); // +1 Hour
+            }
+            targetKeys = validKeys;
+
+        } else {
+            // Daily granularity (default)
+            // Just use the provided dates as UTC buckets (legacy behavior)
+            // Or should we map? 
+            // Existing behavior: `dates` (from loop) mapped directly to keys.
+            // If we are viewing "Last 7 Days" in PST, we probably still just want the 7 UTC days 
+            // because converting daily buckets is impossible without hourly data (which expires).
+            // NOTE: Hourly keys expire after 48h.
+            // So for ranges > 48h, we MUST use daily UTC keys.
+
             targetKeys = dates.map(d => ({
                 view: `analytics:views:${d}`,
                 visitor: `analytics:visitors:${d}`,
