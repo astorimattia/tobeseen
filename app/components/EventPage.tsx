@@ -175,34 +175,9 @@ export default function EventPage({
             <h1 className="text-2xl md:text-4xl font-bold leading-tight">{event.title}</h1>
             <p className="text-sm md:text-base text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
 
-            {/* Digital/Analog Toggle */}
-            {(hasAnalogImages || event.id === 'tinku' || event.id === 'tultepec') && (
-              <div className="flex items-center justify-center mt-6">
-                <div className="flex items-center bg-zinc-800/50 rounded-full p-1 border border-white/10">
-                  <button
-                    onClick={() => setIsAnalogMode(false)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${!isAnalogMode
-                      ? 'bg-white text-black'
-                      : 'text-zinc-400 hover:text-white'
-                      }`}
-                  >
-                    Digital
-                  </button>
-                  <button
-                    onClick={() => setIsAnalogMode(true)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${isAnalogMode
-                      ? 'bg-white text-black'
-                      : 'text-zinc-400 hover:text-white'
-                      }`}
-                  >
-                    Analog
-                  </button>
-                </div>
-              </div>
-            )}
             {/* Medium Article Link */}
             {event.mediumUrl && (
-              <div className="mt-8 pt-8 border-t border-white/10">
+              <div className="mt-8">
                 <Link
                   href={`/work/${event.id}/story`}
                   className="group block bg-zinc-900 border border-white/10 rounded-lg p-6 hover:bg-zinc-800 transition-all duration-300"
@@ -228,6 +203,32 @@ export default function EventPage({
                     </div>
                   </div>
                 </Link>
+              </div>
+            )}
+
+            {/* Digital/Analog Toggle */}
+            {(hasAnalogImages || event.id === 'tinku' || event.id === 'tultepec') && (
+              <div className="flex items-center justify-center mt-8">
+                <div className="flex items-center bg-zinc-800/50 rounded-full p-1 border border-white/10">
+                  <button
+                    onClick={() => setIsAnalogMode(false)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${!isAnalogMode
+                      ? 'bg-white text-black'
+                      : 'text-zinc-400 hover:text-white'
+                      }`}
+                  >
+                    Digital
+                  </button>
+                  <button
+                    onClick={() => setIsAnalogMode(true)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${isAnalogMode
+                      ? 'bg-white text-black'
+                      : 'text-zinc-400 hover:text-white'
+                      }`}
+                  >
+                    Analog
+                  </button>
+                </div>
               </div>
             )}
           </div>

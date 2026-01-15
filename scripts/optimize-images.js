@@ -41,6 +41,7 @@ async function optimizeImage(inputPath, outputPath, config) {
 
 async function processDirectory(dir) {
   const files = fs.readdirSync(dir);
+  const filter = process.argv[2];
 
   for (const file of files) {
     const filePath = path.join(dir, file);
@@ -56,6 +57,9 @@ async function processDirectory(dir) {
       const ext = path.extname(file).toLowerCase();
 
       if (imageExtensions.includes(ext)) {
+        if (filter && !file.includes(filter)) {
+          continue;
+        }
         const baseName = path.basename(file, ext);
         const relativePath = path.relative(publicDir, filePath);
         const outputSubDir = path.dirname(path.join(outputDir, relativePath));
