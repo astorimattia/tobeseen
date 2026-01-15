@@ -71,7 +71,7 @@ export async function GET(req: Request) {
         if (fromParam === 'all') {
             // ... existing "all" logic ...
             // simpler to just use UTC for "all time" or iterate from 2024-01-01
-            let current = new Date('2024-01-01T00:00:00Z');
+            const current = new Date('2024-01-01T00:00:00Z');
             const end = new Date();
             while (current <= end) {
                 dates.push(current.toISOString().slice(0, 10));
@@ -93,7 +93,7 @@ export async function GET(req: Request) {
             // - Top Lists / Totals: Generate UTC-equivalent days that cover the range.
             // - Chart: Use precise hourly keys.
 
-            let s = new Date(startYmd!);
+            const s = new Date(startYmd!);
             const e = new Date(endYmd!);
             // Just basic loop
             while (s <= e) {
@@ -133,7 +133,7 @@ export async function GET(req: Request) {
             const searchEnd = new Date(endYmd);
             searchEnd.setDate(searchEnd.getDate() + 2); // Buffer
 
-            let current = new Date(searchStart);
+            const current = new Date(searchStart);
             const validKeys: typeof targetKeys = [];
 
             while (current < searchEnd) {
