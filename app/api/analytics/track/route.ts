@@ -82,9 +82,10 @@ export async function POST(req: Request) {
 
                 // 4b. Global Top Cities (for the "Top Cities" card when no country selected)
                 pipeline.zIncrBy(`analytics:cities:all:${today}`, 1, safeCity);
-                // Expire similar to other keys? 
-                // We'll set expiry later. We need to add it to the expire step.
             }
+
+            // 4c. Top Pages per Country
+            pipeline.zIncrBy(`analytics:pages:country:${safeCountry}:${today}`, 1, path);
         }
 
         // 5. Top Referrers (Sorted Set)
@@ -92,6 +93,11 @@ export async function POST(req: Request) {
             try {
                 const domain = new URL(referrer).hostname;
                 pipeline.zIncrBy(`analytics:referrers:${today}`, 1, domain);
+
+                // 5b. Top Referrers per Country
+                if (safeCountry) {
+                    pipeline.zIncrBy(`analytics:referrers:country:${safeCountry}:${today}`, 1, domain);
+                }
             } catch {
                 // Invalid URL
             }
@@ -104,6 +110,7 @@ export async function POST(req: Request) {
                 ip: ip || 'unknown',
                 country: safeCountry || 'unknown',
                 city: safeCity || 'unknown',
+                referrer: referrer ? new URL(referrer).hostname : 'unknown',
                 userAgent: userAgent || 'unknown',
                 lastSeen: new Date().toISOString()
             });

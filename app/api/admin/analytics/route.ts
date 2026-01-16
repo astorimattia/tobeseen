@@ -285,10 +285,16 @@ export async function GET(req: Request) {
         // --- Top Lists (pages, countries, referrers) always use daily aggregation for now ---
         const pageKeys = visitorFilter
             ? dates.map(d => `analytics:visitors:${visitorFilter}:pages:${d}`)
-            : dates.map(d => `analytics:pages:${d}`);
+            : countryFilter
+                ? dates.map(d => `analytics:pages:country:${countryFilter}:${d}`)
+                : dates.map(d => `analytics:pages:${d}`);
 
         const countryKeys = dates.map(d => `analytics:countries:${d}`);
-        const referrerKeys = dates.map(d => `analytics:referrers:${d}`);
+
+        const referrerKeys = countryFilter
+            ? dates.map(d => `analytics:referrers:country:${countryFilter}:${d}`)
+            : dates.map(d => `analytics:referrers:${d}`);
+
         const visitorTopKeys = dates.map(d => `analytics:visitors:top:${d}`);
 
         // City Keys (if country filter is set, else Global)
@@ -335,14 +341,28 @@ export async function GET(req: Request) {
         const [pages, countries, referrers, cities, topVisitors] = await Promise.all([
             getTop(pageKeys),
             getTop(countryKeys),
-            getTop(referrerKeys),
+            // Referrers: If visitor filter, we handle it specially later. Global otherwise.
+            visitorFilter ? Promise.resolve([]) : getTop(referrerKeys),
             getTop(cityKeys),
-            getTop(visitorTopKeys)
+            // Top Visitors: Fetch MORE if country filtering to allow in-memory filter
+            getTop(visitorTopKeys) // We'll always fetch global top, then filter
         ]);
 
-        // Enrich Top Visitors with Metadata
+        let finalReferrers = referrers;
+
+        // 1b. Handle Visitor Filter for Referrers
+        if (visitorFilter) {
+            const [meta] = await Promise.all([
+                redis.hGetAll(`analytics:visitor:${visitorFilter}`)
+            ]);
+            console.log(`[DEBUG] Filter ${visitorFilter} meta:`, meta);
+            if (meta && meta.referrer && meta.referrer !== 'unknown') {
+                finalReferrers = [{ value: meta.referrer, score: 1 }];
+            }
+        }
+
+        // Enrich Top Visitors with Metadata & Filter by Country
         const enrichedTopVisitors = await Promise.all(topVisitors
-            .filter(v => v.score > 1)
             .map(async (v) => {
                 const vid = v.value;
                 const [meta, email] = await Promise.all([
@@ -355,9 +375,22 @@ export async function GET(req: Request) {
                     email: email || null,
                     ip: meta.ip || null,
                     country: meta.country || null,
-                    city: meta.city || null
+                    city: meta.city || null,
+                    referrer: meta.referrer || null
                 };
             }));
+
+        // Filter Top Visitors by Country if needed
+        let filteredTopVisitors = enrichedTopVisitors;
+        if (countryFilter) {
+            filteredTopVisitors = enrichedTopVisitors.filter(v => v.country === countryFilter);
+        }
+
+        // Limit to top 10 (since we might have fetched 50 globals and filtered to 2)
+        // If we really want "Top Visitors from Country", we should probably fetch deeper (e.g. 500)
+        // Update: getTop currently slices to 50. Line 332.
+        // We should increase getTop limit if country filter is active?
+        // Let's modify getTop to accept a limit or fetch more by default.
 
         // 2. Recent Visitor Identities
         const search = searchParams.get('search')?.toLowerCase();
@@ -397,6 +430,7 @@ export async function GET(req: Request) {
                     ip: meta.ip || null,
                     country: meta.country || null,
                     city: meta.city || null,
+                    referrer: meta.referrer || null,
                     userAgent: meta.userAgent || null,
                     lastSeen: meta.lastSeen || null
                 };
@@ -452,6 +486,7 @@ export async function GET(req: Request) {
             visitors = finalVisitors!;
         } else {
             // hydrate hydration (Standard or VisitorFilter case)
+            // Use recentIds (it IS available in this scope because it was let declared above block)
             visitors = await Promise.all(recentIds.map(async (vid) => {
                 const [meta, email] = await Promise.all([
                     redis.hGetAll(`analytics:visitor:${vid}`),
@@ -463,6 +498,7 @@ export async function GET(req: Request) {
                     ip: meta.ip || null,
                     country: meta.country || null,
                     city: meta.city || null,
+                    referrer: meta.referrer || null,
                     userAgent: meta.userAgent || null,
                     lastSeen: meta.lastSeen || null
                 };
@@ -486,12 +522,13 @@ export async function GET(req: Request) {
                 pages: pages.map(p => ({ name: p.value, value: p.score })),
                 countries: countries.map(c => ({ name: c.value, value: c.score })),
                 cities: cities.map(c => ({ name: c.value, value: c.score })),
-                referrers: referrers.map(r => ({ name: r.value, value: r.score })),
-                topVisitors: enrichedTopVisitors,
+                referrers: finalReferrers.map(r => ({ name: r.value, value: r.score })),
+                topVisitors: filteredTopVisitors.slice(0, 50),
                 recentVisitors: visitors,
                 pagination: visitorPagination
             }
         });
+
 
     } catch (error) {
         console.error('Analytics fetch error:', error);
