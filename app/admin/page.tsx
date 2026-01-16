@@ -93,6 +93,7 @@ export default function AdminPage() {
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [subSearchTerm, setSubSearchTerm] = useState('');
     const [debouncedSubSearch, setDebouncedSubSearch] = useState('');
+    const [referrersLimit, setReferrersLimit] = useState(14); // Default to desktop limit
 
     // Sorting is default by Date Descending from backend
     const sortedSubscribers = subscribers;
@@ -254,6 +255,19 @@ export default function AdminPage() {
         }, 300);
         return () => clearTimeout(timer);
     }, [subSearchTerm]);
+
+    // Handle Resize for Referrers Limit
+    useEffect(() => {
+        const handleResize = () => {
+            setReferrersLimit(window.innerWidth >= 768 ? 14 : 7);
+        };
+
+        // Initial check
+        handleResize();
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
 
 
@@ -721,7 +735,7 @@ export default function AdminPage() {
                                         <div className="p-4 flex-1 overflow-hidden">
                                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
                                                 {analytics.data.referrers
-                                                    .slice((referrersPage - 1) * 14, referrersPage * 14)
+                                                    .slice((referrersPage - 1) * referrersLimit, referrersPage * referrersLimit)
                                                     .map((r, i) => (
                                                         <li key={i} className="flex justify-between items-center group border-b border-gray-800/50 pb-2 md:border-none md:pb-0">
                                                             <span
@@ -747,12 +761,149 @@ export default function AdminPage() {
                                                 )}
                                             </div>
                                             <span className="text-xs text-gray-500">
-                                                {referrersPage} / {Math.ceil(analytics.data.referrers.length / 14)}
+                                                {referrersPage} / {Math.ceil(analytics.data.referrers.length / referrersLimit)}
                                             </span>
                                             <div className="w-[60px] flex justify-end">
-                                                {referrersPage < Math.ceil(analytics.data.referrers.length / 14) && (
+                                                {referrersPage < Math.ceil(analytics.data.referrers.length / referrersLimit) && (
                                                     <button
-                                                        onClick={() => setReferrersPage(p => Math.min(Math.ceil(analytics.data.referrers.length / 14), p + 1))}
+                                                        onClick={() => setReferrersPage(p => Math.min(Math.ceil(analytics.data.referrers.length / referrersLimit), p + 1))}
+                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
+                                                    >
+                                                        Next
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="p-4 flex-1 flex items-center justify-center">
+                                        <p className="text-sm text-gray-500">No data yet</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Top Visitors */}
+                            <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[340px]">
+                                <div className="px-4 border-b border-gray-800 flex-shrink-0 h-[48px] flex items-center bg-gray-800/50">
+                                    <h3 className="text-sm font-medium text-white">Top Visitors</h3>
+                                </div>
+                                {analytics && analytics.data.topVisitors && analytics.data.topVisitors.length > 0 ? (
+                                    <>
+                                        <div className="p-4 flex-1 overflow-hidden">
+                                            <ul className="space-y-3">
+                                                {analytics.data.topVisitors
+                                                    .slice((visitorsPage - 1) * 7, visitorsPage * 7)
+                                                    .map((v, i) => (
+                                                        <li
+                                                            key={i}
+                                                            className={`flex justify-between items-center group cursor-pointer transition-colors ${selectedVisitor === v.id ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
+                                                            onClick={() => {
+                                                                setSelectedVisitor(selectedVisitor === v.id ? null : v.id);
+                                                                setPagesPage(1); // Reset pages pagination
+                                                                setVisitorPage(1); // Reset visitor pagination
+                                                            }}
+                                                        >
+                                                            <div className="flex flex-col overflow-hidden mr-2">
+                                                                {v.email ? (
+                                                                    <span className={`text-sm font-medium truncate ${selectedVisitor === v.id ? 'text-indigo-300' : 'text-indigo-400 group-hover:text-indigo-300'}`} title={v.email}>{v.email}</span>
+                                                                ) : (
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className={`text-sm truncate font-mono text-xs ${selectedVisitor === v.id ? 'text-indigo-300' : 'text-gray-300 group-hover:text-white'}`}>{v.ip || 'Unknown'}</span>
+                                                                        {(v.city || v.country) && (
+                                                                            <span className={`text-xs truncate ${selectedVisitor === v.id ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                                                {v.city && v.city !== 'unknown' ? decodeURIComponent(v.city) : ''}
+                                                                                {v.city && v.country ? ', ' : ''}
+                                                                                {v.country ? getCountryName(v.country) : ''}
+                                                                                {v.referrer && v.referrer !== 'unknown' && (
+                                                                                    <span className="text-gray-500"> via {v.referrer}</span>
+                                                                                )}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <span className="text-sm font-mono text-gray-500 flex-shrink-0">{v.value}</span>
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                        </div>
+                                        <div className="px-4 flex justify-between items-center border-t border-gray-800 h-[42px] flex-shrink-0 bg-gray-900">
+                                            <div className="w-[60px]">
+                                                {visitorsPage > 1 && (
+                                                    <button
+                                                        onClick={() => setVisitorsPage(p => Math.max(1, p - 1))}
+                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
+                                                    >
+                                                        Previous
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <span className="text-xs text-gray-500">
+                                                {visitorsPage} / {Math.ceil(analytics.data.topVisitors.length / 7)}
+                                            </span>
+                                            <div className="w-[60px] flex justify-end">
+                                                {visitorsPage < Math.ceil(analytics.data.topVisitors.length / 7) && (
+                                                    <button
+                                                        onClick={() => setVisitorsPage(p => Math.min(Math.ceil((analytics.data.topVisitors?.length || 0) / 7), p + 1))}
+                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
+                                                    >
+                                                        Next
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="p-4 flex-1 flex items-center justify-center">
+                                        <p className="text-sm text-gray-500">No data yet</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Top Pages */}
+                            <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[340px]">
+                                <div className="px-4 border-b border-gray-800 flex-shrink-0 h-[48px] flex items-center justify-between bg-gray-800/50">
+                                    <h3 className="text-sm font-medium text-white truncate max-w-[200px]" title={selectedVisitor ? `Pages visited by ${selectedVisitor}` : 'Top Pages'}>
+                                        {selectedVisitor ? `Pages by Visitor` : 'Top Pages'}
+                                    </h3>
+                                    {selectedVisitor && (
+                                        <button onClick={() => { setSelectedVisitor(null); setVisitorPage(1); }} className="flex-shrink-0 text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer border border-indigo-500/30 rounded px-1.5 py-0.5">
+                                            Clear
+                                        </button>
+                                    )}
+                                </div>
+                                {analytics && analytics.data.pages.length > 0 ? (
+                                    <>
+                                        <div className="p-4 flex-1 overflow-hidden">
+                                            <ul className="space-y-3">
+                                                {analytics.data.pages
+                                                    .slice((pagesPage - 1) * 7, pagesPage * 7)
+                                                    .map((p, i) => (
+                                                        <li key={i} className="flex justify-between items-center">
+                                                            <span className="text-sm text-gray-300 truncate" title={p.name}>{p.name}</span>
+                                                            <span className="text-sm font-mono text-gray-500">{p.value}</span>
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                        </div>
+                                        <div className="px-4 flex justify-between items-center border-t border-gray-800 h-[42px] flex-shrink-0 bg-gray-900">
+                                            <div className="w-[60px]">
+                                                {pagesPage > 1 && (
+                                                    <button
+                                                        onClick={() => setPagesPage(p => Math.max(1, p - 1))}
+                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
+                                                    >
+                                                        Previous
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <span className="text-xs text-gray-500">
+                                                {pagesPage} / {Math.ceil(analytics.data.pages.length / 7)}
+                                            </span>
+                                            <div className="w-[60px] flex justify-end">
+                                                {pagesPage < Math.ceil(analytics.data.pages.length / 7) && (
+                                                    <button
+                                                        onClick={() => setPagesPage(p => Math.min(Math.ceil(analytics.data.pages.length / 7), p + 1))}
                                                         className="text-xs text-gray-400 hover:text-white cursor-pointer"
                                                     >
                                                         Next
@@ -885,143 +1036,6 @@ export default function AdminPage() {
                                 ) : (
                                     <div className="p-4 flex-1 flex items-center justify-center">
                                         <p className="text-sm text-gray-500">No city data available</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Top Pages */}
-                            <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[340px]">
-                                <div className="px-4 border-b border-gray-800 flex-shrink-0 h-[48px] flex items-center justify-between bg-gray-800/50">
-                                    <h3 className="text-sm font-medium text-white truncate max-w-[200px]" title={selectedVisitor ? `Pages visited by ${selectedVisitor}` : 'Top Pages'}>
-                                        {selectedVisitor ? `Pages by Visitor` : 'Top Pages'}
-                                    </h3>
-                                    {selectedVisitor && (
-                                        <button onClick={() => { setSelectedVisitor(null); setVisitorPage(1); }} className="flex-shrink-0 text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer border border-indigo-500/30 rounded px-1.5 py-0.5">
-                                            Clear
-                                        </button>
-                                    )}
-                                </div>
-                                {analytics && analytics.data.pages.length > 0 ? (
-                                    <>
-                                        <div className="p-4 flex-1 overflow-hidden">
-                                            <ul className="space-y-3">
-                                                {analytics.data.pages
-                                                    .slice((pagesPage - 1) * 7, pagesPage * 7)
-                                                    .map((p, i) => (
-                                                        <li key={i} className="flex justify-between items-center">
-                                                            <span className="text-sm text-gray-300 truncate" title={p.name}>{p.name}</span>
-                                                            <span className="text-sm font-mono text-gray-500">{p.value}</span>
-                                                        </li>
-                                                    ))}
-                                            </ul>
-                                        </div>
-                                        <div className="px-4 flex justify-between items-center border-t border-gray-800 h-[42px] flex-shrink-0 bg-gray-900">
-                                            <div className="w-[60px]">
-                                                {pagesPage > 1 && (
-                                                    <button
-                                                        onClick={() => setPagesPage(p => Math.max(1, p - 1))}
-                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
-                                                    >
-                                                        Previous
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <span className="text-xs text-gray-500">
-                                                {pagesPage} / {Math.ceil(analytics.data.pages.length / 7)}
-                                            </span>
-                                            <div className="w-[60px] flex justify-end">
-                                                {pagesPage < Math.ceil(analytics.data.pages.length / 7) && (
-                                                    <button
-                                                        onClick={() => setPagesPage(p => Math.min(Math.ceil(analytics.data.pages.length / 7), p + 1))}
-                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
-                                                    >
-                                                        Next
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div className="p-4 flex-1 flex items-center justify-center">
-                                        <p className="text-sm text-gray-500">No data yet</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Top Visitors */}
-                            <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[340px]">
-                                <div className="px-4 border-b border-gray-800 flex-shrink-0 h-[48px] flex items-center bg-gray-800/50">
-                                    <h3 className="text-sm font-medium text-white">Top Visitors</h3>
-                                </div>
-                                {analytics && analytics.data.topVisitors && analytics.data.topVisitors.length > 0 ? (
-                                    <>
-                                        <div className="p-4 flex-1 overflow-hidden">
-                                            <ul className="space-y-3">
-                                                {analytics.data.topVisitors
-                                                    .slice((visitorsPage - 1) * 7, visitorsPage * 7)
-                                                    .map((v, i) => (
-                                                        <li
-                                                            key={i}
-                                                            className={`flex justify-between items-center group cursor-pointer transition-colors ${selectedVisitor === v.id ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
-                                                            onClick={() => {
-                                                                setSelectedVisitor(selectedVisitor === v.id ? null : v.id);
-                                                                setPagesPage(1); // Reset pages pagination
-                                                                setVisitorPage(1); // Reset visitor pagination
-                                                            }}
-                                                        >
-                                                            <div className="flex flex-col overflow-hidden mr-2">
-                                                                {v.email ? (
-                                                                    <span className={`text-sm font-medium truncate ${selectedVisitor === v.id ? 'text-indigo-300' : 'text-indigo-400 group-hover:text-indigo-300'}`} title={v.email}>{v.email}</span>
-                                                                ) : (
-                                                                    <div className="flex items-center gap-2">
-                                                                        <span className={`text-sm truncate font-mono text-xs ${selectedVisitor === v.id ? 'text-indigo-300' : 'text-gray-300 group-hover:text-white'}`}>{v.ip || 'Unknown'}</span>
-                                                                        {(v.city || v.country) && (
-                                                                            <span className={`text-xs truncate ${selectedVisitor === v.id ? 'text-gray-400' : 'text-gray-500'}`}>
-                                                                                {v.city && v.city !== 'unknown' ? decodeURIComponent(v.city) : ''}
-                                                                                {v.city && v.country ? ', ' : ''}
-                                                                                {v.country ? getCountryName(v.country) : ''}
-                                                                                {v.referrer && v.referrer !== 'unknown' && (
-                                                                                    <span className="text-gray-500"> via {v.referrer}</span>
-                                                                                )}
-                                                                            </span>
-                                                                        )}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            <span className="text-sm font-mono text-gray-500 flex-shrink-0">{v.value}</span>
-                                                        </li>
-                                                    ))}
-                                            </ul>
-                                        </div>
-                                        <div className="px-4 flex justify-between items-center border-t border-gray-800 h-[42px] flex-shrink-0 bg-gray-900">
-                                            <div className="w-[60px]">
-                                                {visitorsPage > 1 && (
-                                                    <button
-                                                        onClick={() => setVisitorsPage(p => Math.max(1, p - 1))}
-                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
-                                                    >
-                                                        Previous
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <span className="text-xs text-gray-500">
-                                                {visitorsPage} / {Math.ceil(analytics.data.topVisitors.length / 7)}
-                                            </span>
-                                            <div className="w-[60px] flex justify-end">
-                                                {visitorsPage < Math.ceil(analytics.data.topVisitors.length / 7) && (
-                                                    <button
-                                                        onClick={() => setVisitorsPage(p => Math.min(Math.ceil((analytics.data.topVisitors?.length || 0) / 7), p + 1))}
-                                                        className="text-xs text-gray-400 hover:text-white cursor-pointer"
-                                                    >
-                                                        Next
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div className="p-4 flex-1 flex items-center justify-center">
-                                        <p className="text-sm text-gray-500">No data yet</p>
                                     </div>
                                 )}
                             </div>
