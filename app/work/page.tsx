@@ -18,6 +18,13 @@ export default function WorkPage() {
       title: "Banni Festival, India",
       story: "In a 'mock' fight that leaves hundreds injured every year, thousands of devotees clash with long bamboo sticks to secure the idol of their god. It's a midnight battlefield where bloodshed is considered a sacred offering.",
       images: ["/digital/banni.webp", "/digital/banni2.webp", "/digital/banni3.webp", "/digital/banni4.webp", "/digital/banni5.webp", "/digital/banni6.webp", "/digital/banni7.webp", "/digital/banni8.webp", "/digital/banni9.webp", "/digital/banni10.webp", "/digital/banni11.webp", "/digital/banni12.webp", "/digital/banni13.webp", "/digital/banni14.webp", "/digital/banni15.webp"],
+      analogImages: [
+        "/analog/banni-analog.webp", "/analog/banni-analog2.webp", "/analog/banni-analog3.webp",
+        "/analog/banni-analog4.webp", "/analog/banni-analog5.webp", "/analog/banni-analog6.webp",
+        "/analog/banni-analog7.webp", "/analog/banni-analog8.webp", "/analog/banni-analog9.webp",
+        "/analog/banni-analog10.webp", "/analog/banni-analog11.webp", "/analog/banni-analog12.webp",
+        "/analog/banni-analog13.webp", "/analog/banni-analog14.webp", "/analog/banni-analog15.webp"
+      ],
     },
     {
       id: "mautkakuan",
