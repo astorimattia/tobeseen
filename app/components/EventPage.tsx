@@ -11,6 +11,7 @@ import SensitiveContentFilter from "./SensitiveContentFilter";
 interface Event {
   id: string;
   title: string;
+  year?: string;
   story: string;
   images: string[];
   analogImages?: string[];
@@ -172,7 +173,16 @@ export default function EventPage({
         {/* Event Content */}
         <article className="space-y-8 mt-4 md:mt-8">
           <div className="space-y-6">
-            <h1 className="text-2xl md:text-4xl font-bold leading-tight">{event.title}</h1>
+            <div className="flex justify-between items-start gap-4">
+              <h1 className="text-2xl md:text-4xl font-bold leading-tight">
+                {event.title}
+              </h1>
+              {event.year && (
+                <span className="text-xl md:text-2xl text-zinc-500 font-medium whitespace-nowrap pt-1">
+                  {event.year}
+                </span>
+              )}
+            </div>
             <p className="text-sm md:text-base text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
 
             {/* Medium Article Link */}
