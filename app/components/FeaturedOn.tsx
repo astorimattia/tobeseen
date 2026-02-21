@@ -6,11 +6,13 @@ const featured = [
     name: "Wikipedia",
     href: "https://en.wikipedia.org",
     className: "font-serif text-xl md:text-2xl tracking-tight",
+    logo: "/wikipedia.svg?v=2",
   },
   {
     name: "insta360",
     href: "https://www.insta360.com",
     className: "font-sans font-semibold text-lg md:text-xl tracking-tight",
+    logo: "/insta360.svg?v=2",
   },
   {
     name: "All About Photo",
