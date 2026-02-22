@@ -19,6 +19,7 @@
     "@vercel/kv": "^3.0.0",
     "csv-parse": "^6.1.0",
     "framer-motion": "^12.27.1",
+    "ioredis": "^5.9.3",
     "next": "15.5.9",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -49,7 +50,7 @@
     "typescript": "^5"
   },
   "optionalDependencies": {
-    "lightningcss-darwin-arm64": "^1.31.1",
-    "@tailwindcss/oxide-darwin-arm64": "^4.1.18"
+    "@tailwindcss/oxide-darwin-arm64": "^4.1.18",
+    "lightningcss-darwin-arm64": "^1.31.1"
   }
 }

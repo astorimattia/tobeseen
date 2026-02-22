@@ -32,7 +32,7 @@ interface AnalyticsData {
         visitors: number;
     };
     data: {
-        chart?: { date: string; views: number; visitors: number }[];
+        chart?: { date: string; views: number; visitors: number; subscribers?: number }[];
         pages: { name: string; value: number }[];
         countries: { name: string; value: number }[];
         cities: { name: string; value: number }[];
@@ -45,6 +45,9 @@ interface AnalyticsData {
             country?: string | null;
             city?: string | null;
             referrer?: string | null;
+            org?: string | null;
+            queryParams?: Record<string, string>;
+            firstTouch?: Record<string, string> | null;
         }[];
         recentVisitors?: {
             id: string;
@@ -53,17 +56,22 @@ interface AnalyticsData {
             city?: string;
             referrer?: string | null;
             userAgent?: string;
+            org?: string | null;
             lastSeen: string;
             email?: string;
+            queryParams?: Record<string, string>;
+            firstTouch?: Record<string, string> | null;
         }[];
         pagination?: PaginationMeta;
     };
 }
 
 const getCountryName = (code: string) => {
+    if (!code) return code;
     try {
         const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-        return regionNames.of(code) || code;
+        const cleanCode = code.trim().toUpperCase();
+        return regionNames.of(cleanCode) || code;
     } catch {
         return code;
     }
@@ -193,18 +201,36 @@ export default function AdminPage() {
             ]);
 
             const subData = await subRes.json();
-            const analyticsData = await analyticsRes.json();
+            let analyticsData;
+
+            if (analyticsRes.ok) {
+                analyticsData = await analyticsRes.json();
+
+                // Deduplicate countries: Combine ISO codes ("US") and full names ("United States")
+                if (analyticsData?.data?.countries) {
+                    const cMap = new Map();
+                    for (const c of analyticsData.data.countries) {
+                        const displayName = getCountryName(c.name);
+                        cMap.set(displayName, (cMap.get(displayName) || 0) + c.value);
+                    }
+                    analyticsData.data.countries = Array.from(cMap.entries())
+                        .map(([name, value]: [string, number]) => ({ name, value }))
+                        .sort((a: { value: number }, b: { value: number }) => b.value - a.value);
+                }
+            } else {
+                if (analyticsRes.status === 401) throw new Error('Invalid credentials');
+                throw new Error('Failed to fetch analytics');
+            }
 
             if (subRes.ok) {
                 setSubscribers(subData.subscribers);
                 setSubPagination(subData.pagination);
                 setAnalytics(analyticsData);
                 setIsAuthenticated(true);
-                setPassword(pwd); // Sync state
-                setCookie('admin_secret', pwd, 30); // Persist login
+                setPassword(pwd);
+                setCookie('admin_secret', pwd, 30);
             } else {
-                setError(subData.error || analyticsData.error || 'Invalid credentials');
-                // If invalid, clear cookie
+                setError(subData.error || 'Invalid credentials');
                 setCookie('admin_secret', '', -1);
             }
         } catch {
@@ -814,6 +840,9 @@ export default function AdminPage() {
                                                                                 {v.city && v.city !== 'unknown' ? decodeURIComponent(v.city) : ''}
                                                                                 {v.city && v.country ? ', ' : ''}
                                                                                 {v.country ? getCountryName(v.country) : ''}
+                                                                                {v.org && v.org !== 'unknown' && (
+                                                                                    <span className="text-gray-600 text-[10px] ml-2 truncate max-w-[120px]" title={v.org}>• {v.org}</span>
+                                                                                )}
                                                                                 {v.referrer && v.referrer !== 'unknown' && (
                                                                                     <span className="text-gray-500"> via {v.referrer}</span>
                                                                                 )}
@@ -1065,42 +1094,63 @@ export default function AdminPage() {
                                 <table className="min-w-full text-left text-sm whitespace-nowrap">
                                     <thead className="text-gray-400 border-b border-gray-800">
                                         <tr>
-                                            <th className="px-4 py-3 font-medium">Identity (Email)</th>
-                                            <th className="px-4 py-3 font-medium">IP Address</th>
-                                            <th className="px-4 py-3 font-medium">Location</th>
-                                            <th className="px-4 py-3 font-medium">Referrer</th>
-                                            <th className="px-4 py-3 font-medium">Last Seen</th>
+                                            <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider">IP Address</th>
+                                            <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider">Location</th>
+                                            <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider">Referrer</th>
+                                            <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider">Campaign</th>
+                                            <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider text-right">Last Seen</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-800">
                                         {(analytics && analytics.data.recentVisitors && analytics.data.recentVisitors.length > 0) ? (
-                                            analytics.data.recentVisitors.map((v, i) => (
-                                                <tr
-                                                    key={i}
-                                                    className={`hover:bg-gray-800/50 transition-colors cursor-pointer ${selectedVisitor === v.id ? 'bg-indigo-900/20' : ''}`}
-                                                    onClick={() => {
-                                                        setSelectedVisitor(selectedVisitor === v.id ? null : v.id);
-                                                        setVisitorPage(1);
-                                                    }}
-                                                >
-                                                    <td className="px-4 py-3 font-medium text-indigo-400">
-                                                        {v.email ? (
-                                                            <span className="font-bold">{v.email}</span>
-                                                        ) : (
-                                                            <span className="text-gray-600 italic">Anonymous</span>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-gray-300 font-mono text-xs">{v.ip}</td>
-                                                    <td className="px-4 py-3 text-gray-300">
-                                                        {v.country ? getCountryName(v.country) : 'Unknown'}
-                                                        {v.city && v.city !== 'unknown' && <span className="text-gray-500 text-xs ml-1">({decodeURIComponent(v.city)})</span>}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-gray-300 text-xs truncate max-w-[150px]" title={v.referrer || ''}>
-                                                        {v.referrer && v.referrer !== 'unknown' ? v.referrer : '-'}
-                                                    </td>
-                                                    <td className="px-4 py-3 text-gray-500 text-xs">{new Date(v.lastSeen).toLocaleString()}</td>
-                                                </tr>
-                                            ))
+                                            analytics.data.recentVisitors.map((v, i) => {
+                                                // Build a compact campaign summary string
+                                                let campaignLabel: string | null = null;
+                                                if (v.queryParams && Object.keys(v.queryParams).length > 0) {
+                                                    const src = v.queryParams.utm_source;
+                                                    const med = v.queryParams.utm_medium;
+                                                    campaignLabel = [src, med].filter(Boolean).join(' · ');
+                                                } else if (v.firstTouch?.source && v.firstTouch.source !== 'direct') {
+                                                    const src = v.firstTouch.source;
+                                                    const med = v.firstTouch.medium && v.firstTouch.medium !== 'none' ? v.firstTouch.medium : null;
+                                                    campaignLabel = `↩ ${[src, med].filter(Boolean).join(' · ')}`;
+                                                }
+
+                                                const isSelected = selectedVisitor === v.id;
+                                                return (
+                                                    <tr
+                                                        key={i}
+                                                        className={`transition-colors cursor-pointer ${isSelected ? 'bg-indigo-900/20' : 'hover:bg-gray-800/50'}`}
+                                                        onClick={() => {
+                                                            setSelectedVisitor(isSelected ? null : v.id);
+                                                            setVisitorPage(1);
+                                                        }}
+                                                    >
+                                                        <td className="px-4 py-2">
+                                                            <span className={`font-mono text-xs ${isSelected ? 'text-indigo-300 font-medium' : 'text-gray-300'}`}>{v.ip}</span>
+                                                        </td>
+                                                        <td className="px-4 py-2 text-gray-300 text-sm">
+                                                            {v.country ? getCountryName(v.country) : 'Unknown'}
+                                                            {v.city && v.city !== 'unknown' && <span className="text-gray-500 text-xs ml-1">({decodeURIComponent(v.city)})</span>}
+                                                        </td>
+                                                        <td className="px-4 py-2 text-gray-400 text-xs truncate max-w-[150px]" title={v.referrer || ''}>
+                                                            {v.referrer && v.referrer !== 'unknown' ? v.referrer : '-'}
+                                                        </td>
+                                                        <td className="px-4 py-2 text-gray-500 text-xs font-mono truncate max-w-[160px]" title={campaignLabel || ''}>
+                                                            {campaignLabel || <span className="text-gray-700">—</span>}
+                                                        </td>
+                                                        <td className="px-4 py-2 text-gray-500 text-xs text-right">
+                                                            {v.lastSeen ? new Date(v.lastSeen).toLocaleString('en-US', {
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                                hour: 'numeric',
+                                                                minute: 'numeric',
+                                                                hour12: true
+                                                            }) : <span className="text-gray-700">—</span>}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
                                         ) : (
                                             <tr>
                                                 <td colSpan={5} className="px-4 py-6 text-center text-gray-500">

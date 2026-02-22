@@ -1,21 +1,10 @@
-import { createClient } from 'redis';
+import { redis } from '@/lib/redis';
+import { ensureRedisConnection } from '@/lib/redis';
 import { Resend } from 'resend';
 
 const SUBSCRIBERS_KEY = 'subscribers';
 
-// Create Redis client
-function getRedisClient() {
-  const redisUrl = process.env.REDIS_URL;
-  if (!redisUrl) {
-    throw new Error('REDIS_URL environment variable is not set');
-  }
-  return createClient({ url: redisUrl });
-}
-
 export async function POST(req: Request) {
-  const redis = getRedisClient();
-  let redisConnected = false;
-
   try {
     const { email } = await req.json();
 
@@ -28,31 +17,25 @@ export async function POST(req: Request) {
 
     console.log(`New subscriber email: ${email}`);
 
-    // Connect to Redis if not already connected
-    if (!redis.isOpen) {
-      await redis.connect();
-      redisConnected = true;
-    }
+    await ensureRedisConnection();
 
     // Save the email to Redis
     try {
       // Check if email already exists using Redis ZSCORE (for Sorted Sets)
-      const score = await redis.zScore(SUBSCRIBERS_KEY, email);
+      const score = await redis.zscore(SUBSCRIBERS_KEY, email);
 
       if (score !== null) {
         console.log(`Email already exists: ${email}`);
         return new Response(JSON.stringify({ message: 'Email already subscribed!' }), {
-          status: 409, // Conflict status code
+          status: 409,
           headers: { 'Content-Type': 'application/json' },
         });
       }
 
       // Add new email to Redis Sorted Set with current timestamp as score
-      await redis.zAdd(SUBSCRIBERS_KEY, { score: Date.now(), value: email });
+      await redis.zadd(SUBSCRIBERS_KEY, Date.now(), email);
       console.log(`Email saved to Redis: ${email}`);
 
-      // Link Identity (Email) to VisitorId
-      // Link Identity (Email) to VisitorId
       // Link Identity (Email) to VisitorId
       const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
       const userAgent = req.headers.get('user-agent') || '';
@@ -65,9 +48,9 @@ export async function POST(req: Request) {
 
       const visitorId = btoa(`${ip}-${userAgent}`).slice(0, 32);
 
-      // Store Subscriber Metadata (New)
+      // Store Subscriber Metadata
       console.log(`Saving metadata for ${email}: ${country}, ${city}`);
-      await redis.hSet(`subscriber:${email}`, {
+      await redis.hset(`subscriber:${email}`, {
         ip,
         country,
         city,
@@ -79,17 +62,17 @@ export async function POST(req: Request) {
       await redis.set(`analytics:identity:${visitorId}`, email);
 
       // Update Recent Identified Visitors List
-      await redis.lPush('analytics:recent_identified_visitors', visitorId);
-      await redis.lTrim('analytics:recent_identified_visitors', 0, 199);
+      await redis.lpush('analytics:recent_identified_visitors', visitorId);
+      await redis.ltrim('analytics:recent_identified_visitors', 0, 199);
 
       // Update visitor meta with email immediately if exists
       const metaKey = `analytics:visitor:${visitorId}`;
-      const existingMeta = await redis.hGetAll(metaKey);
+      const existingMeta = await redis.hgetall(metaKey);
       if (existingMeta && Object.keys(existingMeta).length > 0) {
-        await redis.hSet(metaKey, 'email', email);
+        await redis.hset(metaKey, 'email', email);
       } else {
         // Create meta if doesn't exist (edge case)
-        await redis.hSet(metaKey, {
+        await redis.hset(metaKey, {
           ip,
           userAgent,
           email,
@@ -244,10 +227,5 @@ export async function POST(req: Request) {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
-  } finally {
-    // Close Redis connection
-    if (redisConnected && redis.isOpen) {
-      await redis.quit();
-    }
   }
 }
