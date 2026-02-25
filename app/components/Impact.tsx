@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 const InstagramIcon = () => (
@@ -43,33 +42,21 @@ const featured = [
 
 export default function Impact() {
   return (
-    <section className="bg-black py-10 md:py-16 border-b border-white/5 relative z-10 font-sans">
+    <section className="bg-black py-10 md:py-16 relative z-10 font-sans">
       <div className="mx-auto max-w-6xl px-4 flex flex-col items-center gap-10 md:gap-14">
 
         {/* Views Counter (Top) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-          className="text-center flex flex-col items-center w-full"
-        >
+        <div className="text-center flex flex-col items-center w-full">
           <h2 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-white mb-3">
             115,000,000<span className="text-white/40">+</span>
           </h2>
           <p className="text-xs md:text-sm text-white/50 font-light tracking-[0.2em] uppercase font-sans">
             Views Across Platforms
           </p>
-        </motion.div>
+        </div>
 
         {/* Unified Logos (Bottom) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full flex flex-wrap items-center justify-center gap-10 md:gap-16 pt-4 md:pt-8"
-        >
+        <div className="w-full flex flex-wrap items-center justify-center gap-10 md:gap-16 pt-4 md:pt-8">
           {/* Social Icons */}
           <div className="flex items-center gap-8 text-white/40">
             <InstagramIcon />
@@ -82,12 +69,9 @@ export default function Impact() {
           {/* Sponsor Logos */}
           <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
             {featured.map((item) => (
-              <a
+              <div
                 key={item.name}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white opacity-40 hover:opacity-100 transition-opacity duration-300"
+                className="text-white opacity-40 transition-opacity duration-300"
                 aria-label={item.name}
               >
                 {item.logo ? (
@@ -96,16 +80,16 @@ export default function Impact() {
                       src={item.logo}
                       alt={item.name}
                       fill
-                      className="object-contain filter grayscale invert brightness-0 hover:brightness-100 mix-blend-screen transition-all duration-300"
+                      className="object-contain filter grayscale invert brightness-0 mix-blend-screen transition-all duration-300"
                     />
                   </div>
                 ) : (
                   <span className={item.className}>{item.name}</span>
                 )}
-              </a>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
       </div>
     </section>
