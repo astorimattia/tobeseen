@@ -1,5 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const InstagramIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" className="transition-colors duration-300">
@@ -40,20 +43,56 @@ const featured = [
   },
 ];
 
+const BASE_VIEWS = 115000000;
+// Using Feb 25, 2026 as the base date since it was added around then
+const BASE_DATE = new Date("2026-02-25T00:00:00Z").getTime();
+// 1 million per month (~30.44 days)
+const VIEWS_PER_MILLISECOND = 1000000 / (30.436875 * 24 * 60 * 60 * 1000);
+
 export default function Impact() {
+  const [views, setViews] = useState(BASE_VIEWS);
+
+  useEffect(() => {
+    let animationFrameId: number;
+
+    const updateViews = () => {
+      const now = Date.now();
+      const elapsedMs = Math.max(0, now - BASE_DATE);
+      const currentViews = BASE_VIEWS + elapsedMs * VIEWS_PER_MILLISECOND;
+      setViews(Math.floor(currentViews));
+      animationFrameId = requestAnimationFrame(updateViews);
+    };
+
+    animationFrameId = requestAnimationFrame(updateViews);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
+
   return (
     <section className="bg-black py-10 md:py-16 relative z-10 font-sans">
       <div className="mx-auto max-w-6xl px-4 flex flex-col items-center gap-10 md:gap-14">
 
         {/* Views Counter (Top) */}
-        <div className="text-center flex flex-col items-center w-full">
-          <h2 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-white mb-3">
-            115,000,000<span className="text-white/40">+</span>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center flex flex-col items-center w-full relative"
+        >
+          {/* Subtle glow behind the text */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/5 blur-3xl rounded-full pointer-events-none" />
+
+          <h2 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-4 tabular-nums bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/40 drop-shadow-sm">
+            {views.toLocaleString()}
+            <span className="text-white/30 font-light ml-1 md:ml-2">+</span>
           </h2>
-          <p className="text-xs md:text-sm text-white/50 font-light tracking-[0.2em] uppercase font-sans">
+          <p className="text-xs md:text-sm text-white/50 font-light tracking-[0.25em] uppercase font-sans flex items-center gap-2">
+            <span className="w-8 h-px bg-white/20"></span>
             Views Across Platforms
+            <span className="w-8 h-px bg-white/20"></span>
           </p>
-        </div>
+        </motion.div>
 
         {/* Unified Logos (Bottom) */}
         <div className="w-full flex flex-wrap items-center justify-center gap-10 md:gap-16 pt-4 md:pt-8">
