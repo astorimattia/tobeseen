@@ -73,11 +73,7 @@ export default function Impact() {
       <div className="mx-auto max-w-6xl px-4 flex flex-col items-center gap-10 md:gap-14">
 
         {/* Views Counter (Top) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+        <div
           className="text-center flex flex-col items-center w-full relative"
         >
           {/* Subtle glow behind the text */}
@@ -92,7 +88,7 @@ export default function Impact() {
             Views Across Platforms
             <span className="w-8 h-px bg-white/20"></span>
           </p>
-        </motion.div>
+        </div>
 
         {/* Unified Logos (Bottom) */}
         <div className="w-full flex flex-wrap items-center justify-center gap-10 md:gap-16 pt-4 md:pt-8">
