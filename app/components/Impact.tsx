@@ -69,7 +69,7 @@ export default function Impact() {
   }, []);
 
   return (
-    <section className="bg-black py-10 md:py-16 relative z-10 font-sans">
+    <section className="bg-black py-10 md:py-16 relative z-10 font-sans overflow-hidden">
       <div className="mx-auto max-w-6xl px-4 flex flex-col items-center gap-10 md:gap-14">
 
         {/* Views Counter (Top) */}
