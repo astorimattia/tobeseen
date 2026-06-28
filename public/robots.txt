@@ -1,8 +1,26 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://sacratos.com/sitemap.xml
+# AI Crawlers
+User-agent: GPTBot
+Allow: /
 
-# Crawl-delay
-Crawl-delay: 1
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+Sitemap: https://sacratos.com/sitemap.xml

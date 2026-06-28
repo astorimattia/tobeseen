@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://sacratos.com"),
   alternates: {
     canonical: "/",
+    types: {
+      "text/plain": "/llms.txt",
+    },
   },
   icons: {
     icon: [
@@ -128,39 +131,104 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Sacratos",
-              "description": "Documentary photography and storytelling project capturing hidden cultural events and dangerous festivals around the world",
-              "url": "https://sacratos.com",
-              "logo": "https://sacratos.com/favicon.webp",
-              "sameAs": [
-                "https://instagram.com/sacratos",
-                "https://twitter.com/sacratos"
-              ],
-              "foundingDate": "2024",
-              "areaServed": "Worldwide",
-              "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Documentary Photography",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "CreativeWork",
-                      "name": "Feria Internacional de la Pirotecnia",
-                      "description": "Documentary coverage of the dangerous fireworks festival in Tultepec, Mexico"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "CreativeWork",
-                      "name": "Vegetarian Festival Thailand",
-                      "description": "Spirit mediums and cultural rituals in Thailand"
-                    }
-                  }
-                ]
-              }
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://sacratos.com/#organization",
+                  "name": "Sacratos",
+                  "description": "Documentary photography and storytelling project capturing the world's most hidden and dangerous cultural events — from exploding hammers in Mexico to spirit mediums in Thailand, the Well of Death in India to ritual combat in Bolivia. 115M+ views across platforms. Featured by Wikipedia, Insta360, and All About Photo.",
+                  "url": "https://sacratos.com",
+                  "logo": "https://sacratos.com/favicon.webp",
+                  "sameAs": [
+                    "https://instagram.com/sacratos",
+                    "https://twitter.com/sacratos"
+                  ],
+                  "foundingDate": "2024",
+                  "areaServed": "Worldwide",
+                  "knowsAbout": [
+                    "documentary photography",
+                    "photojournalism",
+                    "cultural anthropology",
+                    "dangerous festivals",
+                    "hidden rituals",
+                    "world travel",
+                    "adventure documentary",
+                    "immersive storytelling",
+                    "Mexican fireworks festivals",
+                    "Indian stunt culture",
+                    "Thai spirit mediums",
+                    "Bolivian Tinku",
+                    "Vegetarian Festival Thailand",
+                    "Feria de la Pirotecnia Tultepec",
+                    "Maut Ka Kuan Well of Death",
+                    "exploding hammers San Juan de la Vega"
+                  ],
+                  "founder": [
+                    { "@id": "https://sacratos.com/#daniele" },
+                    { "@id": "https://sacratos.com/#mattia" }
+                  ]
+                },
+                {
+                  "@type": "Person",
+                  "@id": "https://sacratos.com/#daniele",
+                  "name": "Daniele Colucci",
+                  "url": "https://danielecolucci.com",
+                  "jobTitle": "Co-Creator, Photographer, Videomaker",
+                  "worksFor": { "@id": "https://sacratos.com/#organization" }
+                },
+                {
+                  "@type": "Person",
+                  "@id": "https://sacratos.com/#mattia",
+                  "name": "Mattia Astori",
+                  "url": "https://mattiaastori.com",
+                  "jobTitle": "Co-Creator, Producer, Photographer",
+                  "worksFor": { "@id": "https://sacratos.com/#organization" },
+                  "description": "Co-creator of Sacratos and founder of Astori Ventures, a private investment firm."
+                },
+                {
+                  "@type": "CreativeWork",
+                  "name": "Feria Internacional de la Pirotecnia",
+                  "description": "Documentary coverage of the dangerous fireworks festival in Tultepec, Mexico — 200 bulls loaded with rockets thrown against thousands of people",
+                  "creator": { "@id": "https://sacratos.com/#organization" },
+                  "locationCreated": { "@type": "Place", "name": "Tultepec, Mexico" }
+                },
+                {
+                  "@type": "CreativeWork",
+                  "name": "Vegetarian Festival Thailand",
+                  "description": "Documentary coverage of spirit mediums piercing their skin in rituals during the Nine Emperor Gods Festival in Thailand",
+                  "creator": { "@id": "https://sacratos.com/#organization" },
+                  "locationCreated": { "@type": "Place", "name": "Thailand" }
+                },
+                {
+                  "@type": "CreativeWork",
+                  "name": "Exploding Hammers",
+                  "description": "Documentary coverage of the tradition of slamming explosive-packed hammers against stone anvils in San Juan de la Vega, Mexico",
+                  "creator": { "@id": "https://sacratos.com/#organization" },
+                  "locationCreated": { "@type": "Place", "name": "San Juan de la Vega, Mexico" }
+                },
+                {
+                  "@type": "CreativeWork",
+                  "name": "Tinku de Macha",
+                  "description": "Documentary coverage of the three-day ritual combat festival at 4,000m altitude in Bolivia — dance, fight, mourn",
+                  "creator": { "@id": "https://sacratos.com/#organization" },
+                  "locationCreated": { "@type": "Place", "name": "Macha, Bolivia" }
+                },
+                {
+                  "@type": "CreativeWork",
+                  "name": "Banni Festival",
+                  "description": "Documentary coverage of the midnight battlefield festival in India where bloodshed is sacred offering",
+                  "creator": { "@id": "https://sacratos.com/#organization" },
+                  "locationCreated": { "@type": "Place", "name": "India" }
+                },
+                {
+                  "@type": "Article",
+                  "name": "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
+                  "description": "The story of Soma Basu, a Bengali woman stunt rider in India's Maut Ka Kuan (Well of Death), who defied gender expectations to ride motorcycles on vertical wooden walls",
+                  "author": { "name": "Ana Ben" },
+                  "creator": { "@id": "https://sacratos.com/#organization" },
+                  "locationCreated": { "@type": "Place", "name": "Jagdalpur, India" }
+                }
+              ]
             })
           }}
         />
