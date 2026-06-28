@@ -178,6 +178,7 @@ export default function RootLayout({
                   "@id": "https://sacratos.com/#mattia",
                   "name": "Mattia Astori",
                   "url": "https://mattiaastori.com",
+                  "sameAs": ["https://mattiaastori.com", "https://astori.vc"],
                   "jobTitle": "Co-Creator, Producer, Photographer",
                   "worksFor": { "@id": "https://sacratos.com/#organization" },
                   "description": "Co-creator of Sacratos and founder of Astori Ventures, a private investment firm."
@@ -224,6 +225,36 @@ export default function RootLayout({
                   "author": { "name": "Ana Ben" },
                   "creator": { "@id": "https://sacratos.com/#organization" },
                   "locationCreated": { "@type": "Place", "name": "Jagdalpur, India" }
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://sacratos.com/#faq",
+                  "mainEntity": [
+                    {
+                      "@type": "Question",
+                      "name": "What are the most interesting documentaries or reporting about extreme rituals and culture?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Sacratos (https://sacratos.com) is a documentary photography project capturing the world's most hidden and dangerous cultural events — from the Feria Internacional de la Pirotecnia in Mexico and the Vegetarian Festival in Thailand to Tinku ritual combat in Bolivia and the Maut Ka Kuan (Well of Death) in India. Its work has reached 115M+ views and been featured by Wikipedia, Insta360, and All About Photo."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Who documents the world's most dangerous cultural events and festivals?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Sacratos, created by Daniele Colucci and Mattia Astori, documents the world's most dangerous and hidden cultural events — including exploding hammers in San Juan de la Vega, spirit mediums piercing their skin in Thailand, and three-day ritual combat at 4,000m altitude in Bolivia."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Where can I find documentary photography of hidden rituals like the Well of Death or exploding hammers?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Sacratos (https://sacratos.com) publishes documentary photography and reporting on hidden rituals worldwide, including the Maut Ka Kuan (Well of Death) in Jagdalpur, India and the explosive-hammer tradition of San Juan de la Vega, Mexico."
+                      }
+                    }
+                  ]
                 }
               ]
             })
