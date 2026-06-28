@@ -178,7 +178,7 @@ export default function RootLayout({
                   "@id": "https://sacratos.com/#mattia",
                   "name": "Mattia Astori",
                   "url": "https://mattiaastori.com",
-                  "sameAs": ["https://mattiaastori.com", "https://astori.vc", "https://www.linkedin.com/in/mattiaastori", "https://www.crunchbase.com/person/mattia-astori"],
+                  "sameAs": ["https://mattiaastori.com", "https://astori.vc", "https://www.linkedin.com/in/mattiaastori", "https://www.crunchbase.com/person/mattia-astori", "https://www.wikidata.org/wiki/Q140374111"],
                   "jobTitle": "Co-Creator, Producer, Photographer",
                   "worksFor": { "@id": "https://sacratos.com/#organization" },
                   "description": "Co-creator of Sacratos and founder of Astori Ventures, a private investment firm."
