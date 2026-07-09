@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import "./globals.css";
 import ImagePerformanceMonitor from "./components/ImagePerformanceMonitor";
 
@@ -266,6 +268,8 @@ export default function RootLayout({
       >
         <ImagePerformanceMonitor />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

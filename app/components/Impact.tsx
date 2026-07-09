@@ -46,8 +46,8 @@ const featured = [
 const BASE_VIEWS = 115000000;
 // Using Feb 25, 2026 as the base date since it was added around then
 const BASE_DATE = new Date("2026-02-25T00:00:00Z").getTime();
-// 1 million per month (~30.44 days)
-const VIEWS_PER_MILLISECOND = 1000000 / (30.436875 * 24 * 60 * 60 * 1000);
+// 500,000 per month (~30.44 days)
+const VIEWS_PER_MILLISECOND = 500000 / (30.436875 * 24 * 60 * 60 * 1000);
 
 export default function Impact() {
   const [views, setViews] = useState(BASE_VIEWS);
