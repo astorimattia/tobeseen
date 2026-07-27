@@ -14,6 +14,15 @@ export default function WorkPage() {
 
   const EVENTS = [
     {
+      id: "soccorso",
+      title: "Festa del Soccorso, Italy",
+      year: "2026",
+      story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
+      images: [],
+      hasVideo: true,
+      isProtected: true,
+    },
+    {
       id: "banni",
       title: "Banni Festival, India",
       year: "2025",
@@ -116,52 +125,83 @@ export default function WorkPage() {
         {/* Event Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
           {EVENTS.map((event, index) => {
+            const hasImages = event.images && event.images.length > 0;
             return (
               <Link key={event.id} href={`/work/${event.id}`}>
                 <div
                   className="group block bg-zinc-900/50 rounded-2xl overflow-hidden transition-all duration-300 border border-white/10 hover:bg-zinc-900/70 hover:border-white/20"
                 >
                   {/* Event Image */}
-                  <div className="relative aspect-[16/10] overflow-hidden">
-                    {imageFallbacks.has(event.id) || event.id === 'mautkakuan' || event.id === 'banni' ? (
-                      <img
-                        src={event.images[0]}
-                        alt={event.title}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center',
-                          filter: event.id === 'vegetarian' ? 'blur(8px)' : 'none',
-                        }}
-                        onError={() => {
-                          if (!imageFallbacks.has(event.id)) {
-                            setImageFallbacks(prev => new Set(prev).add(event.id));
-                          }
-                        }}
-                      />
+                  <div className="relative aspect-[16/10] overflow-hidden bg-zinc-950">
+                    {hasImages ? (
+                      imageFallbacks.has(event.id) || event.id === 'mautkakuan' || event.id === 'banni' ? (
+                        <img
+                          src={event.images[0]}
+                          alt={event.title}
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center',
+                            filter: event.id === 'vegetarian' ? 'blur(8px)' : 'none',
+                          }}
+                          onError={() => {
+                            if (!imageFallbacks.has(event.id)) {
+                              setImageFallbacks(prev => new Set(prev).add(event.id));
+                            }
+                          }}
+                        />
+                      ) : (
+                        <Image
+                          src={event.images[0]}
+                          alt={event.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          quality={85}
+                          priority={index < 2}
+                          style={{
+                            objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center',
+                            filter: event.id === 'vegetarian' ? 'blur(8px)' : 'none',
+                          }}
+                          unoptimized={event.id === 'mautkakuan' || event.id === 'banni'}
+                          onError={() => {
+                            if (!imageFallbacks.has(event.id)) {
+                              setImageFallbacks(prev => new Set(prev).add(event.id));
+                            }
+                          }}
+                        />
+                      )
                     ) : (
-                      <Image
-                        src={event.images[0]}
-                        alt={event.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        quality={85}
-                        priority={index < 2}
-                        style={{
-                          objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center',
-                          filter: event.id === 'vegetarian' ? 'blur(8px)' : 'none',
-                        }}
-                        unoptimized={event.id === 'mautkakuan' || event.id === 'banni'}
-                        onError={() => {
-                          if (!imageFallbacks.has(event.id)) {
-                            setImageFallbacks(prev => new Set(prev).add(event.id));
-                          }
-                        }}
-                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-zinc-950 flex flex-col items-center justify-center p-6 text-center">
+                        <div className="w-14 h-14 rounded-full bg-zinc-800/80 border border-white/15 flex items-center justify-center mb-3 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                          <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                        <span className="text-xs text-zinc-400 font-medium tracking-wider uppercase">Documentary Preview</span>
+                      </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                    {/* Top badges for Video and Password Protection */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
+                      {event.hasVideo ? (
+                        <span className="px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/20 text-[11px] font-medium text-white flex items-center gap-1.5 shadow-lg">
+                          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                          Documentary Video
+                        </span>
+                      ) : <span />}
+
+                      {event.isProtected && (
+                        <span className="px-2.5 py-1 rounded-md bg-zinc-800/90 backdrop-blur-md border border-white/20 text-[11px] font-medium text-zinc-300 flex items-center gap-1 shadow-lg">
+                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          </svg>
+                          Protected
+                        </span>
+                      )}
+                    </div>
 
                     {/* Sensitive Content Label */}
                     {event.id === 'vegetarian' && (
@@ -188,7 +228,7 @@ export default function WorkPage() {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-zinc-500">
-                        {event.images.length} photos
+                        {hasImages ? `${event.images.length} photos` : 'Documentary Video'}
                       </span>
                       <div className="flex items-center gap-2 text-xs text-zinc-400 group-hover:text-white transition-colors">
                         <span>View event</span>

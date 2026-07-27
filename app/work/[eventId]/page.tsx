@@ -8,6 +8,16 @@ import Footer from "../../components/Footer";
 
 const EVENTS = [
   {
+    id: "soccorso",
+    title: "Festa del Soccorso, Italy",
+    year: "2026",
+    story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
+    images: [],
+    vimeoId: "1213399301",
+    videoUrl: "https://vimeo.com/1213399301?share=copy&fl=sv&fe=ci",
+    isPasswordProtected: true,
+  },
+  {
     id: "banni",
     title: "Banni Festival, India",
     year: "2025",

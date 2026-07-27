@@ -7,6 +7,7 @@ import Image from "next/image";
 import FullScreenImageViewer from "./FullScreenImageViewer";
 import EventNavigation from "./EventNavigation";
 import SensitiveContentFilter from "./SensitiveContentFilter";
+import PasswordGate from "./PasswordGate";
 
 interface Event {
   id: string;
@@ -17,6 +18,9 @@ interface Event {
   analogImages?: string[];
   mediumUrl?: string; // Optional field for Medium article URL
   mediumTitle?: string; // Optional title for the Medium article
+  vimeoId?: string;
+  videoUrl?: string;
+  isPasswordProtected?: boolean;
 }
 
 interface EventPageProps {
@@ -145,6 +149,42 @@ export default function EventPage({
   const isSensitive = event.id === 'vegetarian';
   const [hasConsented, setHasConsented] = useState(!isSensitive);
 
+  // Password protection state
+  const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
+    if (!event.isPasswordProtected) return true;
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem(`unlocked_${event.id}`) === 'true';
+    }
+    return false;
+  });
+
+  const handleUnlock = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(`unlocked_${event.id}`, 'true');
+    }
+    setIsUnlocked(true);
+  };
+
+  // If password protected and not unlocked, show PasswordGate
+  if (event.isPasswordProtected && !isUnlocked) {
+    return (
+      <div className="bg-black min-h-screen">
+        <div className="mx-auto max-w-6xl px-4 py-4 md:py-8">
+          <EventNavigation
+            currentIndex={currentIndex}
+            totalEvents={totalEvents}
+            onPrevious={() => navigateToEvent(prevEventId)}
+            onNext={() => navigateToEvent(nextEventId)}
+          />
+          <PasswordGate
+            eventTitle={event.title}
+            onUnlock={handleUnlock}
+          />
+        </div>
+      </div>
+    );
+  }
+
   // If sensitive and not consented, show warning
   if (isSensitive && !hasConsented) {
     return (
@@ -184,6 +224,21 @@ export default function EventPage({
               )}
             </div>
             <p className="text-sm md:text-base text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
+
+            {/* Embedded Vimeo Video Player */}
+            {event.vimeoId && (
+              <div className="mt-8">
+                <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/15 bg-zinc-950 shadow-2xl">
+                  <iframe
+                    src={`https://player.vimeo.com/video/${event.vimeoId}?autoplay=0&title=0&byline=0&portrait=0`}
+                    className="absolute inset-0 w-full h-full"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title={`${event.title} Vimeo Documentary`}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Medium Article Link */}
             {event.mediumUrl && (

@@ -101,5 +101,39 @@ export const STORIES: Record<string, Story> = {
         <p class="mb-10 text-lg leading-8 text-zinc-300">Article written by <a href="https://medium.com/u/ca9aad974a12" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">Ana Ben</a>, drawing from an interview by me and <a href="https://www.instagram.com/astori.teller/" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">@Mattia Astori</a> for <a href="http://www.sacratos.com" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">www.sacratos.com</a></p>
       </div>
     `
+  },
+  soccorso: {
+    id: "soccorso",
+    title: "Festa del Soccorso: Fire, Faith, and Adrenaline in San Severo",
+    subtitle: "Running through a storm of exploding fireworks in Apulia's most explosive sacred tradition.",
+    author: "Daniele Colucci & Mattia Astori",
+    publishDate: "May 2026",
+    content: `
+      <p class="mb-10 text-lg leading-8 text-zinc-300">In San Severo, Italy, faith does not speak in quiet whispers—it roars in blinding flashes, sulfur fumes, and deafening concussions. Every May, the town celebrates <em>La Festa del Soccorso</em> in honor of the Black Virgin Mary (Madonna del Soccorso), transforming centuries-old baroque streets into a fiery labyrinth.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The heart of the festival lies in the <em>batterie pyrotecniche</em>: thousands of powerful paper firecrackers chained together along kilometer-long routes suspended above the streets. As the sacred statues process through the city, the batteries are ignited sequence by sequence, exploding in a rhythmic, earth-shaking cascade of sparks and smoke.</p>
+      
+      <img src="/digital/soccorso.webp" alt="Runners amidst pyrotechnic explosions in San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <div class="text-center text-3xl text-zinc-500 my-16 tracking-[0.2em]">. . .</div>
+
+      <h2 class="text-xl font-bold uppercase tracking-widest mb-8">The Fujenti: Running Under the Fire</h2>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Local runners known as <em>fujenti</em> sprint directly beneath the exploding chains. Clad in soot-stained white shirts, with hoodies drawn tight and damp towels covering their mouth and nose, they run alongside the fiery sparks. It is an adrenaline-fueled act of devotion, brotherhood, and raw physical courage.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">"You don't hear the crowd anymore once the first charge goes off," explains a local fujente. "It is pure instinct. You run with the rhythm of the fire, surrounded by smoke and sparks, trusting the Virgin Mary and your brothers."</p>
+      
+      <img src="/digital/soccorso2.webp" alt="Pyrotechnic battery chain exploding" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <div class="text-center text-3xl text-zinc-500 my-16 tracking-[0.2em]">. . .</div>
+
+      <h2 class="text-xl font-bold uppercase tracking-widest mb-8">Documentary & Visual Archive</h2>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Our documentary film captures the acoustic thunder and visual intensity of San Severo's sacred fire ritual, combining high-speed digital cinematography with grainy 35mm analog film stills.</p>
+      
+      <div class="mt-12 pt-8 border-t border-white/10 text-sm text-zinc-500">
+        <p class="mb-10 text-lg leading-8 text-zinc-300">Documentary film directed & photographed by <a href="https://www.instagram.com/astori.teller/" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">@Mattia Astori</a> and Daniele Colucci for <a href="http://www.sacratos.com" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">www.sacratos.com</a></p>
+      </div>
+    `
   }
 };
