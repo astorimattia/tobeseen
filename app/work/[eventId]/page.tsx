@@ -144,6 +144,8 @@ export async function generateMetadata({ params }: { params: Promise<{ eventId: 
   };
 }
 
+import VimeoFullscreenPlayer from "../../components/VimeoFullscreenPlayer";
+
 export default async function EventPageRoute({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;
   const event = EVENTS.find((e) => e.id === eventId);
@@ -161,15 +163,10 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
             {event.title}
           </h1>
 
-          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/15 bg-zinc-950 shadow-2xl">
-            <iframe
-              src={`https://player.vimeo.com/video/${event.vimeoId}?autoplay=0&title=0&byline=0&portrait=0`}
-              className="absolute inset-0 w-full h-full"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title={`${event.title} Vimeo Documentary`}
-            />
-          </div>
+          <VimeoFullscreenPlayer
+            vimeoId={event.vimeoId || '1213399301'}
+            title={event.title}
+          />
         </div>
       </main>
     );
