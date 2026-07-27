@@ -1,40 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
-import PasswordGate from './PasswordGate';
+import React from 'react';
 import { Story } from '../data/stories';
 
 interface ProtectedStoryContainerProps {
   story: Story;
-  isProtected?: boolean;
 }
 
-export default function ProtectedStoryContainer({ story, isProtected = false }: ProtectedStoryContainerProps) {
-  const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
-    if (!isProtected) return true;
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem(`unlocked_${story.id}`) === 'true';
-    }
-    return false;
-  });
-
-  const handleUnlock = () => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem(`unlocked_${story.id}`, 'true');
-    }
-    setIsUnlocked(true);
-  };
-
-  if (isProtected && !isUnlocked) {
-    return (
-      <div className="py-12">
-        <PasswordGate
-          eventTitle={story.title}
-          onUnlock={handleUnlock}
-        />
-      </div>
-    );
-  }
+export default function ProtectedStoryContainer({ story }: ProtectedStoryContainerProps) {
 
   return (
     <article className="mx-auto max-w-6xl px-4 py-12 md:py-20">

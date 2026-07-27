@@ -15,7 +15,6 @@ const EVENTS = [
     images: [],
     vimeoId: "1213399301",
     videoUrl: "https://vimeo.com/1213399301?share=copy&fl=sv&fe=ci",
-    isPasswordProtected: true,
   },
   {
     id: "banni",

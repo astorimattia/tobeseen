@@ -12,8 +12,6 @@ export default async function StoryPage({ params }: { params: Promise<{ eventId:
         notFound();
     }
 
-    const isProtected = eventId === 'soccorso';
-
     return (
         <main className="min-h-screen bg-black text-white">
             {/* Navigation */}
@@ -29,7 +27,7 @@ export default async function StoryPage({ params }: { params: Promise<{ eventId:
                 </div>
             </nav>
 
-            <ProtectedStoryContainer story={story} isProtected={isProtected} />
+            <ProtectedStoryContainer story={story} />
         </main>
     );
 }

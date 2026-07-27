@@ -20,7 +20,6 @@ export default function WorkPage() {
       story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
       images: [],
       hasVideo: true,
-      isProtected: true,
     },
     {
       id: "banni",
@@ -184,24 +183,15 @@ export default function WorkPage() {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                    {/* Top badges for Video and Password Protection */}
-                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
-                      {event.hasVideo ? (
+                    {/* Top badges for Video */}
+                    {event.hasVideo && (
+                      <div className="absolute top-3 left-3 pointer-events-none z-10">
                         <span className="px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/20 text-[11px] font-medium text-white flex items-center gap-1.5 shadow-lg">
                           <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                           Documentary Video
                         </span>
-                      ) : <span />}
-
-                      {event.isProtected && (
-                        <span className="px-2.5 py-1 rounded-md bg-zinc-800/90 backdrop-blur-md border border-white/20 text-[11px] font-medium text-zinc-300 flex items-center gap-1 shadow-lg">
-                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                          </svg>
-                          Protected
-                        </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
 
                     {/* Sensitive Content Label */}
                     {event.id === 'vegetarian' && (
