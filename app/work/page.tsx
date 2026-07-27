@@ -18,7 +18,7 @@ export default function WorkPage() {
       title: "Festa del Soccorso, Italy",
       year: "2026",
       story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
-      images: [],
+      images: ["/analog/sansevero-analog.webp"],
       hasVideo: true,
     },
     {
@@ -133,7 +133,7 @@ export default function WorkPage() {
                   {/* Event Image */}
                   <div className="relative aspect-[16/10] overflow-hidden bg-zinc-950">
                     {hasImages ? (
-                      imageFallbacks.has(event.id) || event.id === 'mautkakuan' || event.id === 'banni' ? (
+                      imageFallbacks.has(event.id) || event.id === 'mautkakuan' || event.id === 'banni' || event.id === 'soccorso' ? (
                         <img
                           src={event.images[0]}
                           alt={event.title}
@@ -163,7 +163,7 @@ export default function WorkPage() {
                             objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center',
                             filter: event.id === 'vegetarian' ? 'blur(8px)' : 'none',
                           }}
-                          unoptimized={event.id === 'mautkakuan' || event.id === 'banni'}
+                          unoptimized={event.id === 'mautkakuan' || event.id === 'banni' || event.id === 'soccorso'}
                           onError={() => {
                             if (!imageFallbacks.has(event.id)) {
                               setImageFallbacks(prev => new Set(prev).add(event.id));
