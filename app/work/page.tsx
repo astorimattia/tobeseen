@@ -14,14 +14,6 @@ export default function WorkPage() {
 
   const EVENTS = [
     {
-      id: "soccorso",
-      title: "Festa del Soccorso, Italy",
-      year: "2026",
-      story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
-      images: ["/analog/sansevero-analog.webp"],
-      hasVideo: true,
-    },
-    {
       id: "banni",
       title: "Banni Festival, India",
       year: "2025",
@@ -183,15 +175,7 @@ export default function WorkPage() {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                    {/* Top badges for Video */}
-                    {event.hasVideo && (
-                      <div className="absolute top-3 left-3 pointer-events-none z-10">
-                        <span className="px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md border border-white/20 text-[11px] font-medium text-white flex items-center gap-1.5 shadow-lg">
-                          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                          Documentary Video
-                        </span>
-                      </div>
-                    )}
+
 
                     {/* Sensitive Content Label */}
                     {event.id === 'vegetarian' && (

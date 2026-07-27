@@ -152,9 +152,10 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
     notFound();
   }
 
-  const currentIndex = EVENTS.findIndex((e) => e.id === eventId);
-  const nextEvent = EVENTS[(currentIndex + 1) % EVENTS.length];
-  const prevEvent = EVENTS[currentIndex === 0 ? EVENTS.length - 1 : currentIndex - 1];
+  const PUBLIC_EVENTS = EVENTS.filter((e) => e.id !== 'soccorso');
+  const currentIndex = PUBLIC_EVENTS.findIndex((e) => e.id === eventId);
+  const nextEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex + 1) % PUBLIC_EVENTS.length : 0];
+  const prevEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex === 0 ? PUBLIC_EVENTS.length - 1 : currentIndex - 1) : 0];
 
   // Preload current event images and adjacent event images
   const preloadImages = [
