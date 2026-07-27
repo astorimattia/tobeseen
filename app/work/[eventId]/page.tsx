@@ -159,9 +159,12 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
     return (
       <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-12 md:py-24">
         <div className="w-full max-w-4xl space-y-8 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-2">
-            {event.title}
-          </h1>
+          <div>
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-2">
+              {event.title}
+            </h1>
+            <p className="text-zinc-500 text-sm font-medium tracking-wide">2026</p>
+          </div>
 
           <VimeoFullscreenPlayer
             vimeoId={event.vimeoId || '1213399301'}
