@@ -163,13 +163,21 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-2">
               {event.title}
             </h1>
-            <p className="text-zinc-500 text-sm font-medium tracking-wide">2026</p>
+            <p className="text-zinc-300 text-base md:text-lg font-semibold tracking-widest mt-2">
+              2026
+            </p>
           </div>
 
           <VimeoFullscreenPlayer
             vimeoId={event.vimeoId || '1213399301'}
             title={event.title}
           />
+
+          <div className="pt-2">
+            <span className="inline-block px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-zinc-200 tracking-widest uppercase">
+              2026
+            </span>
+          </div>
         </div>
       </main>
     );
