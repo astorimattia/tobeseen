@@ -152,6 +152,32 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
     notFound();
   }
 
+  // Standalone isolated page for unlisted documentary video
+  if (eventId === 'soccorso') {
+    return (
+      <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-12 md:py-24">
+        <div className="w-full max-w-4xl space-y-8 text-center">
+          <div>
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-2">
+              {event.title}
+            </h1>
+            <p className="text-zinc-500 text-sm font-medium">2026</p>
+          </div>
+
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/15 bg-zinc-950 shadow-2xl">
+            <iframe
+              src={`https://player.vimeo.com/video/${event.vimeoId}?autoplay=0&title=0&byline=0&portrait=0`}
+              className="absolute inset-0 w-full h-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              title={`${event.title} Vimeo Documentary`}
+            />
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   const PUBLIC_EVENTS = EVENTS.filter((e) => e.id !== 'soccorso');
   const currentIndex = PUBLIC_EVENTS.findIndex((e) => e.id === eventId);
   const nextEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex + 1) % PUBLIC_EVENTS.length : 0];
