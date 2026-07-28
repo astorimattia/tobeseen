@@ -74,9 +74,9 @@ export default function AutoFullscreenVimeo({ vimeoId, title }: AutoFullscreenVi
       {isPlaying ? (
         <div className="relative w-full h-full aspect-video">
           <iframe
-            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&playsinline=0&title=0&byline=0&portrait=0&controls=1`}
+            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=0&autopause=0&playsinline=0&title=0&byline=0&portrait=0&controls=1`}
             className="w-full h-full"
-            allow="autoplay; fullscreen; picture-in-picture"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             allowFullScreen
             title={`${title} Vimeo Documentary`}
           />
