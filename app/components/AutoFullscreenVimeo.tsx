@@ -7,12 +7,57 @@ interface AutoFullscreenVimeoProps {
   title: string;
 }
 
+interface VimeoPlayerInstance {
+  play: () => Promise<void>;
+  pause: () => Promise<void>;
+  setVolume: (volume: number) => Promise<void>;
+  setMuted: (muted: boolean) => Promise<void>;
+  on: (event: string, callback: (data: unknown) => void) => void;
+}
+
+declare global {
+  interface Window {
+    Vimeo?: {
+      Player: new (element: HTMLIFrameElement | string, options?: Record<string, unknown>) => VimeoPlayerInstance;
+    };
+  }
+}
+
 export default function AutoFullscreenVimeo({ vimeoId, title }: AutoFullscreenVimeoProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const vimeoPlayerRef = useRef<VimeoPlayerInstance | null>(null);
 
-  const handleStartPlay = (e: React.MouseEvent | React.TouchEvent) => {
+  useEffect(() => {
+    const loadScript = () => {
+      return new Promise<void>((resolve) => {
+        if (window.Vimeo && window.Vimeo.Player) {
+          resolve();
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://player.vimeo.com/api/player.js';
+        script.async = true;
+        script.onload = () => resolve();
+        document.body.appendChild(script);
+      });
+    };
+
+    loadScript().then(() => {
+      if (iframeRef.current && window.Vimeo) {
+        try {
+          const player = new window.Vimeo.Player(iframeRef.current);
+          vimeoPlayerRef.current = player;
+        } catch (err) {
+          console.error('Vimeo init error:', err);
+        }
+      }
+    });
+  }, [vimeoId]);
+
+  const handleStartPlay = async (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -29,6 +74,16 @@ export default function AutoFullscreenVimeo({ vimeoId, title }: AutoFullscreenVi
         elem.requestFullscreen().catch(() => {});
       } else if (elem.webkitRequestFullscreen) {
         elem.webkitRequestFullscreen();
+      }
+    }
+
+    if (vimeoPlayerRef.current) {
+      try {
+        await vimeoPlayerRef.current.setMuted(false);
+        await vimeoPlayerRef.current.setVolume(1.0);
+        await vimeoPlayerRef.current.play();
+      } catch (err) {
+        console.error('Vimeo play error:', err);
       }
     }
   };
@@ -71,37 +126,32 @@ export default function AutoFullscreenVimeo({ vimeoId, title }: AutoFullscreenVi
         </button>
       )}
 
-      {isPlaying ? (
-        <div className="relative w-full h-full aspect-video">
-          <iframe
-            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&muted=0&autopause=0&playsinline=0&title=0&byline=0&portrait=0&controls=1`}
-            className="w-full h-full"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-            allowFullScreen
-            title={`${title} Vimeo Documentary`}
-          />
-        </div>
-      ) : (
-        <div
-          onClick={handleStartPlay}
-          onTouchEnd={handleStartPlay}
-          className="absolute inset-0 cursor-pointer group"
-        >
-          <iframe
-            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=0&title=0&byline=0&portrait=0&controls=0`}
-            className="w-full h-full pointer-events-none"
-            title={`${title} Vimeo Preview`}
-          />
-          {/* Subtle click/tap overlay to trigger instant fullscreen without text */}
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors flex items-center justify-center">
+      {/* Single iframe element for seamless user gesture audio activation */}
+      <div className="relative w-full h-full aspect-video">
+        <iframe
+          ref={iframeRef}
+          src={`https://player.vimeo.com/video/${vimeoId}?autoplay=0&muted=0&autopause=0&playsinline=0&title=0&byline=0&portrait=0&controls=1`}
+          className="w-full h-full"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allowFullScreen
+          title={`${title} Vimeo Documentary`}
+        />
+
+        {/* Play Overlay before starting */}
+        {!isPlaying && (
+          <div
+            onClick={handleStartPlay}
+            onTouchEnd={handleStartPlay}
+            className="absolute inset-0 bg-black/20 hover:bg-transparent transition-colors flex items-center justify-center cursor-pointer z-10 group"
+          >
             <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/90 text-black flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
               <svg className="w-8 h-8 md:w-9 md:h-9 ml-1 fill-black" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
