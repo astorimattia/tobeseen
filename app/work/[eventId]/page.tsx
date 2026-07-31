@@ -13,8 +13,8 @@ const EVENTS = [
     year: "2026",
     story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
     images: [],
-    vimeoId: "1213399301",
-    videoUrl: "https://vimeo.com/1213399301?share=copy&fl=sv&fe=ci",
+    vimeoId: "1214414319",
+    videoUrl: "https://vimeo.com/1214414319?share=copy&fl=sv&fe=ci",
   },
   {
     id: "banni",
@@ -169,7 +169,7 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
           </div>
 
           <AutoFullscreenVimeo
-            vimeoId={event.vimeoId || '1213399301'}
+            vimeoId={event.vimeoId || '1214414319'}
             title={event.title}
           />
         </div>
