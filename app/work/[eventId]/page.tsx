@@ -28,8 +28,20 @@ const EVENTS = [
       "/analog/sansevero-analog7.webp", "/analog/sansevero-analog8.webp", "/analog/sansevero-analog9.webp",
       "/analog/sansevero-analog10.webp", "/analog/sansevero-analog11.webp"
     ],
-    mediumUrl: "/work/soccorso/story",
-    mediumTitle: "Festa del Soccorso: Fire, Faith, and Adrenaline in San Severo",
+    stories: [
+      {
+        url: "/work/soccorso/story",
+        title: "Festa del Soccorso: Fire, Faith, and Adrenaline in San Severo",
+        author: "Mattia Astori & Daniele Colucci · Sacratos",
+        isExternal: false
+      },
+      {
+        url: "https://danielecolucci.substack.com/p/explosive-devotion-the-fujenti-and",
+        title: "Explosive Devotion: The Fujenti and the Black Madonna",
+        author: "Daniele Colucci, Ana Ben, and Sacratos · Jun 30, 2026",
+        isExternal: true
+      }
+    ],
   },
   {
     id: "banni",
