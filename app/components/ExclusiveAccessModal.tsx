@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ExclusiveAccessModalProps {
   isOpen: boolean;
@@ -9,7 +9,9 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  // Handle Escape key to close modal
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -27,6 +29,37 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        alert('Successfully subscribed to exclusive access updates!');
+        setEmail('');
+        onClose();
+      } else {
+        const errorData = await response.json();
+        alert(`Subscription failed: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error subscribing:', error);
+      alert('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -62,30 +95,28 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
             />
           </svg>
         </button>
-        <h2 className="text-3xl font-bold text-white mb-4 text-center">Subscribe on Substack</h2>
+        <h2 className="text-3xl font-bold text-white mb-4 text-center">Get exclusive access</h2>
         <p className="text-zinc-300 text-center mb-6 text-sm leading-relaxed">
-          Documentary photography and writing on extreme rituals and the people who keep them alive.
+          Be the first to know when new documentaries drop.
         </p>
-        <div className="w-full">
-          <iframe
-            src="https://extremerituals.substack.com/embed"
-            width="100%"
-            height="180"
-            style={{ border: '1px solid #EEE', background: 'white', borderRadius: '8px' }}
-            frameBorder="0"
-            scrolling="no"
-          ></iframe>
-        </div>
-        <div className="mt-4 text-center">
-          <a
-            href="https://extremerituals.substack.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-white text-sm transition-colors duration-200 underline"
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 w-full">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="flex-1 w-full sm:max-w-xs md:max-w-sm rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+            required
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={isLoading}
           >
-            View the publication →
-          </a>
-        </div>
+            {isLoading ? 'Subscribing...' : 'Subscribe'}
+          </button>
+        </form>
       </div>
     </div>
   );
