@@ -14,6 +14,19 @@ export default function WorkPage() {
 
   const EVENTS = [
     {
+      id: "soccorso",
+      title: "Festa del Soccorso, San Severo, Italy",
+      year: "2026",
+      story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
+      images: ["/digital/soccorso.webp", "/digital/soccorso2.webp", "/digital/soccorso3.webp", "/digital/soccorso4.webp", "/digital/soccorso5.webp", "/digital/soccorso6.webp", "/digital/soccorso7.webp", "/digital/soccorso8.webp", "/digital/soccorso9.webp", "/digital/soccorso10.webp", "/digital/soccorso11.webp", "/digital/soccorso12.webp", "/digital/soccorso13.webp", "/digital/soccorso14.webp", "/digital/soccorso15.webp", "/digital/soccorso16.webp", "/digital/soccorso17.webp", "/digital/soccorso18.webp", "/digital/soccorso19.webp", "/digital/soccorso20.webp", "/digital/soccorso21.webp", "/digital/soccorso22.webp", "/digital/soccorso23.webp", "/digital/soccorso24.webp", "/digital/soccorso25.webp", "/digital/soccorso26.webp", "/digital/soccorso27.webp", "/digital/soccorso28.webp", "/digital/soccorso29.webp", "/digital/soccorso30.webp", "/digital/soccorso31.webp", "/digital/soccorso32.webp", "/digital/soccorso33.webp", "/digital/soccorso34.webp", "/digital/soccorso35.webp", "/digital/soccorso36.webp", "/digital/soccorso37.webp", "/digital/soccorso38.webp", "/digital/soccorso39.webp", "/digital/soccorso40.webp"],
+      analogImages: [
+        "/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp",
+        "/analog/sansevero-analog4.webp", "/analog/sansevero-analog5.webp", "/analog/sansevero-analog6.webp",
+        "/analog/sansevero-analog7.webp", "/analog/sansevero-analog8.webp", "/analog/sansevero-analog9.webp",
+        "/analog/sansevero-analog10.webp", "/analog/sansevero-analog11.webp"
+      ],
+    },
+    {
       id: "banni",
       title: "Banni Festival, India",
       year: "2025",
@@ -61,8 +74,8 @@ export default function WorkPage() {
       id: "hammers",
       title: "Exploding Hammers, Mexico",
       year: "2025",
-      story: "Hammers packed with explosives slam stone anvils, creating controlled chaos. The explosive force sends shrapnel flying through the air as participants test their luck and timing.",
-      images: ["/digital/hammers.webp", "/digital/hammers2.webp", "/digital/hammers3.webp", "/digital/hammers4.webp", "/digital/hammers5.webp", "/digital/hammers6.webp", "/digital/hammers7.webp", "/digital/hammers8.webp", "/digital/hammers9.webp", "/digital/hammers10.webp", "/digital/hammers11.webp", "/digital/hammers12.webp", "/digital/hammers13.webp", "/digital/hammers14.webp", "/digital/hammers15.webp"],
+      story: "In San Juan de la Vega, six families uphold a centuries-old vow after a silver merchant's prayer saved him from bandits on the Camino Real. They honor San Juanito with explosives, but when the state banned the rite for the first time, the town had other plans.",
+      images: ["/digital/hammers.webp", "/digital/hammers2.webp", "/digital/hammers3.webp", "/digital/hammers4.webp", "/digital/hammers5.webp", "/digital/hammers6.webp", "/digital/hammers7.webp", "/digital/hammers8.webp", "/digital/hammers9.webp", "/digital/hammers10.webp", "/digital/hammers11.webp", "/digital/hammers12.webp", "/digital/hammers13.webp", "/digital/hammers14.webp", "/digital/hammers15.webp", "/digital/hammers16.webp", "/digital/hammers17.webp", "/digital/hammers18.webp", "/digital/hammers19.webp", "/digital/hammers20.webp", "/digital/hammers21.webp", "/digital/hammers22.webp", "/digital/hammers23.webp", "/digital/hammers24.webp", "/digital/hammers25.webp", "/digital/hammers26.webp", "/digital/hammers27.webp", "/digital/hammers28.webp", "/digital/hammers29.webp", "/digital/hammers30.webp", "/digital/hammers31.webp", "/digital/hammers32.webp", "/digital/hammers33.webp", "/digital/hammers34.webp", "/digital/hammers35.webp"],
     },
     {
       id: "tinku",
@@ -83,6 +96,8 @@ export default function WorkPage() {
 
   // Preload first few images from each event for faster loading
   const preloadImages = [
+    "/digital/soccorso.webp", "/digital/soccorso2.webp", "/digital/soccorso3.webp",
+    "/digital/banni.webp", "/digital/banni2.webp", "/digital/banni3.webp",
     "/digital/mautkakuan.webp", "/digital/mautkakuan2.webp", "/digital/mautkakuan3.webp",
     "/digital/tultepec.webp", "/digital/tultepec2.webp", "/digital/tultepec3.webp",
     "/digital/vegetarian.webp", "/digital/vegetarian2.webp", "/digital/vegetarian3.webp",

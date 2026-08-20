@@ -8,13 +8,28 @@ import Footer from "../../components/Footer";
 
 const EVENTS = [
   {
-    id: "soccorso",
+    id: "soccorsovideo",
     title: "Festa del Soccorso, Italy",
     year: "2026",
     story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
     images: [],
     vimeoId: "1214414319",
     videoUrl: "https://vimeo.com/1214414319?share=copy&fl=sv&fe=ci",
+  },
+  {
+    id: "soccorso",
+    title: "Festa del Soccorso, San Severo, Italy",
+    year: "2026",
+    story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
+    images: ["/digital/soccorso.webp", "/digital/soccorso2.webp", "/digital/soccorso3.webp", "/digital/soccorso4.webp", "/digital/soccorso5.webp", "/digital/soccorso6.webp", "/digital/soccorso7.webp", "/digital/soccorso8.webp", "/digital/soccorso9.webp", "/digital/soccorso10.webp", "/digital/soccorso11.webp", "/digital/soccorso12.webp", "/digital/soccorso13.webp", "/digital/soccorso14.webp", "/digital/soccorso15.webp", "/digital/soccorso16.webp", "/digital/soccorso17.webp", "/digital/soccorso18.webp", "/digital/soccorso19.webp", "/digital/soccorso20.webp", "/digital/soccorso21.webp", "/digital/soccorso22.webp", "/digital/soccorso23.webp", "/digital/soccorso24.webp", "/digital/soccorso25.webp", "/digital/soccorso26.webp", "/digital/soccorso27.webp", "/digital/soccorso28.webp", "/digital/soccorso29.webp", "/digital/soccorso30.webp", "/digital/soccorso31.webp", "/digital/soccorso32.webp", "/digital/soccorso33.webp", "/digital/soccorso34.webp", "/digital/soccorso35.webp", "/digital/soccorso36.webp", "/digital/soccorso37.webp", "/digital/soccorso38.webp", "/digital/soccorso39.webp", "/digital/soccorso40.webp"],
+    analogImages: [
+      "/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp",
+      "/analog/sansevero-analog4.webp", "/analog/sansevero-analog5.webp", "/analog/sansevero-analog6.webp",
+      "/analog/sansevero-analog7.webp", "/analog/sansevero-analog8.webp", "/analog/sansevero-analog9.webp",
+      "/analog/sansevero-analog10.webp", "/analog/sansevero-analog11.webp"
+    ],
+    mediumUrl: "/work/soccorso/story",
+    mediumTitle: "Festa del Soccorso: Fire, Faith, and Adrenaline in San Severo",
   },
   {
     id: "banni",
@@ -84,7 +99,7 @@ const EVENTS = [
     title: "Exploding Hammers, Mexico",
     year: "2025",
     story: "In San Juan de la Vega, six families uphold a centuries-old vow after a silver merchant's prayer saved him from bandits on the Camino Real. They honor San Juanito with explosives, but when the state banned the rite for the first time, the town had other plans.",
-    images: ["/digital/hammers.webp", "/digital/hammers2.webp", "/digital/hammers3.webp", "/digital/hammers4.webp", "/digital/hammers5.webp", "/digital/hammers6.webp", "/digital/hammers7.webp", "/digital/hammers8.webp", "/digital/hammers9.webp", "/digital/hammers10.webp", "/digital/hammers11.webp", "/digital/hammers12.webp", "/digital/hammers13.webp", "/digital/hammers14.webp", "/digital/hammers15.webp"],
+    images: ["/digital/hammers.webp", "/digital/hammers2.webp", "/digital/hammers3.webp", "/digital/hammers4.webp", "/digital/hammers5.webp", "/digital/hammers6.webp", "/digital/hammers7.webp", "/digital/hammers8.webp", "/digital/hammers9.webp", "/digital/hammers10.webp", "/digital/hammers11.webp", "/digital/hammers12.webp", "/digital/hammers13.webp", "/digital/hammers14.webp", "/digital/hammers15.webp", "/digital/hammers16.webp", "/digital/hammers17.webp", "/digital/hammers18.webp", "/digital/hammers19.webp", "/digital/hammers20.webp", "/digital/hammers21.webp", "/digital/hammers22.webp", "/digital/hammers23.webp", "/digital/hammers24.webp", "/digital/hammers25.webp", "/digital/hammers26.webp", "/digital/hammers27.webp", "/digital/hammers28.webp", "/digital/hammers29.webp", "/digital/hammers30.webp", "/digital/hammers31.webp", "/digital/hammers32.webp", "/digital/hammers33.webp", "/digital/hammers34.webp", "/digital/hammers35.webp"],
     mediumUrl: "/work/hammers/story",
     mediumTitle: "Si San Juanito Permite",
   },
@@ -157,7 +172,7 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
   }
 
   // Standalone isolated page for unlisted documentary video
-  if (eventId === 'soccorso') {
+  if (eventId === 'soccorsovideo') {
     return (
       <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-12 md:py-24">
         <div className="w-full max-w-4xl space-y-8 text-center">
@@ -179,7 +194,7 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
     );
   }
 
-  const PUBLIC_EVENTS = EVENTS.filter((e) => e.id !== 'soccorso');
+  const PUBLIC_EVENTS = EVENTS.filter((e) => e.id !== 'soccorsovideo');
   const currentIndex = PUBLIC_EVENTS.findIndex((e) => e.id === eventId);
   const nextEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex + 1) % PUBLIC_EVENTS.length : 0];
   const prevEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex === 0 ? PUBLIC_EVENTS.length - 1 : currentIndex - 1) : 0];
