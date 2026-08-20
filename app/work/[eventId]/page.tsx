@@ -84,11 +84,6 @@ const EVENTS = [
     ],
     stories: [
       {
-        url: "/work/mautkakuan/story",
-        title: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
-        author: "Sacratos",
-      },
-      {
         url: "https://danielecolucci.substack.com/p/riding-the-well-of-death-soma-basus",
         title: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
         author: "Daniele Colucci, Ana Ben, and Sacratos",
