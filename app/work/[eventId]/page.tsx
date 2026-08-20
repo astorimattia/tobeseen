@@ -55,6 +55,14 @@ const EVENTS = [
       "/analog/banni-analog10.webp", "/analog/banni-analog11.webp", "/analog/banni-analog12.webp",
       "/analog/banni-analog13.webp", "/analog/banni-analog14.webp", "/analog/banni-analog15.webp"
     ],
+    stories: [
+      {
+        url: "https://danielecolucci.substack.com/p/echoes-of-demons-the-violent-devotion",
+        title: "Echoes of Demons: The Violent Devotion of Devaragattu",
+        author: "Daniele Colucci, Ana Ben, and Sacratos",
+        external: true,
+      },
+    ],
   },
   {
     id: "mautkakuan",
@@ -79,8 +87,19 @@ const EVENTS = [
       "/optimized/analog/mautkakuan-analog14_lg.webp",
       "/optimized/analog/mautkakuan-analog15_lg.webp",
     ],
-    mediumUrl: "https://medium.com/@dcolucci71043/riding-the-well-of-death-soma-basus-defiance-of-gravity-and-tradition-cbb8c87e4fbe",
-    mediumTitle: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
+    stories: [
+      {
+        url: "/work/mautkakuan/story",
+        title: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
+        author: "Sacratos",
+      },
+      {
+        url: "https://danielecolucci.substack.com/p/riding-the-well-of-death-soma-basus",
+        title: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
+        author: "Daniele Colucci, Ana Ben, and Sacratos",
+        external: true,
+      },
+    ],
   },
   {
     id: "tultepec",
