@@ -154,8 +154,6 @@ export async function generateMetadata({ params }: { params: Promise<{ eventId: 
   };
 }
 
-import AutoFullscreenVimeo from "../../components/AutoFullscreenVimeo";
-
 export default async function EventPageRoute({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;
   const event = EVENTS.find((e) => e.id === eventId);
