@@ -30,9 +30,16 @@ const EVENTS = [
     ],
     stories: [
       {
-        url: "/work/soccorso/story",
-        title: "C' vdim au' fnel",
+        url: "https://extremerituals.substack.com/p/c-vdim-au-fnel-1aa",
+        title: "C' vdim au' fnel — Appunti dalla Festa del Soccorso",
         author: "Mattia Astori",
+        external: true,
+      },
+      {
+        url: "https://extremerituals.substack.com/p/c-vdim-au-fnel",
+        title: "C' vdim au' fnel — Notes from the Festa del Soccorso",
+        author: "Mattia Astori",
+        external: true,
       },
       {
         url: "https://danielecolucci.substack.com/p/explosive-devotion-the-fujenti-and",
@@ -137,8 +144,14 @@ const EVENTS = [
       "/analog/hammers-analog10.webp", "/analog/hammers-analog11.webp", "/analog/hammers-analog12.webp",
       "/analog/hammers-analog13.webp"
     ],
-    mediumUrl: "/work/hammers/story",
-    mediumTitle: "Si San Juanito Permite",
+    stories: [
+      {
+        url: "https://extremerituals.substack.com/p/si-san-juanito-permite",
+        title: "Si San Juanito Permite",
+        author: "Mattia Astori & Daniele Colucci",
+        external: true,
+      },
+    ],
   },
   {
     id: "tinku",
