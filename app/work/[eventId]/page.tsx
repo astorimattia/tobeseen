@@ -30,21 +30,9 @@ const EVENTS = [
     ],
     stories: [
       {
-        url: "https://extremerituals.substack.com/p/c-vdim-au-fnel-1aa",
-        title: "C' vdim au' fnel — Appunti dalla Festa del Soccorso",
-        author: "Mattia Astori",
-        external: true,
-      },
-      {
         url: "https://extremerituals.substack.com/p/c-vdim-au-fnel",
-        title: "C' vdim au' fnel — Notes from the Festa del Soccorso",
+        title: "C' vdim au' fnel",
         author: "Mattia Astori",
-        external: true,
-      },
-      {
-        url: "https://danielecolucci.substack.com/p/explosive-devotion-the-fujenti-and",
-        title: "Explosive Devotion: The Fujenti and the Black Madonna",
-        author: "Daniele Colucci, Ana Ben, and Sacratos",
         external: true,
       },
     ],
@@ -95,11 +83,6 @@ const EVENTS = [
       "/optimized/analog/mautkakuan-analog15_lg.webp",
     ],
     stories: [
-      {
-        url: "/work/mautkakuan/story",
-        title: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
-        author: "Sacratos",
-      },
       {
         url: "https://danielecolucci.substack.com/p/riding-the-well-of-death-soma-basus",
         title: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
