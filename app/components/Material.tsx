@@ -4,6 +4,13 @@ import Carousel, { GalleryItem } from "./Carousel";
 
 const GALLERY: GalleryItem[] = [
   {
+    id: "soccorso",
+    title: "Festa del Soccorso, San Severo, Italy",
+    subtitle:
+      "Runners brave kilometer-long chains of exploding pyrotechnic batteries in honor of the Madonna del Soccorso.",
+    image: "/digital/soccorso.webp",
+  },
+  {
     id: "tultepec",
     title: "Feria Internacional de la Pirotecnia, Mexico",
     subtitle:
@@ -35,7 +42,7 @@ const GALLERY: GalleryItem[] = [
     id: "hammers",
     title: "Exploding Hammers, Mexico",
     subtitle:
-      "Hammers packed with explosives slam stone anvils.",
+      "When the state banned the rite for the first time, the town had other plans.",
     image: "/digital/hammers.webp",
   },
   {
