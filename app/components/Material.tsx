@@ -5,7 +5,7 @@ import Carousel, { GalleryItem } from "./Carousel";
 const GALLERY: GalleryItem[] = [
   {
     id: "soccorso",
-    title: "Festa del Soccorso, San Severo, Italy",
+    title: "Festa del Soccorso, Italy",
     subtitle:
       "Runners brave kilometer-long chains of exploding pyrotechnic batteries in honor of the Madonna del Soccorso.",
     image: "/digital/soccorso.webp",
