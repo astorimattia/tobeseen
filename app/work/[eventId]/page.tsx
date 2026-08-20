@@ -30,21 +30,9 @@ const EVENTS = [
     ],
     stories: [
       {
-        url: "https://extremerituals.substack.com/p/c-vdim-au-fnel-1aa",
-        title: "C' vdim au' fnel — Appunti dalla Festa del Soccorso",
-        author: "Mattia Astori",
-        external: true,
-      },
-      {
         url: "https://extremerituals.substack.com/p/c-vdim-au-fnel",
-        title: "C' vdim au' fnel — Notes from the Festa del Soccorso",
+        title: "C' vdim au' fnel",
         author: "Mattia Astori",
-        external: true,
-      },
-      {
-        url: "https://danielecolucci.substack.com/p/explosive-devotion-the-fujenti-and",
-        title: "Explosive Devotion: The Fujenti and the Black Madonna",
-        author: "Daniele Colucci, Ana Ben, and Sacratos",
         external: true,
       },
     ],
