@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface ExclusiveAccessModalProps {
   isOpen: boolean;
@@ -11,6 +11,7 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
 }) => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -30,35 +31,23 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (isLoading) return;
     
     setIsLoading(true);
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        alert('Successfully subscribed to exclusive access updates!');
-        setEmail('');
-        onClose();
-      } else {
-        const errorData = await response.json();
-        alert(`Subscription failed: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error('Error subscribing:', error);
-      alert('An unexpected error occurred. Please try again later.');
-    } finally {
-      setIsLoading(false);
+    
+    // Submit the form to the hidden iframe
+    if (formRef.current) {
+      formRef.current.submit();
     }
+    
+    // Show success and close modal
+    alert('Successfully subscribed to exclusive access updates!');
+    setEmail('');
+    setIsLoading(false);
+    onClose();
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -99,9 +88,17 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
         <p className="text-zinc-300 text-center mb-6 text-sm leading-relaxed">
           Be the first to know when new documentaries drop.
         </p>
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 w-full">
+        <form 
+          ref={formRef}
+          onSubmit={handleSubmit}
+          action="https://extremerituals.substack.com/api/v1/free"
+          method="post"
+          target="substack-subscribe-modal"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 w-full"
+        >
           <input
             type="email"
+            name="email"
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -109,6 +106,7 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
             required
             disabled={isLoading}
           />
+          <input type="hidden" name="source" value="sacratos" />
           <button
             type="submit"
             className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
@@ -117,6 +115,11 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
             {isLoading ? 'Subscribing...' : 'Subscribe'}
           </button>
         </form>
+        <iframe 
+          name="substack-subscribe-modal" 
+          style={{ display: 'none' }}
+          title="Substack subscription"
+        />
       </div>
     </div>
   );
