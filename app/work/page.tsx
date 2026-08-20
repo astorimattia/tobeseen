@@ -14,6 +14,19 @@ export default function WorkPage() {
 
   const EVENTS = [
     {
+      id: "soccorso",
+      title: "Festa del Soccorso, Italy",
+      year: "2026",
+      story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
+      images: ["/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp", "/analog/sansevero-analog4.webp", "/analog/sansevero-analog5.webp", "/analog/sansevero-analog6.webp", "/analog/sansevero-analog7.webp", "/analog/sansevero-analog8.webp", "/analog/sansevero-analog9.webp", "/analog/sansevero-analog10.webp", "/analog/sansevero-analog11.webp"],
+      analogImages: [
+        "/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp",
+        "/analog/sansevero-analog4.webp", "/analog/sansevero-analog5.webp", "/analog/sansevero-analog6.webp",
+        "/analog/sansevero-analog7.webp", "/analog/sansevero-analog8.webp", "/analog/sansevero-analog9.webp",
+        "/analog/sansevero-analog10.webp", "/analog/sansevero-analog11.webp"
+      ],
+    },
+    {
       id: "banni",
       title: "Banni Festival, India",
       year: "2025",
@@ -83,6 +96,8 @@ export default function WorkPage() {
 
   // Preload first few images from each event for faster loading
   const preloadImages = [
+    "/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp",
+    "/digital/banni.webp", "/digital/banni2.webp", "/digital/banni3.webp",
     "/digital/mautkakuan.webp", "/digital/mautkakuan2.webp", "/digital/mautkakuan3.webp",
     "/digital/tultepec.webp", "/digital/tultepec2.webp", "/digital/tultepec3.webp",
     "/digital/vegetarian.webp", "/digital/vegetarian2.webp", "/digital/vegetarian3.webp",

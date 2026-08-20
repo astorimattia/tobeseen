@@ -12,9 +12,17 @@ const EVENTS = [
     title: "Festa del Soccorso, Italy",
     year: "2026",
     story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
-    images: [],
+    images: ["/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp", "/analog/sansevero-analog4.webp", "/analog/sansevero-analog5.webp", "/analog/sansevero-analog6.webp", "/analog/sansevero-analog7.webp", "/analog/sansevero-analog8.webp", "/analog/sansevero-analog9.webp", "/analog/sansevero-analog10.webp", "/analog/sansevero-analog11.webp"],
+    analogImages: [
+      "/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp",
+      "/analog/sansevero-analog4.webp", "/analog/sansevero-analog5.webp", "/analog/sansevero-analog6.webp",
+      "/analog/sansevero-analog7.webp", "/analog/sansevero-analog8.webp", "/analog/sansevero-analog9.webp",
+      "/analog/sansevero-analog10.webp", "/analog/sansevero-analog11.webp"
+    ],
     vimeoId: "1214414319",
     videoUrl: "https://vimeo.com/1214414319?share=copy&fl=sv&fe=ci",
+    mediumUrl: "/work/soccorso/story",
+    mediumTitle: "Festa del Soccorso: Fire, Faith, and Adrenaline in San Severo",
   },
   {
     id: "banni",
@@ -156,30 +164,7 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
     notFound();
   }
 
-  // Standalone isolated page for unlisted documentary video
-  if (eventId === 'soccorso') {
-    return (
-      <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-4 py-12 md:py-24">
-        <div className="w-full max-w-4xl space-y-8 text-center">
-          <div>
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-2">
-              {event.title}
-            </h1>
-            <p className="text-zinc-300 text-base md:text-lg font-semibold tracking-widest mt-2">
-              2026
-            </p>
-          </div>
-
-          <AutoFullscreenVimeo
-            vimeoId={event.vimeoId || '1214414319'}
-            title={event.title}
-          />
-        </div>
-      </main>
-    );
-  }
-
-  const PUBLIC_EVENTS = EVENTS.filter((e) => e.id !== 'soccorso');
+  const PUBLIC_EVENTS = EVENTS;
   const currentIndex = PUBLIC_EVENTS.findIndex((e) => e.id === eventId);
   const nextEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex + 1) % PUBLIC_EVENTS.length : 0];
   const prevEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex === 0 ? PUBLIC_EVENTS.length - 1 : currentIndex - 1) : 0];
