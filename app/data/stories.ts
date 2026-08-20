@@ -104,35 +104,139 @@ export const STORIES: Record<string, Story> = {
   },
   soccorso: {
     id: "soccorso",
-    title: "Festa del Soccorso: Fire, Faith, and Adrenaline in San Severo",
-    subtitle: "Running through a storm of exploding fireworks in Apulia's most explosive sacred tradition.",
-    author: "Daniele Colucci & Mattia Astori",
+    title: "C' vdim au' fnel",
+    subtitle: "Notes from the Festa del Soccorso",
+    author: "Mattia Astori",
     publishDate: "May 2026",
     content: `
-      <p class="mb-10 text-lg leading-8 text-zinc-300">In San Severo, Italy, faith does not speak in quiet whispers—it roars in blinding flashes, sulfur fumes, and deafening concussions. Every May, the town celebrates <em>La Festa del Soccorso</em> in honor of the Black Virgin Mary (Madonna del Soccorso), transforming centuries-old baroque streets into a fiery labyrinth.</p>
+      <p class="mb-10 text-lg leading-8 text-zinc-300">It was Saturday night and above our heads hung the <em>castelletti</em>, garlands of iron wire strung from one side of the street to the other, loaded with gray cylinders tied at regular intervals. Old newspaper wrapped each charge. Seen from below, backlit against the streetlamps, they could have passed for the decorations of a village fair, but the dry paper and the smell of sulfur said otherwise.</p>
       
-      <p class="mb-10 text-lg leading-8 text-zinc-300">The heart of the festival lies in the <em>batterie pyrotecniche</em>: thousands of powerful paper firecrackers chained together along kilometer-long routes suspended above the streets. As the sacred statues process through the city, the batteries are ignited sequence by sequence, exploding in a rhythmic, earth-shaking cascade of sparks and smoke.</p>
+      <img src="/digital/soccorso3.webp" alt="Festa del Soccorso, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Bruno held me by the right arm. Tall, solid, dark wavy hair combed back, a beige trench coat over his shirt. Dress trousers, polished shoes. Nothing to suggest that thirty seconds later we'd be running through explosions going off in midair. He had the calm expression of a man who has done this many times and now only has to walk someone else through it for the first time.</p>
       
-      <img src="/digital/soccorso.webp" alt="Runners amidst pyrotechnic explosions in San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The street was packed, a dense crush, shoulder to shoulder. Clusters of young guys calling to each other across the sidewalks, families with children in their arms, old people leaning against the walls. Everyone was looking in the same direction. The air already tasted of sulfur.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">From far off came the first blast. My heart leapt into my throat. The crowd tightened, a ripple ran through the street.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Bruno gripped my arm. "No, wait," he said. "Wait… wait… wait…"</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Two more blasts, spaced apart. Then the rapid burst. Behind us someone started to push, the pressure surged all at once.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Bruno tightened his grip. "Okay. Let's go."</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">And then we were running. The street itself began to move, a human wave that started from behind and took you from the back, compressed you. We were packed so tight I couldn't lift my elbow. Left arm wedged against my ribs, right hand clenched around the camera pressed to my chest, and all around me, only bodies. Bodies pushing and shouting, bodies that every so often lifted you off your feet with no way to resist.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The fireworks above us went off in sequence along the iron wire, just a little faster than the crowd. You heard them coming first with your ears, crackles getting closer and closer, then you saw them: white and orange flashes at head height, sparks raining down on shoulders, on arms, into hair. A boy in front of me tripped, fell forward, and before he even hit the ground four hands grabbed him by the armpits and set him back on his feet. Nobody stopped running for that boy.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Then the burst stopped. Two seconds of silence in which all you could hear was breathing and the ringing in your ears. A single blast. A pause. Another blast. The fire was catching its breath.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Bruno stopped. His face was flushed and there was a fresh burn on his collar, but his eyes were calm.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">"We have to decide," he said. "If we stay back here, we take it easy. If you want to see the finale, we have to go up now, before it starts again. But up front it gets tight, it's a mess."</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">"Let's go up," I said.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">We started moving again, dodging bodies in the lull. Bruno walked fast, glancing back every so often. The street narrowed into a gut between two buildings. Then we heard the fuse start up again in the distance. That unmistakable crackle, coming closer. Bruno turned, already pulled by the crowd that was beginning to push again. He said something in dialect.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">"<em>C' vdim au' fnel.</em>"</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">I didn't understand. There was no time to ask. The tide of bodies separated us in a second, him one way, me the other, and I was alone again in the middle of the crush and the explosions, the fire advancing over my head.</p>
+      
+      <img src="/digital/soccorso5.webp" alt="Festa del Soccorso, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The finale was where the street narrowed, and there the crowd compressed into a single mass. The explosions came in clusters, so close I could feel the heat on the back of my neck. A burning on my right arm. Then a hand behind me, I never knew whose, struck me twice, hard, on the shoulder, to put something out.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The last explosion was the loudest. A roar that boomed in your stomach, the iron wire shuddering above our heads, then silence. The white smoke so thick that for a few seconds you couldn't see anything at all. When it cleared, the street was a carpet of burned paper and smoking casings. The crowd erupted in a single collective shout. A man in a shredded shirt, his chest covered in little red dots, jumped and shouted toward a balcony where someone was waving a scorched flag. I found Bruno again.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">That night, at the hotel, I blew my nose and the tissue came away black. My sweatshirt riddled with holes. On my right arm a red mark that still burned. My backpack had three clean holes, like cigarette burns. And those four syllables, <em>c' vdim au' fnel</em>, kept coming back to me with no meaning attached.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Before I gave in to sleep, I thought back to what they'd told us during the day: this is the appetizer. Tomorrow is the real feast.</p>
 
       <div class="text-center text-3xl text-zinc-500 my-16 tracking-[0.2em]">. . .</div>
 
-      <h2 class="text-xl font-bold uppercase tracking-widest mb-8">The Fujenti: Running Under the Fire</h2>
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The day before, Friday morning, Michele Sales had picked us up at the hotel at nine. He drove a little gray hatchback with the back seats full of copies of the <em>Gazzetta di San Severo</em>, his newspaper. He'd printed our arrival in the center of the front page.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Michele talked barely moving his lips, his voice too loud. "See this?" he said, touching his right ear. "2007. A badly made fuse. It fell on my shoulder, went through my shoulder and burst my eardrum. Two operations. They took membrane from the back of my head and from my temple and rebuilt the eardrum. I lost fifty percent of my hearing. <em>Ma corr tutt l'ann.</em>" I run every year.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">I asked him why. He looked at me in the rearview mirror, and in that instant his eyes changed. Full of light, no longer watching the road but something inside. "Adrenaline," he said.</p>
       
-      <p class="mb-10 text-lg leading-8 text-zinc-300">Local runners known as <em>fujenti</em> sprint directly beneath the exploding chains. Clad in soot-stained white shirts, with hoodies drawn tight and damp towels covering their mouth and nose, they run alongside the fiery sparks. It is an adrenaline-fueled act of devotion, brotherhood, and raw physical courage.</p>
+      <p class="mb-10 text-lg leading-8 text-zinc-300">He took us to the Nuova Pirodaunia. The smell of sulfur and gunpowder reached you before the building did. Inside, an old workman with black, dried-out hands, worn-down nails, thin fingers, was preparing the charges, rolling strips of old calendars around cylinders of compressed powder. The owner, Michele Altrui, told us about the jury that until 2017 used to choose the loudest fire. "Then a girl got hurt. Her arm. Pulped. And they stopped."</p>
       
-      <p class="mb-10 text-lg leading-8 text-zinc-300">"You don't hear the crowd anymore once the first charge goes off," explains a local fujente. "It is pure instinct. You run with the rhythm of the fire, surrounded by smoke and sparks, trusting the Virgin Mary and your brothers."</p>
+      <img src="/digital/soccorso2.webp" alt="Preparazione delle cariche, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Later, at Umberto Presutto's, at the San Pio factory, we heard the same story: no barriers before 2017, then the barricades, people knocking them down, the barriers reinforced. "Every time a new prefect arrives, a police chief, a commissioner, people who aren't from here, they try to rein it in. And every time, protests break out." In the sixties, Bishop Valentino Velati didn't want the fires set off. In the mid-eighties a commissioner shut it all down: people sat down in the street, hours of negotiation, and in the end the batteries were mounted in a hurry and they fired anyway. In 2002, another attempt. Everyone sat down, the Madonna wouldn't come out, two hours later they changed the ordinances.</p>
       
-      <img src="/digital/soccorso2.webp" alt="Pyrotechnic battery chain exploding" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+      <p class="mb-10 text-lg leading-8 text-zinc-300">In the afternoon we met Raffaele Florio, president of the Pro Loco. A man doing a thousand things at once, cell phone in his right hand, landline on the desk, people coming in and out of the office every seventeen seconds. In one of those gaps he found the time to tell me: "The more you repress it, the more you feed it. Since 2017 the kids have multiplied. The more you tell them it's dangerous, the more they want to run under it."</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Then he stood up, put both phones away, and took us around town. And that was when we understood who Raffaele Florio was. In half an hour of walking we must have counted forty interactions. "Ciao dottò," "I've missed you," "Hey Raffaele, all set?" two kisses on the cheek, one and two, handshakes that lasted minutes. Every time he stopped, introduced us, explained who we were. "They're two photographers, they've come to tell the story of the Festa," and the reaction was always the same: a wide smile, a "welcome, you'll see…"</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">We passed in front of the cathedral, well-dressed people, old folks arm in arm, and then in a side church where Raffaele pointed out the confraternity's coat of arms. "<em>Memento mori.</em> Remember that you must die."</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">That evening we ate our first <em>torcinello</em> sandwich. A cloud of white smoke rose from an improvised grill on the sidewalk. Pork liver and innards, marinated eggplant, sun-dried tomatoes, stuffed into a roll that soaked up the fat from the meat. White plastic chairs, the kind from ice cream shops. The Luna Park square was already twice as crowded as it had been in the afternoon. In the distance, blasts.</p>
 
       <div class="text-center text-3xl text-zinc-500 my-16 tracking-[0.2em]">. . .</div>
 
-      <h2 class="text-xl font-bold uppercase tracking-widest mb-8">Documentary & Visual Archive</h2>
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Sunday morning it was drizzling. At seven the city was wet and silent, but already fully decorated. The <em>castelletti</em> hung over the empty streets with the sound of dry paper. At a café we had a coffee. The barista dried cups: "Then it'll stop. At nine it always stops." And at nine it stopped.</p>
       
-      <p class="mb-10 text-lg leading-8 text-zinc-300">Our documentary film captures the acoustic thunder and visual intensity of San Severo's sacred fire ritual, combining high-speed digital cinematography with grainy 35mm analog film stills.</p>
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The dressing of the bearers took place in a room behind the main church. We watched them put on the blue mantle, the collar with the symbol of the Madonna del Soccorso. Then came the drawing. Children held dark gray cloth caps containing the groups' tickets. The first ticket drawn was number three. Team number three was the first drawn: they would have the exit from the cathedral. The group moved toward the altar, and one of them, a man in his forties, put his hands to his face and burst into tears. He said something I didn't hear, but I saw his shoulders shake. "It's a strong emotion," he said in a low voice. The same man I would see again Monday evening, in tears, with the statue on his shoulder.</p>
       
+      <img src="/digital/soccorso10.webp" alt="Vestizione dei portatori, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The Madonna came out at eleven. The year before it was at ten, but the rain had delayed everything. The statue was Byzantine, black and gold, patron saint of the city and diocese. People leaned out to touch her, kiss her. Next to me a man gave me an elbow, pointing at her with his chin: "See how beautiful she is." Everyone said it, every time they showed us her in those days. They carried her out on their shoulders, and the crowd exploded in applause. From that moment, the feast began.</p>
+      
+      <img src="/digital/soccorso8.webp" alt="La Madonna del Soccorso, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The first fire of Sunday caught me in the middle of the street, among the <em>fujenti</em> who were waiting. The air changed twenty seconds before the sound arrived: people became charged, bodies tensed, someone rose on their toes. Then the first blast, like thunder. My heart leapt into my throat. I put on my glasses, my earplugs, clutched my camera. The flood started from behind and overwhelmed me. Again bodies pushing, again my arm stuck, sparks on my neck. A burn on my arm, then on my neck. I turned and a boy I'd never seen was already patting a hand on my shoulder to put out a fire that had fallen on me. I raised my chin to thank him, and he was already gone.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Eleven neighborhoods, eleven batteries, from morning to afternoon, counterclockwise on Sunday, clockwise on Monday. The city was a circle of fires, and we moved from one neighborhood to another following the mass. In another neighborhood, after the fire, I saw a shoe hanging from one of the iron wires that had held the firecrackers, tied up there by someone so the owner would find it. It dangled in the middle of the street, and a boy was jumping on one leg trying to get it back.</p>
+      
+      <img src="/digital/soccorso7.webp" alt="I fujenti, Festa del Soccorso" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Between one fire and the next, TMax scooters zoomed by, with father, mother and child aboard, all without helmets, passing in front of police vehicles cutting through the crowd to get to the next fire first.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The <em>fujenti</em> — those who flee — wore layers of shirts, two or three or four, all riddled with holes from previous fires. The more riddled the shirt, the more valorous you were. On each shirt a sponsor: the olive press, the hardware store, the local deli, Fresh Pasta from Ciro printed on the chest of a boy running with his arms raised. And then there were the shirts with photos of the dead. A boy wore printed on his chest the photo of a friend, with a caption in dialect. Another had a photo of his son, and under the photo the caption: I don't see you but I feel you near. When I asked him about it, he pointed at the caption with his finger. He turned and ran toward the next fire.</p>
+      
+      <img src="/digital/soccorso6.webp" alt="Le magliette dei fujenti, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300 font-semibold italic">"Two things are certain in life: death and the Festa del Soccorso."</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">During a pause I heard a <em>fujente</em> shout to another, in dialect: "Two things are certain in life: death and the Festa del Soccorso." The other laughed, gave him a pat on the shoulder. Later, another, leaning against a wall with his smoking shirt: "I told my boss: the third week of May I'm here. Either it's vacation or it's sick leave, you decide." He worked in Turin, he'd come back.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Monday I found Bruno again. He was leaning against a wall under the fires of Porta Lucera, the beige trench coat, a burn on his neck. He had his phone in his hand and earbuds in his ears, the screen lit up. He saw me, gave me a nod with his chin, "sorry one moment, I'm in a work meeting," and laughed. Then the fuse started in the distance. Bruno pulled away from the wall, adjusted his collar. He looked at me. He said: "<em>C' vdim au' fnel.</em>"</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">This time I understood.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Before the last fire, while I was eating a <em>torcinello</em> sandwich, a man in his forties was laughing with his family, tattoos everywhere. He had an electronic bracelet on his ankle, house arrest, evidently suspended for the day. For those three days, in San Severo, the laws stopped along with the traffic.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Not far away, a lady with a t-shirt printed with a photo of a boy and a date: 2024. Her son, killed in a traffic accident. "He ran every year. And I run for him."</p>
+      
+      <img src="/digital/soccorso4.webp" alt="Festa del Soccorso, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Monday evening the Madonna returned to the Sanctuary of Soccorso. The church was small, maybe fifty seats, but inside we were four hundred, crammed like under the fires, all sweaty and singed, but silent. A layman from the confraternity stood at the entrance and decided who entered. Outside, the crowd pressed.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Inside, two hours of rosary. The deacon led the Hail Mary, and everyone responded in a single low, tired voice, two hours of prayer while outside the last fires went off and the Madonna finished her tour of the city.</p>
+      
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Then the statue arrived. They carried her in on their shoulders, black and gold, and the church burst into collective weeping. In front of me a big man with a tattooed neck cried without making a sound, hands clasped and tears disappearing into his beard. The boy I'd seen crying at the drawing was in the front row, the blue mantle dirty with soot. And he was crying.</p>
+      
+      <img src="/digital/soccorso9.webp" alt="Il rientro della Madonna, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">The statue was placed in her niche. People pushed to touch her one last time.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">When I left the Sanctuary, the city was silent, covered in burned paper. At the hotel I blew my nose: black. The backpack riddled. The marks on my left arm, on my right arm, on my neck. The camera lens had a burn that would never come off.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300 font-semibold italic">It was the only certain thing, in those days when everything else was suspended.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">Before falling asleep, I thought back to the phrase. I no longer needed to translate it.</p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300"><em>C' vdim au' fnel.</em></p>
+
+      <p class="mb-10 text-lg leading-8 text-zinc-300">It was the only certain thing, in those days when everything else — the laws, work, mourning, fear — was suspended. You got lost in the crush, in the fire, in the weeping. And then you found each other again. At the end of the fire, at the end of the feast, in front of the Madonna returned to her niche. At the finale.</p>
+      
+      <img src="/digital/soccorso11.webp" alt="Festa del Soccorso, San Severo" class="w-full h-auto my-8 rounded-xl border border-white/10" />
+
       <div class="mt-12 pt-8 border-t border-white/10 text-sm text-zinc-500">
-        <p class="mb-10 text-lg leading-8 text-zinc-300">Documentary film directed & photographed by <a href="https://www.instagram.com/astori.teller/" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">@Mattia Astori</a> and Daniele Colucci for <a href="http://www.sacratos.com" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">www.sacratos.com</a></p>
+        <p class="mb-10 text-lg leading-8 text-zinc-300">Photographed by <a href="https://www.instagram.com/astori.teller/" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">Mattia Astori</a> and Daniele Colucci for <a href="http://www.sacratos.com" target="_blank" rel="noopener noreferrer" class="text-zinc-400 hover:text-white">www.sacratos.com</a></p>
       </div>
     `
   },
