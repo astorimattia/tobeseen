@@ -83,8 +83,10 @@ const EVENTS = [
     id: "hammers",
     title: "Exploding Hammers, Mexico",
     year: "2025",
-    story: "Hammers packed with explosives slam stone anvils, creating controlled chaos. The explosive force sends shrapnel flying through the air as participants test their luck and timing.",
+    story: "In San Juan de la Vega, six families uphold a centuries-old vow after a silver merchant's prayer saved him from bandits on the Camino Real. They honor San Juanito with explosives, but when the state banned the rite for the first time, the town had other plans.",
     images: ["/digital/hammers.webp", "/digital/hammers2.webp", "/digital/hammers3.webp", "/digital/hammers4.webp", "/digital/hammers5.webp", "/digital/hammers6.webp", "/digital/hammers7.webp", "/digital/hammers8.webp", "/digital/hammers9.webp", "/digital/hammers10.webp", "/digital/hammers11.webp", "/digital/hammers12.webp", "/digital/hammers13.webp", "/digital/hammers14.webp", "/digital/hammers15.webp"],
+    mediumUrl: "/work/hammers/story",
+    mediumTitle: "Si San Juanito Permite",
   },
   {
     id: "tinku",
