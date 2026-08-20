@@ -99,7 +99,14 @@ const EVENTS = [
     title: "Exploding Hammers, Mexico",
     year: "2025",
     story: "In San Juan de la Vega, six families uphold a centuries-old vow after a silver merchant's prayer saved him from bandits on the Camino Real. They honor San Juanito with explosives, but when the state banned the rite for the first time, the town had other plans.",
-    images: ["/digital/hammers.webp", "/digital/hammers2.webp", "/digital/hammers3.webp", "/digital/hammers4.webp", "/digital/hammers5.webp", "/digital/hammers6.webp", "/digital/hammers7.webp", "/digital/hammers8.webp", "/digital/hammers9.webp", "/digital/hammers10.webp", "/digital/hammers11.webp", "/digital/hammers12.webp", "/digital/hammers13.webp", "/digital/hammers14.webp", "/digital/hammers15.webp", "/digital/hammers16.webp", "/digital/hammers17.webp", "/digital/hammers18.webp", "/digital/hammers19.webp", "/digital/hammers20.webp", "/digital/hammers21.webp", "/digital/hammers22.webp", "/digital/hammers23.webp", "/digital/hammers24.webp", "/digital/hammers25.webp", "/digital/hammers26.webp", "/digital/hammers27.webp", "/digital/hammers28.webp", "/digital/hammers29.webp", "/digital/hammers30.webp", "/digital/hammers31.webp", "/digital/hammers32.webp", "/digital/hammers33.webp", "/digital/hammers34.webp", "/digital/hammers35.webp"],
+    images: ["/digital/hammers.webp", "/digital/hammers2.webp", "/digital/hammers3.webp", "/digital/hammers4.webp", "/digital/hammers5.webp", "/digital/hammers6.webp", "/digital/hammers7.webp", "/digital/hammers8.webp", "/digital/hammers9.webp", "/digital/hammers10.webp", "/digital/hammers11.webp", "/digital/hammers12.webp", "/digital/hammers13.webp"],
+    analogImages: [
+      "/analog/hammers-analog.webp", "/analog/hammers-analog2.webp", "/analog/hammers-analog3.webp",
+      "/analog/hammers-analog4.webp", "/analog/hammers-analog5.webp", "/analog/hammers-analog6.webp",
+      "/analog/hammers-analog7.webp", "/analog/hammers-analog8.webp", "/analog/hammers-analog9.webp",
+      "/analog/hammers-analog10.webp", "/analog/hammers-analog11.webp", "/analog/hammers-analog12.webp",
+      "/analog/hammers-analog13.webp"
+    ],
     mediumUrl: "/work/hammers/story",
     mediumTitle: "Si San Juanito Permite",
   },
