@@ -2,43 +2,30 @@
 
 import React from "react";
 import SectionHeading from "./SectionHeading";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Contact() {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (isLoading || isSubscribed) return;
     
     setIsLoading(true);
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        console.log("Subscription successful!");
-        setEmail("");
-        setIsSubscribed(true);
-      } else {
-        const errorData = await response.json();
-        console.error("Subscription failed:", errorData.message);
-        alert(`Subscription failed: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error("There was an error subscribing:", error);
-      alert("There was an error subscribing. Please try again later.");
-    } finally {
-      setIsLoading(false);
+    
+    // Submit the form to the hidden iframe
+    if (formRef.current) {
+      formRef.current.submit();
     }
+    
+    // Show success state immediately
+    setEmail("");
+    setIsSubscribed(true);
+    setIsLoading(false);
   };
 
   return (
@@ -59,24 +46,40 @@ export default function Contact() {
             <p className="text-zinc-300">You&apos;ll receive our quarterly newsletter with new work, rituals, and hidden discoveries.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 mt-8 w-full max-w-xl mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 w-full sm:max-w-xs md:max-w-sm rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
-              required
-              disabled={isSubscribed || isLoading}
-            />
-            <button
-              type="submit"
-              className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-              disabled={isSubscribed || isLoading}
+          <>
+            <form 
+              ref={formRef}
+              onSubmit={handleSubmit}
+              action="https://extremerituals.substack.com/api/v1/free"
+              method="post"
+              target="substack-subscribe"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 mt-8 w-full max-w-xl mx-auto"
             >
-              {isLoading ? 'Subscribing...' : isSubscribed ? 'Subscribed' : 'Subscribe'}
-            </button>
-          </form>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 w-full sm:max-w-xs md:max-w-sm rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+                required
+                disabled={isSubscribed || isLoading}
+              />
+              <input type="hidden" name="source" value="sacratos" />
+              <button
+                type="submit"
+                className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isSubscribed || isLoading}
+              >
+                {isLoading ? 'Subscribing...' : isSubscribed ? 'Subscribed' : 'Subscribe'}
+              </button>
+            </form>
+            <iframe 
+              name="substack-subscribe" 
+              style={{ display: 'none' }}
+              title="Substack subscription"
+            />
+          </>
         )}
       </div>
     </section>

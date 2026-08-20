@@ -28,7 +28,8 @@ export async function POST(req: Request) {
 
     const status = substackResponse.status;
     
-    if (status === 302 || (status >= 200 && status < 300)) {
+    // Treat 2xx, 3xx (301-308), and status 0 (opaqueredirect) as success
+    if (status === 0 || (status >= 200 && status < 300) || (status >= 301 && status <= 308)) {
       console.log(`Successfully subscribed ${email} to Extreme Rituals on Substack (status: ${status})`);
       return new Response(JSON.stringify({ message: 'Subscription successful!' }), {
         status: 200,
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
     console.error(`Substack API error (${status}):`, responseText);
     
     if (status === 409) {
-      return new Response(JSON.stringify({ message: 'Email already subscribed!' }), {
+      return new Response(JSON.stringify({ message: 'Email already subscribed!', status }), {
         status: 409,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -50,25 +51,25 @@ export async function POST(req: Request) {
       try {
         const errorData = JSON.parse(responseText);
         const errorMessage = errorData.message || errorData.error || 'Please enter a valid email address';
-        return new Response(JSON.stringify({ message: errorMessage }), {
+        return new Response(JSON.stringify({ message: errorMessage, status }), {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
         });
       } catch {
-        return new Response(JSON.stringify({ message: 'Please enter a valid email address' }), {
+        return new Response(JSON.stringify({ message: 'Please enter a valid email address', status }), {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
         });
       }
     }
     
-    return new Response(JSON.stringify({ message: 'Failed to subscribe. Please try again later.' }), {
+    return new Response(JSON.stringify({ message: 'Failed to subscribe. Please try again later.', status }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Subscription error:', error);
-    return new Response(JSON.stringify({ message: 'Internal server error' }), {
+    return new Response(JSON.stringify({ message: 'Internal server error', error: String(error) }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
