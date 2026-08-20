@@ -58,17 +58,6 @@ export default function EventPage({
   const currentImages = isAnalogMode && event.analogImages ? event.analogImages : event.images;
   const hasAnalogImages = event.analogImages && event.analogImages.length > 0;
 
-  // Force loading state to clear after a timeout as a fail-safe for the mautkakuan and banni images
-  useEffect(() => {
-    if ((event.id === 'mautkakuan' || event.id === 'banni') && !loadedImages.has(0)) {
-      const timer = setTimeout(() => {
-        setLoadedImages(prev => new Set(prev).add(0));
-      }, 3000); // 3 second timeout fallback
-
-      return () => clearTimeout(timer);
-    }
-  }, [event.id, loadedImages]);
-
   // Reset selected image index when switching modes
   useEffect(() => {
     setSelectedImageIndex(0);
@@ -307,7 +296,7 @@ export default function EventPage({
           {/* Hero Image */}
           {currentImages.length > 0 && (
             <div key={`hero-${isAnalogMode ? 'analog' : 'digital'}`} className="group relative w-full aspect-[4/3] md:aspect-[16/7] overflow-hidden bg-zinc-800 cursor-pointer" onClick={() => handleImageClick(0)}>
-              {imageFallbacks.has(0) || event.id === 'mautkakuan' || event.id === 'banni' ? (
+              {imageFallbacks.has(0) ? (
                 <img
                   ref={el => {
                     if (el && el.complete && !loadedImages.has(0)) {
@@ -332,6 +321,7 @@ export default function EventPage({
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                   sizes="100vw"
+                  quality={85}
                   priority
                   onLoad={() => handleImageLoad(0)}
                   onError={() => handleImageError(0)}
@@ -340,7 +330,6 @@ export default function EventPage({
                   style={{
                     objectPosition: event.id === 'mautkakuan' ? 'center 95%' : 'center center'
                   }}
-                  unoptimized={event.id === 'mautkakuan' || event.id === 'banni'}
                 />
               )}
               {/* Loading placeholder */}
@@ -393,7 +382,7 @@ export default function EventPage({
                       objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' :
                         event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
                     }}
-                    loading={i < 8 ? "eager" : "lazy"}
+                    loading="lazy"
                     onLoad={() => handleImageLoad(i + 1)}
                     onError={() => handleImageError(i + 1)}
                   />
@@ -408,10 +397,9 @@ export default function EventPage({
                       objectPosition: event.id === 'vegetarian' && i === 6 ? 'center top' :
                         event.id === 'vegetarian' && i === 10 ? 'center 25%' : 'center center'
                     }}
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    quality={85}
-                    loading={i < 8 ? "eager" : "lazy"} // Load first 8 images eagerly, rest lazy
-                    priority={i < 4} // Prioritize first 4 images
+                    sizes="(max-width: 1023px) 100vw, 50vw"
+                    quality={75}
+                    loading="lazy"
                     onLoad={() => handleImageLoad(i + 1)}
                     onError={() => handleImageError(i + 1)}
                     placeholder="blur"

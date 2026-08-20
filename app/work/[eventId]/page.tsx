@@ -232,12 +232,10 @@ export default async function EventPageRoute({ params }: { params: Promise<{ eve
   const nextEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex + 1) % PUBLIC_EVENTS.length : 0];
   const prevEvent = PUBLIC_EVENTS[currentIndex >= 0 ? (currentIndex === 0 ? PUBLIC_EVENTS.length - 1 : currentIndex - 1) : 0];
 
-  // Preload current event images and adjacent event images
+  // Preload only the hero image
   const preloadImages = [
-    ...event.images.slice(0, 6), // First 6 images of current event
-    ...nextEvent.images.slice(0, 3), // First 3 images of next event
-    ...prevEvent.images.slice(0, 3), // First 3 images of previous event
-  ];
+    event.images[0], // Hero image only
+  ].filter(Boolean);
 
   return (
     <main className="min-h-screen bg-black text-white">
