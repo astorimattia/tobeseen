@@ -18,7 +18,7 @@ export default function WorkPage() {
       title: "Festa del Soccorso, Italy",
       year: "2026",
       story: "Devotees run directly beneath kilometer-long chains of exploding pyrotechnic batteries ('batterie'). Clad in soot-stained clothes and face wraps, runners brave intense fire, sparks, and deafening explosions in honor of the Madonna del Soccorso.",
-      images: ["/digital/soccorso13.webp", "/digital/soccorso14.webp", "/digital/soccorso15.webp", "/digital/soccorso16.webp", "/digital/soccorso17.webp", "/digital/soccorso18.webp", "/digital/soccorso19.webp", "/digital/soccorso20.webp", "/digital/soccorso21.webp", "/digital/soccorso22.webp", "/digital/soccorso23.webp", "/digital/soccorso24.webp", "/digital/soccorso25.webp", "/digital/soccorso26.webp", "/digital/soccorso27.webp", "/digital/soccorso28.webp", "/digital/soccorso29.webp", "/digital/soccorso30.webp", "/digital/soccorso31.webp", "/digital/soccorso32.webp", "/digital/soccorso33.webp", "/digital/soccorso34.webp", "/digital/soccorso35.webp", "/digital/soccorso36.webp", "/digital/soccorso37.webp", "/digital/soccorso38.webp", "/digital/soccorso39.webp", "/digital/soccorso40.webp"],
+      images: ["/digital/soccorso33.webp", "/digital/soccorso13.webp", "/digital/soccorso14.webp", "/digital/soccorso15.webp", "/digital/soccorso16.webp", "/digital/soccorso17.webp", "/digital/soccorso18.webp", "/digital/soccorso19.webp", "/digital/soccorso20.webp", "/digital/soccorso21.webp", "/digital/soccorso22.webp", "/digital/soccorso23.webp", "/digital/soccorso24.webp", "/digital/soccorso25.webp", "/digital/soccorso26.webp", "/digital/soccorso27.webp", "/digital/soccorso28.webp", "/digital/soccorso29.webp", "/digital/soccorso30.webp", "/digital/soccorso31.webp", "/digital/soccorso32.webp", "/digital/soccorso34.webp", "/digital/soccorso35.webp", "/digital/soccorso36.webp", "/digital/soccorso37.webp", "/digital/soccorso38.webp", "/digital/soccorso39.webp", "/digital/soccorso40.webp"],
       analogImages: [
         "/analog/sansevero-analog.webp", "/analog/sansevero-analog2.webp", "/analog/sansevero-analog3.webp",
         "/analog/sansevero-analog4.webp", "/analog/sansevero-analog5.webp", "/analog/sansevero-analog6.webp",
@@ -96,7 +96,7 @@ export default function WorkPage() {
 
   // Preload first few images from each event for faster loading
   const preloadImages = [
-    "/digital/soccorso13.webp", "/digital/soccorso14.webp", "/digital/soccorso15.webp",
+    "/digital/soccorso33.webp", "/digital/soccorso34.webp", "/digital/soccorso35.webp",
     "/digital/banni.webp", "/digital/banni2.webp", "/digital/banni3.webp",
     "/digital/mautkakuan.webp", "/digital/mautkakuan2.webp", "/digital/mautkakuan3.webp",
     "/digital/tultepec.webp", "/digital/tultepec2.webp", "/digital/tultepec3.webp",
