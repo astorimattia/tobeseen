@@ -184,8 +184,10 @@ export default function EventPage({
 
             {/* Story Links - Quiet list design */}
             {(event.stories && event.stories.length > 0) ? (
-              <div className="mt-6 space-y-3">
-                {event.stories.map((story, index) => (
+              <div className="mt-6">
+                <div className="text-xs uppercase tracking-widest text-zinc-500 mb-3">Stories</div>
+                <div className="space-y-3">
+                  {event.stories.map((story, index) => (
                   <div key={index}>
                     <Link
                       href={story.url}
@@ -205,6 +207,7 @@ export default function EventPage({
                     )}
                   </div>
                 ))}
+                </div>
               </div>
             ) : event.mediumUrl ? (
               <div className="mt-6">
