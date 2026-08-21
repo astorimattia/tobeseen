@@ -139,14 +139,14 @@ export default function Hero() {
                 <input type="hidden" name="source" value="sacratos" />
                 <button
                   type="submit"
-                  className="font-heading rounded-xl bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg transition-all duration-300 whitespace-nowrap"
+                  className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer whitespace-nowrap"
                 >
                   Subscribe
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowEmailForm(false)}
-                  className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300"
+                  className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer"
                   title="Close"
                 >
                   ×
