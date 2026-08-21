@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Hero() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [showEmailForm, setShowEmailForm] = useState(false);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -91,20 +92,68 @@ export default function Hero() {
         
         {/* Buttons area - positioned at bottom */}
         <div className="pb-32 md:pb-20 flex justify-center">
-          <div className="flex items-center justify-center gap-3 w-full max-w-72">
-            <button
-              onClick={() => router.push('/work')}
-              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
-            >
-              View Work
-            </button>
-            <button
-              onClick={() => scrollToSection('subscribe')}
-              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
-            >
-              Stay Updated
-            </button>
-          </div>
+          <AnimatePresence mode="wait">
+            {!showEmailForm ? (
+              <motion.div
+                key="buttons"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center justify-center gap-3 w-full max-w-72"
+              >
+                <button
+                  onClick={() => router.push('/work')}
+                  className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
+                >
+                  View Work
+                </button>
+                <button
+                  onClick={() => setShowEmailForm(true)}
+                  className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
+                >
+                  Stay Updated
+                </button>
+              </motion.div>
+            ) : (
+              <motion.form
+                key="form"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                action="https://extremerituals.substack.com/api/v1/free?nojs=true"
+                method="post"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full max-w-md"
+              >
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  required
+                  autoFocus
+                  className="font-heading flex-1 rounded-xl border border-white/20 bg-transparent px-4 py-2 text-sm font-medium text-white placeholder:text-white/40 hover:border-white/40 focus:outline-none focus:border-white/40 focus:bg-white/5 transition-all duration-300"
+                />
+                <input type="hidden" name="source" value="sacratos" />
+                <button
+                  type="submit"
+                  className="font-heading rounded-xl bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg transition-all duration-300 whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowEmailForm(false)}
+                  className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300"
+                  title="Close"
+                >
+                  ×
+                </button>
+              </motion.form>
+            )}
+          </AnimatePresence>
         </div>
         
         {/* Down arrow */}
