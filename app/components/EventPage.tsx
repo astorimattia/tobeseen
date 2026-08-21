@@ -182,6 +182,44 @@ export default function EventPage({
             </div>
             <p className="text-sm md:text-base text-zinc-300 max-w-4xl leading-relaxed">{event.story}</p>
 
+            {/* Story Links - Quiet list design */}
+            {(event.stories && event.stories.length > 0) ? (
+              <div className="mt-6 space-y-3">
+                {event.stories.map((story, index) => (
+                  <div key={index}>
+                    <Link
+                      href={story.url}
+                      target={story.external ? "_blank" : undefined}
+                      rel={story.external ? "noopener noreferrer" : undefined}
+                      className="group inline-flex items-baseline gap-2"
+                    >
+                      <span className="text-sm text-white group-hover:text-zinc-300 transition-colors">
+                        {story.title}
+                      </span>
+                      <span className="text-sm text-zinc-500 flex-shrink-0">
+                        {story.external ? '↗' : '→'}
+                      </span>
+                    </Link>
+                    {story.author && (
+                      <div className="text-xs text-zinc-500 mt-0.5">{story.author}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : event.mediumUrl ? (
+              <div className="mt-6">
+                <Link
+                  href={`/work/${event.id}/story`}
+                  className="group inline-flex items-baseline gap-2"
+                >
+                  <span className="text-sm text-white group-hover:text-zinc-300 transition-colors">
+                    {event.mediumTitle || `Read more about ${event.title}`}
+                  </span>
+                  <span className="text-sm text-zinc-500 flex-shrink-0">→</span>
+                </Link>
+              </div>
+            ) : null}
+
             {/* Embedded Vimeo Video Player */}
             {event.vimeoId && (
               <div className="mt-8">
@@ -196,73 +234,6 @@ export default function EventPage({
                 </div>
               </div>
             )}
-
-            {/* Story Links - Multiple stories support */}
-            {(event.stories && event.stories.length > 0) ? (
-              <div className="mt-8 space-y-4">
-                {event.stories.map((story, index) => (
-                  <Link
-                    key={index}
-                    href={story.url}
-                    target={story.external ? "_blank" : undefined}
-                    rel={story.external ? "noopener noreferrer" : undefined}
-                    className="group block bg-zinc-900 border border-white/10 rounded-lg p-6 hover:bg-zinc-800 transition-all duration-300"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex-shrink-0">
-                        <svg viewBox="0 0 1024 1024" className="w-8 h-8 fill-white" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M248 408c-92.8 0-168 75.2-168 168s75.2 168 168 168 168-75.2 168-168-75.2-168-168-168zm0 280c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112zm528-280c-92.8 0-168 75.2-168 168s75.2 168 168 168 168-75.2 168-168-75.2-168-168-168zm0 280c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112zM512 80c-238.6 0-432 193.4-432 432s193.4 432 432 432 432-193.4 432-432S750.6 80 512 80zm0 800c-203.3 0-368-164.7-368-368S308.7 144 512 144s368 164.7 368 368-164.7 368-368 368z" />
-                          <path d="M792 376H232c-4.4 0-8 3.6-8 8v312c0 4.4 3.6 8 8 8h560c4.4 0 8-3.6 8-8V384c0-4.4-3.6-8-8-8zm-56 264H288V432h448v208z" fill="none" opacity="0" />
-                          <path d="M300 300h424v424H300z" fill="none" opacity="0" />
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
-                          {index === 0 ? 'Read Full Story' : 'Read Story'}
-                        </p>
-                        <h3 className="text-lg font-semibold text-white group-hover:text-zinc-200 transition-colors">
-                          {story.title}
-                        </h3>
-                        {story.author && (
-                          <p className="text-xs text-zinc-500 mt-1">{story.author}</p>
-                        )}
-                      </div>
-                      <div className="flex-shrink-0 text-zinc-500 group-hover:translate-x-1 transition-transform duration-300">
-                        {story.external ? '↗' : '→'}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : event.mediumUrl ? (
-              <div className="mt-8">
-                <Link
-                  href={`/work/${event.id}/story`}
-                  className="group block bg-zinc-900 border border-white/10 rounded-lg p-6 hover:bg-zinc-800 transition-all duration-300"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0">
-                      <svg viewBox="0 0 1024 1024" className="w-8 h-8 fill-white" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M248 408c-92.8 0-168 75.2-168 168s75.2 168 168 168 168-75.2 168-168-75.2-168-168-168zm0 280c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112zm528-280c-92.8 0-168 75.2-168 168s75.2 168 168 168 168-75.2 168-168-75.2-168-168-168zm0 280c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112zM512 80c-238.6 0-432 193.4-432 432s193.4 432 432 432 432-193.4 432-432S750.6 80 512 80zm0 800c-203.3 0-368-164.7-368-368S308.7 144 512 144s368 164.7 368 368-164.7 368-368 368z" />
-                        <path d="M792 376H232c-4.4 0-8 3.6-8 8v312c0 4.4 3.6 8 8 8h560c4.4 0 8-3.6 8-8V384c0-4.4-3.6-8-8-8zm-56 264H288V432h448v208z" fill="none" opacity="0" />
-                        <path d="M300 300h424v424H300z" fill="none" opacity="0" />
-                      </svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
-                        Read Full Story
-                      </p>
-                      <h3 className="text-lg font-semibold text-white group-hover:text-zinc-200 transition-colors truncate">
-                        {event.mediumTitle || `Read more about ${event.title}`}
-                      </h3>
-                    </div>
-                    <div className="flex-shrink-0 text-zinc-500 group-hover:translate-x-1 transition-transform duration-300">
-                      →
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ) : null}
 
             {/* Digital/Analog Toggle */}
             {(hasAnalogImages || event.id === 'tinku' || event.id === 'tultepec') && (
