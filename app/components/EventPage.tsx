@@ -144,15 +144,6 @@ export default function EventPage({
   const isSensitive = event.id === 'vegetarian';
   const [hasConsented, setHasConsented] = useState(!isSensitive);
 
-  // If sensitive and not consented, show warning
-  if (isSensitive && !hasConsented) {
-    return (
-      <div className="flex bg-black min-h-screen items-center justify-center">
-        <SensitiveContentFilter onShowContent={() => setHasConsented(true)} />
-      </div>
-    );
-  }
-
   return (
     <>
       <div
@@ -168,6 +159,13 @@ export default function EventPage({
           onPrevious={() => navigateToEvent(prevEventId)}
           onNext={() => navigateToEvent(nextEventId)}
         />
+
+        {/* Sensitive Content Warning Overlay */}
+        {isSensitive && !hasConsented && (
+          <div className="fixed inset-0 z-50 flex bg-black items-center justify-center">
+            <SensitiveContentFilter onShowContent={() => setHasConsented(true)} />
+          </div>
+        )}
 
         {/* Event Content */}
         <article className="space-y-8 mt-4 md:mt-8">
