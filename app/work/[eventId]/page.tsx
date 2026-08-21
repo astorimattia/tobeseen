@@ -35,6 +35,12 @@ const EVENTS = [
         author: "Mattia Astori",
         external: true,
       },
+      {
+        url: "https://extremerituals.substack.com/p/explosive-devotion-the-fujenti-and",
+        title: "Explosive Devotion: The Fujenti and the Black Madonna",
+        author: "Daniele Colucci, Ana Ben, and Sacratos",
+        external: true,
+      },
     ],
   },
   {
