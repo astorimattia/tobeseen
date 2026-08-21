@@ -1,10 +1,15 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Hero() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (videoRef.current) {
@@ -22,6 +27,38 @@ export default function Hero() {
         behavior: 'smooth',
         block: 'start',
       });
+    }
+  };
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setErrorMessage("");
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setEmail("");
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(data.message || 'Failed to subscribe. Please try again.');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setErrorMessage('Network error. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -91,20 +128,96 @@ export default function Hero() {
         
         {/* Buttons area - positioned at bottom */}
         <div className="pb-32 md:pb-20 flex justify-center">
-          <div className="flex items-center justify-center gap-3 w-full max-w-72">
-            <button
-              onClick={() => router.push('/work')}
-              className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
-            >
-              View Work
-            </button>
-            <button
-              onClick={() => scrollToSection('subscribe')}
-              className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
-            >
-              Stay Updated
-            </button>
-          </div>
+          <AnimatePresence mode="wait">
+            {!showEmailForm ? (
+              <motion.div
+                key="buttons"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center justify-center gap-3 w-full max-w-72"
+              >
+                <button
+                  onClick={() => router.push('/work')}
+                  className="font-heading rounded-xl bg-white text-black px-4 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
+                >
+                  View Work
+                </button>
+                <button
+                  onClick={() => setShowEmailForm(true)}
+                  className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer flex-1"
+                >
+                  Stay Updated
+                </button>
+              </motion.div>
+            ) : (
+              <motion.form
+                key="form"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                onSubmit={handleSubscribe}
+                className="w-full max-w-md"
+              >
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      required
+                      autoFocus
+                      disabled={isSubmitting || submitStatus === 'success'}
+                      className="flex-1 rounded-xl bg-white/10 border border-white/20 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || submitStatus === 'success'}
+                      className="font-heading rounded-xl bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                    >
+                      {isSubmitting ? 'Subscribing...' : submitStatus === 'success' ? 'Subscribed!' : 'Subscribe'}
+                    </button>
+                  </div>
+                  
+                  {submitStatus === 'success' && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-sm text-green-400 text-center"
+                    >
+                      Thanks! Check your email to confirm.
+                    </motion.p>
+                  )}
+                  
+                  {submitStatus === 'error' && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-sm text-red-400 text-center"
+                    >
+                      {errorMessage}
+                    </motion.p>
+                  )}
+                  
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowEmailForm(false);
+                      setEmail("");
+                      setSubmitStatus('idle');
+                      setErrorMessage("");
+                    }}
+                    className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200 text-center"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </motion.form>
+            )}
+          </AnimatePresence>
         </div>
         
         {/* Down arrow */}
