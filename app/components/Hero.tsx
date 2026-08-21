@@ -6,10 +6,6 @@ export default function Hero() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showEmailForm, setShowEmailForm] = useState(false);
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (videoRef.current) {
@@ -27,38 +23,6 @@ export default function Hero() {
         behavior: 'smooth',
         block: 'start',
       });
-    }
-  };
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-    setErrorMessage("");
-
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        setEmail("");
-      } else {
-        setSubmitStatus('error');
-        setErrorMessage(data.message || 'Failed to subscribe. Please try again.');
-      }
-    } catch (error) {
-      setSubmitStatus('error');
-      setErrorMessage('Network error. Please try again.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -152,61 +116,42 @@ export default function Hero() {
                 </button>
               </motion.div>
             ) : (
-              <motion.div
+              <motion.form
                 key="form"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
-                className="w-full max-w-md"
+                action="https://extremerituals.substack.com/api/v1/free?nojs=true"
+                method="post"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full max-w-md"
               >
-                <form
-                  onSubmit={handleSubscribe}
-                  className="flex items-center justify-center gap-3"
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  required
+                  autoFocus
+                  className="font-heading flex-1 rounded-xl border border-white/20 bg-transparent px-4 py-2 text-sm font-medium text-white placeholder:text-white/40 hover:border-white/40 focus:outline-none focus:border-white/40 focus:bg-white/5 transition-all duration-300"
+                />
+                <input type="hidden" name="source" value="sacratos" />
+                <button
+                  type="submit"
+                  className="font-heading rounded-xl bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg transition-all duration-300 whitespace-nowrap"
                 >
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    required
-                    autoFocus
-                    disabled={isSubmitting || submitStatus === 'success'}
-                    className="font-heading flex-1 rounded-xl border border-white/20 bg-transparent px-4 py-2 text-sm font-medium text-white placeholder:text-white/40 hover:border-white/40 focus:outline-none focus:border-white/40 focus:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || submitStatus === 'success'}
-                    className="font-heading rounded-xl bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-300 whitespace-nowrap"
-                  >
-                    {isSubmitting ? '...' : submitStatus === 'success' ? '✓' : 'Subscribe'}
-                  </button>
-                  {submitStatus !== 'idle' && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowEmailForm(false);
-                        setEmail("");
-                        setSubmitStatus('idle');
-                        setErrorMessage("");
-                      }}
-                      className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300"
-                      title="Close"
-                    >
-                      ×
-                    </button>
-                  )}
-                </form>
-                {submitStatus === 'error' && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-2 text-xs text-white/50 text-center"
-                  >
-                    {errorMessage}
-                  </motion.p>
-                )}
-              </motion.div>
+                  Subscribe
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowEmailForm(false)}
+                  className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300"
+                  title="Close"
+                >
+                  ×
+                </button>
+              </motion.form>
             )}
           </AnimatePresence>
         </div>
