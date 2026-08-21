@@ -142,6 +142,11 @@ export default function RootLayout({
                     "https://instagram.com/sacratos",
                     "https://twitter.com/sacratos"
                   ],
+                  "contactPoint": {
+                    "@type": "ContactPoint",
+                    "email": "mattia@sacratos.com",
+                    "contactType": "General Inquiries"
+                  },
                   "foundingDate": "2024",
                   "areaServed": "Worldwide",
                   "knowsAbout": [
