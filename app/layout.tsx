@@ -187,6 +187,13 @@ export default function RootLayout({
                 },
                 {
                   "@type": "CreativeWork",
+                  "name": "Festa del Soccorso",
+                  "description": "Documentary coverage of the Festa del Soccorso in San Severo, Italy — fujenti run under exploding batteries strung across the street while the Black Madonna moves through town",
+                  "creator": { "@id": "https://sacratos.com/#organization" },
+                  "locationCreated": { "@type": "Place", "name": "San Severo, Italy" }
+                },
+                {
+                  "@type": "CreativeWork",
                   "name": "Feria Internacional de la Pirotecnia",
                   "description": "Documentary coverage of the dangerous fireworks festival in Tultepec, Mexico — 200 bulls loaded with rockets thrown against thousands of people",
                   "creator": { "@id": "https://sacratos.com/#organization" },
@@ -224,7 +231,11 @@ export default function RootLayout({
                   "@type": "Article",
                   "name": "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
                   "description": "The story of Soma Basu, a Bengali woman stunt rider in India's Maut Ka Kuan (Well of Death), who defied gender expectations to ride motorcycles on vertical wooden walls",
-                  "author": { "name": "Ana Ben" },
+                  "author": [
+                    { "name": "Ana Ben" },
+                    { "@id": "https://sacratos.com/#mattia" },
+                    { "@id": "https://sacratos.com/#daniele" }
+                  ],
                   "creator": { "@id": "https://sacratos.com/#organization" },
                   "locationCreated": { "@type": "Place", "name": "Jagdalpur, India" }
                 },

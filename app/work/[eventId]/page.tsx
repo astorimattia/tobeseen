@@ -38,7 +38,7 @@ const EVENTS = [
       {
         url: "https://extremerituals.substack.com/p/explosive-devotion-the-fujenti-and",
         title: "Explosive Devotion: The Fujenti and the Black Madonna",
-        author: "Daniele Colucci, Ana Ben, and Sacratos",
+        author: "Sacratos",
         external: true,
       },
     ],
@@ -60,7 +60,7 @@ const EVENTS = [
       {
         url: "https://extremerituals.substack.com/p/echoes-of-demons-the-violent-devotion",
         title: "Echoes of Demons: The Violent Devotion of Devaragattu",
-        author: "Daniele Colucci, Ana Ben, and Sacratos",
+        author: "Sacratos",
         external: true,
       },
     ],
@@ -92,7 +92,7 @@ const EVENTS = [
       {
         url: "https://extremerituals.substack.com/p/riding-the-well-of-death-soma-basus",
         title: "Riding the Well of Death: Soma Basu's Defiance of Gravity and Tradition",
-        author: "Daniele Colucci, Ana Ben, and Sacratos",
+        author: "Sacratos",
         external: true,
       },
     ],
