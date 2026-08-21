@@ -152,70 +152,61 @@ export default function Hero() {
                 </button>
               </motion.div>
             ) : (
-              <motion.form
+              <motion.div
                 key="form"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
-                onSubmit={handleSubscribe}
                 className="w-full max-w-md"
               >
-                <div className="flex flex-col gap-2">
-                  <div className="flex gap-2">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                      required
-                      autoFocus
-                      disabled={isSubmitting || submitStatus === 'success'}
-                      className="flex-1 rounded-xl bg-white/10 border border-white/20 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
-                    <button
-                      type="submit"
-                      disabled={isSubmitting || submitStatus === 'success'}
-                      className="font-heading rounded-xl bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                    >
-                      {isSubmitting ? 'Subscribing...' : submitStatus === 'success' ? 'Subscribed!' : 'Subscribe'}
-                    </button>
-                  </div>
-                  
-                  {submitStatus === 'success' && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-sm text-green-400 text-center"
-                    >
-                      Thanks! Check your email to confirm.
-                    </motion.p>
-                  )}
-                  
-                  {submitStatus === 'error' && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-sm text-red-400 text-center"
-                    >
-                      {errorMessage}
-                    </motion.p>
-                  )}
-                  
+                <form
+                  onSubmit={handleSubscribe}
+                  className="flex items-center justify-center gap-3"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    autoFocus
+                    disabled={isSubmitting || submitStatus === 'success'}
+                    className="font-heading flex-1 rounded-xl border border-white/20 bg-transparent px-4 py-2 text-sm font-medium text-white placeholder:text-white/40 hover:border-white/40 focus:outline-none focus:border-white/40 focus:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                  />
                   <button
-                    type="button"
-                    onClick={() => {
-                      setShowEmailForm(false);
-                      setEmail("");
-                      setSubmitStatus('idle');
-                      setErrorMessage("");
-                    }}
-                    className="text-xs text-white/50 hover:text-white/80 transition-colors duration-200 text-center"
+                    type="submit"
+                    disabled={isSubmitting || submitStatus === 'success'}
+                    className="font-heading rounded-xl bg-white text-black px-6 py-2 text-sm font-medium hover:bg-zinc-200 hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-300 whitespace-nowrap"
                   >
-                    Cancel
+                    {isSubmitting ? '...' : submitStatus === 'success' ? '✓' : 'Subscribe'}
                   </button>
-                </div>
-              </motion.form>
+                  {submitStatus !== 'idle' && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowEmailForm(false);
+                        setEmail("");
+                        setSubmitStatus('idle');
+                        setErrorMessage("");
+                      }}
+                      className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300"
+                      title="Close"
+                    >
+                      ×
+                    </button>
+                  )}
+                </form>
+                {submitStatus === 'error' && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-2 text-xs text-white/50 text-center"
+                  >
+                    {errorMessage}
+                  </motion.p>
+                )}
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
