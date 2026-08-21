@@ -65,9 +65,9 @@ const ExclusiveAccessModal: React.FC<ExclusiveAccessModalProps> = ({
             />
           </svg>
         </button>
-        <h2 className="text-3xl font-bold text-white mb-4 text-center">Get exclusive access</h2>
+        <h2 className="text-3xl font-bold text-white mb-4 text-center">Subscribe on Substack</h2>
         <p className="text-zinc-300 text-center mb-6 text-sm leading-relaxed">
-          Be the first to know when new documentaries drop.
+          Join Extreme Rituals on Substack for photo essays and field notes from the edge.
         </p>
         <form 
           onSubmit={handleSubmit}
