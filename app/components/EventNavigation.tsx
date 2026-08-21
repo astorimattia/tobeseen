@@ -46,7 +46,7 @@ export default function EventNavigation({
 
   return (
     <div 
-      className="relative"
+      className="relative z-[60]"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
