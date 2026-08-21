@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Hero() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
   const [showEmailForm, setShowEmailForm] = useState(false);
 
   useEffect(() => {
@@ -15,6 +16,15 @@ export default function Hero() {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (showEmailForm && emailInputRef.current) {
+      // Use requestAnimationFrame to ensure focus happens after render
+      requestAnimationFrame(() => {
+        emailInputRef.current?.focus();
+      });
+    }
+  }, [showEmailForm]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -126,31 +136,35 @@ export default function Hero() {
                 method="post"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 w-full max-w-md"
+                className="w-full max-w-sm min-w-0 px-4"
               >
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="your@email.com"
-                  required
-                  autoFocus
-                  className="font-heading flex-1 rounded-xl border border-white/20 bg-transparent px-4 py-2 text-sm font-medium text-white placeholder:text-white/40 hover:border-white/40 focus:outline-none focus:border-white/40 focus:bg-white/5 transition-all duration-300"
-                />
-                <input type="hidden" name="source" value="sacratos" />
-                <button
-                  type="submit"
-                  className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer whitespace-nowrap"
-                >
-                  Subscribe
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowEmailForm(false)}
-                  className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                  title="Close"
-                >
-                  ×
-                </button>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                  <input
+                    ref={emailInputRef}
+                    type="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    required
+                    className="min-w-0 w-full rounded-xl border border-white/20 bg-transparent px-4 py-2 text-base font-light text-white placeholder:text-white/40 hover:border-white/40 focus:outline-none focus:border-white/40 focus:bg-white/5 transition-all duration-300"
+                  />
+                  <input type="hidden" name="source" value="sacratos" />
+                  <div className="flex gap-2 sm:gap-3">
+                    <button
+                      type="submit"
+                      className="font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer whitespace-nowrap flex-1 sm:flex-none"
+                    >
+                      Subscribe
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowEmailForm(false)}
+                      className="font-heading rounded-xl border border-white/20 px-3 py-2 text-sm font-medium hover:bg-white/20 hover:border-white/40 hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                      title="Close"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
               </motion.form>
             )}
           </AnimatePresence>
