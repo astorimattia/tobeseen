@@ -225,7 +225,7 @@ export default function WorkPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-zinc-500">
                         {hasImages ? `${event.images.length} photos` : 'Documentary Video'}
-                        {(event.id === 'soccorso' || event.id === 'hammers' || event.id === 'banni' || event.id === 'mautkakuan') && ' • Read story'}
+                        {(event.id === 'soccorso' || event.id === 'hammers' || event.id === 'banni' || event.id === 'mautkakuan' || event.id === 'tultepec' || event.id === 'vegetarian' || event.id === 'tinku') && ' • Read story'}
                       </span>
                       <div className="flex items-center gap-2 text-xs text-zinc-400 group-hover:text-white transition-colors">
                         <span>View event</span>
