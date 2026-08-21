@@ -17,19 +17,21 @@ export default function Contact() {
           action="https://extremerituals.substack.com/api/v1/free?nojs=true"
           method="post"
           target="_blank"
+          rel="noopener"
           className="mt-8 flex flex-col items-center gap-4"
         >
-          <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 w-full max-w-md">
             <input
               type="email"
               name="email"
               placeholder="Enter your email"
               required
-              className="flex-1 px-4 py-3 rounded-lg bg-zinc-800/50 border border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent"
+              className="flex-1 w-full sm:max-w-xs md:max-w-sm rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
             />
+            <input type="hidden" name="source" value="sacratos" />
             <button
               type="submit"
-              className="px-6 py-3 rounded-lg bg-zinc-100 text-zinc-900 font-medium hover:bg-white transition-colors whitespace-nowrap"
+              className="w-full sm:w-auto font-heading rounded-xl border border-white/20 px-4 py-2 text-sm font-medium hover:bg-white/10 transition-colors duration-200 cursor-pointer"
             >
               Subscribe
             </button>
@@ -40,4 +42,3 @@ export default function Contact() {
     </section>
   );
 }
-
