@@ -112,14 +112,6 @@ const EVENTS = [
       "/analog/tultepec-analog16.webp", "/analog/tultepec-analog17.webp", "/analog/tultepec-analog18.webp",
       "/analog/tultepec-analog19.webp"
     ],
-    stories: [
-      {
-        url: "/work/tultepec/story",
-        title: "Bulls of Fire",
-        author: "Sacratos",
-        external: false,
-      },
-    ],
   },
   {
     id: "vegetarian",
@@ -127,14 +119,6 @@ const EVENTS = [
     year: "2024",
     story: "Spititual leaders pierce their skin with swords as they enter a trance. The festival is a nine-day celebration where participants believe they become vessels for the gods.",
     images: ["/digital/vegetarian.webp", "/digital/vegetarian2.webp", "/digital/vegetarian3.webp", "/digital/vegetarian4.webp", "/digital/vegetarian5.webp", "/digital/vegetarian6.webp", "/digital/vegetarian7.webp", "/digital/vegetarian8.webp", "/digital/vegetarian9.webp", "/digital/vegetarian10.webp", "/digital/vegetarian11.webp", "/digital/vegetarian12.webp", "/digital/vegetarian13.webp", "/digital/vegetarian14.webp", "/digital/vegetarian15.webp"],
-    stories: [
-      {
-        url: "/work/vegetarian/story",
-        title: "Vessels of the Gods",
-        author: "Sacratos",
-        external: false,
-      },
-    ],
   },
   {
     id: "hammers",
@@ -171,14 +155,6 @@ const EVENTS = [
       "/analog/tinku-analog10.webp", "/analog/tinku-analog11.webp", "/analog/tinku-analog12.webp",
       "/analog/tinku-analog13.webp", "/analog/tinku-analog14.webp", "/analog/tinku-analog15.webp",
       "/analog/tinku-analog16.webp"
-    ],
-    stories: [
-      {
-        url: "/work/tinku/story",
-        title: "Blood for the Harvest",
-        author: "Sacratos",
-        external: false,
-      },
     ],
   },
 ];
